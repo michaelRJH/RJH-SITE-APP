@@ -557,10 +557,36 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><pattern id="h45" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#B9B7AE" stroke-width="1"/></pattern>
+    <pattern id="conc" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#8a8a84"/><circle cx="6.5" cy="5.5" r="0.8" fill="#8a8a84"/><line x1="0" y1="8" x2="3" y2="8" stroke="#8a8a84" stroke-width=".8"/></pattern>
+    <pattern id="sand" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".8" fill="#8a8a84"/><circle cx="4.5" cy="4.5" r=".8" fill="#8a8a84"/></pattern>
+    <pattern id="t1" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M2 3 l3 -2 l3 2 l-2 3 l-3 0 z" fill="none" stroke="#8a8a84" stroke-width=".9"/><circle cx="8" cy="8" r="1" fill="#8a8a84"/></pattern></defs><defs>
+    <pattern id="dp-surf" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#2b2b2a"/></pattern>
+    <pattern id="dp-bind" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#4a4a48"/><circle cx="3" cy="3" r=".7" fill="#7a7a76"/></pattern>
+    <pattern id="dp-base" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#6b6b67"/><circle cx="2" cy="2" r="1" fill="#8f8f8a"/><circle cx="6" cy="6" r="1.2" fill="#8f8f8a"/></pattern>
+    <pattern id="dp-sub" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#EFEEE9"/><path d="M2 3 l3 -2 l3 2 l-2 3 l-3 0 z" fill="none" stroke="#8a8a84" stroke-width=".8"/><circle cx="8" cy="8" r="1" fill="#8a8a84"/></pattern>
+    <pattern id="dp-cap" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#E4E1D6"/><circle cx="3" cy="3" r="2" fill="none" stroke="#8a8a84" stroke-width=".9"/><circle cx="9" cy="8" r="1.6" fill="none" stroke="#8a8a84" stroke-width=".9"/></pattern>
+    <pattern id="dp-conc" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#fff"/><circle cx="2" cy="2" r="1.1" fill="#8a8a84"/><circle cx="6.5" cy="5.5" r=".8" fill="#8a8a84"/><line x1="0" y1="8" x2="3" y2="8" stroke="#8a8a84" stroke-width=".8"/></pattern>
+    <pattern id="dp-ground" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#B9B7AE" stroke-width="1"/></pattern>
+    <pattern id="dp-sand" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#FBF7E8"/><circle cx="1.5" cy="1.5" r=".7" fill="#8a8a84"/><circle cx="3.8" cy="3.8" r=".7" fill="#8a8a84"/></pattern></defs><defs>
+    <pattern id="p-topsoil" width="8" height="8" patternUnits="userSpaceOnUse"><line x1="2" y1="2" x2="2" y2="6" stroke="#5a5a55" stroke-width="1.2"/><line x1="6" y1="1" x2="6" y2="4" stroke="#5a5a55" stroke-width="1.2"/></pattern>
+    <pattern id="p-made" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M1 1 l3 3 M4 1 l-3 3 M6 6 l3 3 M9 6 l-3 3" stroke="#5a5a55" stroke-width="1"/></pattern>
+    <pattern id="p-clay" width="10" height="6" patternUnits="userSpaceOnUse"><line x1="0" y1="3" x2="10" y2="3" stroke="#5a5a55" stroke-width="1"/></pattern>
+    <pattern id="p-sclay" width="12" height="6" patternUnits="userSpaceOnUse"><line x1="0" y1="3" x2="7" y2="3" stroke="#5a5a55" stroke-width="1"/><circle cx="10" cy="3" r=".9" fill="#5a5a55"/></pattern>
+    <pattern id="p-silt" width="10" height="5" patternUnits="userSpaceOnUse"><line x1="0" y1="2.5" x2="10" y2="2.5" stroke="#5a5a55" stroke-width=".7" stroke-dasharray="3 2"/></pattern>
+    <pattern id="p-sand" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".8" fill="#5a5a55"/><circle cx="4.5" cy="4.5" r=".8" fill="#5a5a55"/></pattern>
+    <pattern id="p-gravel" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="2" fill="none" stroke="#5a5a55" stroke-width="1"/><circle cx="9" cy="8" r="1.6" fill="none" stroke="#5a5a55" stroke-width="1"/></pattern>
+    <pattern id="p-sg" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="2" fill="none" stroke="#5a5a55" stroke-width="1"/><circle cx="9" cy="9" r=".8" fill="#5a5a55"/><circle cx="8" cy="3" r=".8" fill="#5a5a55"/></pattern>
+    <pattern id="p-mud" width="10" height="4" patternUnits="userSpaceOnUse"><line x1="0" y1="2" x2="10" y2="2" stroke="#5a5a55" stroke-width="1.4"/></pattern>
+    <pattern id="p-sst" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7" fill="#5a5a55"/><circle cx="6" cy="6" r=".7" fill="#5a5a55"/><line x1="0" y1="4" x2="8" y2="4" stroke="#5a5a55" stroke-width=".6"/></pattern>
+    <pattern id="p-coal" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#2b2b2b"/><line x1="0" y1="3" x2="6" y2="3" stroke="#777" stroke-width=".6"/></pattern>
+    <pattern id="p-rock" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#5a5a55" stroke-width="1"/><line x1="0" y1="4" x2="8" y2="4" stroke="#5a5a55" stroke-width="1"/></pattern>
+    <pattern id="p-peat" width="10" height="8" patternUnits="userSpaceOnUse"><path d="M1 6 q2 -4 4 0 M5 3 q2 -4 4 0" fill="none" stroke="#5a5a55" stroke-width="1"/></pattern>
+    <pattern id="p-other" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#EFEEE9"/></pattern></defs></svg>
 <div class="wrap">
   <header>
     <img src="data:image/png;base64,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" alt="R.J. Howard Engineers Ltd, Civil Engineering Contractors">
-    <div class="sub"><h1>Site Calculator</h1><small id="ver">v10 · offline</small></div>
+    <div class="sub"><h1>Site Calculator</h1><small id="ver">v14 · offline</small></div>
   </header>
 
   <!-- HOME -->
@@ -836,6 +862,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         <div class="field"><label for="d-bed">Bed</label><div class="in"><input id="d-bed" type="number" inputmode="numeric" step="5" value="25"><span class="unit">mm</span></div></div>
       </div>
       <div class="field"><label for="d-race">Race depth</label><div class="in"><input id="d-race" type="number" inputmode="numeric" step="25" value="150"><span class="unit">mm</span></div></div>
+      <div class="field"><label>Start with</label>
+        <div class="seg two" id="d-start">
+          <button type="button" data-s="perm" aria-pressed="true">Permanent kerb</button>
+          <button type="button" data-s="temp" aria-pressed="false">Temporary kerb</button>
+        </div></div>
+      <div id="d-tempfields" hidden>
+        <p class="note">Temporary kerb set on the permanent race with its top at binder level, so the black can be laid against it. The proper kerb goes in later.</p>
+        <div class="chips" id="d-tempchips"></div>
+        <div class="field"><label for="d-temph">Temporary kerb height</label><div class="in"><input id="d-temph" type="number" inputmode="numeric" step="0.5" value="65"><span class="unit">mm</span></div></div>
+      </div>
     </div>
 
     <h2>Construction</h2>
@@ -857,7 +893,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       <div id="d-slatrows"></div>
     </div>
 
-    <h2>Dips from finished level</h2>
+    <h2 id="d-fromh">Dips from top of kerb</h2>
     <table class="out"><thead><tr><th>To</th><th class="n">Dip</th></tr></thead><tbody id="d-frl"></tbody></table>
 
     <div id="d-kerbout">
@@ -870,6 +906,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         <div class="box"><small>1st layer (race sits in)</small><b id="d-l1">–</b></div>
         <div class="box"><small>2nd layer (after kerbing)</small><b id="d-l2">–</b></div>
       </div>
+      <div id="d-tempout" hidden><h2>Temporary kerb</h2><div class="stat"><div class="box"><small>Build-up under the temp kerb</small><b id="d-tmake">–</b></div><div class="box"><small>Top of temp kerb</small><b id="d-ttop">–</b></div></div><p class="note" id="d-tempsum"></p></div>
       <p class="note">The 1st layer is what's left of the sub-base under the bottom of the race, so the race is cast on stone. The 2nd layer is the rest of the sub-base, laid after the kerbs are in. Capping sits under all of it.</p>
     </div>
     <div class="warn" id="d-warn"></div>
@@ -998,18 +1035,39 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   <!-- BEDDING -->
   <section id="panel-bedding" hidden>
     <div class="field"><label>Pipe diameter (mm)</label><div class="seg chips" id="pipe"></div></div>
-    <div class="field"><label for="run">Length of run</label><div class="in"><input id="run" type="number" inputmode="decimal" min="0" step="any" placeholder="0"><span class="unit">m</span></div></div>
+    <div class="field"><label>Pipe</label>
+      <div class="seg two" id="b-mat">
+        <button type="button" data-m="plastic" aria-pressed="true">Plastic / clay</button>
+        <button type="button" data-m="concrete" aria-pressed="false">Concrete</button>
+      </div></div>
+    <div class="field"><label>Bedding</label>
+      <div class="seg three" id="b-class">
+        <button type="button" data-c="full" aria-pressed="true">Full surround</button>
+        <button type="button" data-c="half" aria-pressed="false">Half barrel</button>
+        <button type="button" data-c="bed" aria-pressed="false">Bed only</button>
+      </div></div>
+    <div class="grid2">
+      <div class="field"><label for="b-width">Trench width</label><div class="in"><input id="b-width" type="number" inputmode="decimal" step="0.05" placeholder="0.80"><span class="unit">m</span></div></div>
+      <div class="field"><label for="run">Length of run</label><div class="in"><input id="run" type="number" inputmode="decimal" min="0" step="any" placeholder="0"><span class="unit">m</span></div></div>
+    </div>
+    <div class="sk" id="b-sk"></div>
     <div class="ticket" aria-live="polite">
       <p class="eyebrow">Bedding required</p>
       <p class="big" id="bed-t">0.0<span>t</span></p>
-      <div class="row"><span id="bed-detail">Pick a pipe size and enter a length</span><b id="bed-loads"></b></div>
+      <div class="row"><span id="bed-detail">Pick a pipe size, set the trench width and length</span><b id="bed-loads"></b></div>
+      <div class="row"><span>Per metre run</span><b id="bed-perm">–</b></div>
+      <div class="row"><span>Trench depth for bedding zone</span><b id="bed-zone">–</b></div>
     </div>
-    <details><summary>Adjust rates</summary>
+    <details><summary>Adjust</summary>
       <div class="grid2">
-        <div class="field"><label for="d-bed">Bedding t/m³</label><div class="in"><input id="d-bed" type="number" inputmode="decimal" step="0.01" value="2.2"></div></div>
+        <div class="field"><label for="b-under">Bed under pipe</label><div class="in"><input id="b-under" type="number" inputmode="numeric" step="25" value="150"><span class="unit">mm</span></div></div>
+        <div class="field"><label for="b-over">Cover over pipe (full surround)</label><div class="in"><input id="b-over" type="number" inputmode="numeric" step="25" value="150"><span class="unit">mm</span></div></div>
+        <div class="field"><label for="b-wall">Wall thickness</label><div class="in"><input id="b-wall" type="number" inputmode="numeric" step="1" value="19"><span class="unit">mm</span></div></div>
+        <div class="field"><label for="b-dens">Bedding t/m³</label><div class="in"><input id="b-dens" type="number" inputmode="decimal" step="0.05" value="2.2"></div></div>
         <div class="field"><label for="waste-b">Waste allowance</label><div class="in"><input id="waste-b" type="number" inputmode="decimal" step="1" value="0"><span class="unit">%</span></div></div>
+        <div class="field"><label for="b-wagon">Wagon size</label><div class="in"><input id="b-wagon" type="number" inputmode="decimal" step="1" value="20"><span class="unit">t</span></div></div>
       </div>
-      <p class="note">m³ per metre by pipe size is taken from the RJH spreadsheet table.</p>
+      <p class="note">Picking a pipe size fills in the wall thickness, minimum bed (150 for plastic and clay, 200 for concrete) and a typical trench width from the RJH bedding sheet. Change any of them here. Bedding volume is the trench width times the bedding zone, less the pipe itself.</p>
     </details>
   </section>
 
@@ -1097,17 +1155,67 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   }
   ['area','thick','d-lime','d-hard','waste','wagon'].forEach(id=>$(id).addEventListener('input',calcTarmac));
 
-  // ---- Bedding ----
-  let pipe=225; const pipeEl=$('pipe');
-  Object.keys(BED).forEach(d=>{const b=document.createElement('button');b.type='button';b.textContent=d;b.dataset.d=d;b.setAttribute('aria-pressed',+d===pipe);pipeEl.appendChild(b);});
-  pipeEl.addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; pipe=+b.dataset.d; pipeEl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); calcBed();});
-  function calcBed(){
-    const run=n0('run'), dens=n0('d-bed'), waste=1+n0('waste-b')/100;
-    if(run<=0){$('bed-t').innerHTML='0.0<span>t</span>';$('bed-detail').textContent='Pick a pipe size and enter a length';$('bed-loads').textContent='';return;}
-    const m3=BED[pipe]*run, t=m3*dens*waste;
-    $('bed-t').innerHTML=fmt1(t)+'<span>t</span>'; $('bed-detail').textContent=`${pipe} mm × ${run} m · ${m3.toFixed(2)} m³`; $('bed-loads').textContent=loadsText(t,n0('wagon'));
+  // ---- Pipe bedding (from the RJH bedding sheet) ----
+  // dia: [wall mm, typical trench width m]
+  const PIPES={100:[11,0.8],150:[14,0.8],225:[19,0.8],300:[55,0.8],375:[55,1.0],450:[64,1.0],525:[72,1.2],600:[84,1.3],675:[75,1.375],750:[80,1.45],825:[85,1.6],900:[90,1.7],1050:[105,2.0],1200:[120,2.2],1350:[140,2.3],1500:[150,2.4],1800:[180,2.8],2100:[170,3.1],2400:[220,3.4]};
+  let pipe=225, bMat='plastic', bClass='full'; const pipeEl=$('pipe');
+  Object.keys(PIPES).forEach(d=>{const b=document.createElement('button');b.type='button';b.textContent=d;b.dataset.d=d;b.setAttribute('aria-pressed',+d===pipe);pipeEl.appendChild(b);});
+  function applyPipe(){ const [wall,w]=PIPES[pipe]; $('b-wall').value=wall; $('b-width').value=w.toFixed(2);
+    bMat=pipe>=300?'concrete':'plastic'; $('b-mat').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.m===bMat)); applyMat(); }
+  function applyMat(){ const min=bMat==='concrete'?200:150; $('b-under').value=min; $('b-over').value=min; }
+  pipeEl.addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; pipe=+b.dataset.d; pipeEl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); applyPipe(); calcBed();});
+  $('b-mat').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; bMat=b.dataset.m; $('b-mat').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); applyMat(); calcBed();});
+  $('b-class').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; bClass=b.dataset.c; $('b-class').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); calcBed();});
+  function bedModel(){
+    const W=n0('b-width'), L=n0('run'), under=n0('b-under')/1000, over=n0('b-over')/1000, wall=n0('b-wall')/1000;
+    const OD=pipe/1000+2*wall, r=OD/2, pipeA=Math.PI*r*r;
+    let zone, area, label;
+    if(bClass==='full'){ zone=under+OD+over; area=W*zone-pipeA; label='Full surround'; }
+    else if(bClass==='half'){ zone=under+OD/2; area=W*zone-pipeA/2; label='Half barrel (to centreline)'; }
+    else { zone=under; area=W*zone; label='Bed only'; }
+    return {W,L,under,over,wall,OD,r,zone,area:Math.max(0,area),label};
   }
-  ['run','d-bed','waste-b'].forEach(id=>$(id).addEventListener('input',calcBed));
+  function calcBed(){
+    const M=bedModel(); const dens=n0('b-dens'), waste=1+n0('waste-b')/100;
+    drawBed(M);
+    if(M.W<=0||M.L<=0){ $('bed-t').innerHTML='0.0<span>t</span>'; $('bed-detail').textContent='Pick a pipe size, set the trench width and length'; $('bed-loads').textContent=''; $('bed-perm').textContent='–'; $('bed-zone').textContent='–'; return; }
+    const m3=M.area*M.L, t=m3*dens*waste;
+    $('bed-t').innerHTML=fmt1(t)+'<span>t</span>';
+    $('bed-detail').textContent=`${pipe} mm ${bMat==='concrete'?'concrete':'plastic/clay'} · ${M.label} · ${M.W.toFixed(2)} m wide × ${M.L} m · ${m3.toFixed(2)} m³${n0('waste-b')?' + '+n0('waste-b')+'% waste':''}`;
+    $('bed-loads').textContent=loadsText(t,n0('b-wagon'));
+    $('bed-perm').textContent=`${M.area.toFixed(3)} m³ · ${(M.area*dens).toFixed(2)} t`;
+    $('bed-zone').textContent=`${(M.zone*1000).toFixed(0)} mm (bed ${(M.under*1000).toFixed(0)} + ${bClass==='full'?'pipe '+(M.OD*1000).toFixed(0)+' + cover '+(M.over*1000).toFixed(0):bClass==='half'?'half pipe '+(M.OD*500).toFixed(0):''})`.replace(' + )',')');
+  }
+  function drawBed(M){
+    const Wv=560,H=300; const trenchW=Math.max(M.W,0.5); const s=Math.min(380/trenchW,180/Math.max(M.zone+0.15,0.5)); const P=v=>v*s;
+    const cx=Wv/2, bot=250, x1=cx-P(trenchW)/2, x2=cx+P(trenchW)/2;
+    const bedTop=bot-P(M.zone); const pipeCy=bot-P(M.under)-P(M.r);
+    let g=`<svg viewBox="0 0 ${Wv} ${H}">${HATCH}`;
+    // ground either side and below
+    g+=`<rect x="20" y="40" width="${x1-20}" height="${bot-40+20}" fill="url(#h45)"/><rect x="${x2}" y="40" width="${Wv-20-x2}" height="${bot-40+20}" fill="url(#h45)"/><rect x="${x1}" y="${bot}" width="${x2-x1}" height="20" fill="url(#h45)"/>`;
+    g+=`<line x1="${x1}" y1="40" x2="${x1}" y2="${bot}" stroke="#161616" stroke-width="1.6"/><line x1="${x2}" y1="40" x2="${x2}" y2="${bot}" stroke="#161616" stroke-width="1.6"/><line x1="${x1}" y1="${bot}" x2="${x2}" y2="${bot}" stroke="#161616" stroke-width="1.6"/>`;
+    // backfill above bedding (light)
+    g+=`<rect x="${x1}" y="40" width="${x2-x1}" height="${bedTop-40}" fill="#F7F6F2"/>`;
+    // bedding zone
+    if(bClass==='half'){ g+=`<rect x="${x1}" y="${bedTop}" width="${x2-x1}" height="${bot-bedTop}" fill="url(#sand)" stroke="none"/>`; }
+    else g+=`<rect x="${x1}" y="${bedTop}" width="${x2-x1}" height="${bot-bedTop}" fill="url(#sand)"/>`;
+    g+=`<line x1="${x1}" y1="${bedTop}" x2="${x2}" y2="${bedTop}" stroke="#161616" stroke-width="1" stroke-dasharray="5 3"/>`;
+    // pipe
+    g+=`<circle cx="${cx}" cy="${pipeCy}" r="${P(M.r)}" fill="#fff" stroke="#161616" stroke-width="2"/><circle cx="${cx}" cy="${pipeCy}" r="${Math.max(2,P(M.r)-P(M.wall))}" fill="#fff" stroke="#161616" stroke-width="1"/>`;
+    if(bClass==='half'){ // grey out the upper half fill to show it's backfill, bedding only to centreline
+      g+=`<path d="M ${x1} ${bedTop} L ${x2} ${bedTop}" stroke="#161616" stroke-width="1.6"/>`; }
+    g+=svgText(cx,pipeCy+4,`${pipe}`,{a:'middle',w:700,c:'#161616',s:12});
+    // dims
+    g+=dimH(x1,x2,bot+14,`${M.W.toFixed(2)} m trench`);
+    g+=dimV(x1-14,bot-P(M.under),bot,`${(M.under*1000).toFixed(0)} bed`);
+    if(bClass==='full') g+=dimV(x1-14,bedTop,bedTop+P(M.over),`${(M.over*1000).toFixed(0)} cover`);
+    g+=dimV(x2+14,bedTop,bot,`${(M.zone*1000).toFixed(0)} bedding zone`);
+    g+=svgText(x1+6,52,bClass==='bed'?'backfill / surround by others':'selected backfill',{s:9.5});
+    g+=svgText(Wv/2,H-6,`${M.label} · ${bMat==='concrete'?'concrete':'plastic / clay'} pipe · OD ${(M.OD*1000).toFixed(0)} mm · not to scale`,{a:'middle',s:10});
+    $('b-sk').innerHTML=g+'</svg>';
+  }
+  ['run','b-width','b-under','b-over','b-wall','b-dens','waste-b','b-wagon'].forEach(id=>$(id).addEventListener('input',calcBed));
+  applyPipe();
 
 
   // ---- Gradient ----
@@ -1291,8 +1399,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   function cellRow(doc,x,y,w,h,cells){ // cells: [{label,value,w}]
     let cx=x;
     cells.forEach(c=>{ doc.setFillColor(...PAPER); doc.setDrawColor(...LINE); doc.setLineWidth(0.3); doc.rect(cx,y,c.w,h,'FD');
-      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...GREY); doc.text(c.label.toUpperCase(),cx+2.5,y+4);
-      doc.setFont('helvetica',c.bold?'bold':'normal'); doc.setFontSize(c.size||10.5); doc.setTextColor(...INK); doc.text(String(c.value),cx+2.5,y+h-3); cx+=c.w; });
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...GREY); { const lab=c.label.toUpperCase(); const lw=doc.getTextWidth(lab); if(lw>c.w-5) doc.setFontSize(Math.max(4.8,6.5*(c.w-5)/lw)); doc.text(lab,cx+2.5,y+4); }
+      doc.setFont('helvetica',c.bold?'bold':'normal'); let fs=c.size||10.5; doc.setFontSize(fs); doc.setTextColor(...INK); let txt=String(c.value); while(doc.getTextWidth(txt)>c.w-5 && fs>6.5){ fs-=0.5; doc.setFontSize(fs); } while(doc.getTextWidth(txt)>c.w-5 && txt.length>3){ txt=txt.slice(0,-2)+'…'; } doc.text(txt,cx+2.5,y+h-3);
+      cx+=c.w; });
     return y+h;
   }
   function pdfPlan(doc,x0,y0,W,H){
@@ -1963,7 +2072,11 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   pdfActions('th',buildTh,()=>`RJH_TrialHoles_${($('th-site').value.trim()||'site').replace(/\W/g,'')}_${$('th-date').value}.pdf`,'th-status',()=>TH.holes.some(h=>h.layers.length));
 
   // ---- Road dips & travellers ----
-  const dRound=5; let dMode='kerb';
+  const dRound=5; let dMode='kerb', dStart='perm', dTempName='Brick laid flat';
+  const TEMPK=[['Brick laid flat',65],['Brick on edge',102.5],['Edging laid flat',50],['Briquette',65],['Other',0]];
+  TEMPK.forEach(([n,hgt])=>{ const b=document.createElement('button'); b.type='button'; b.textContent=n; b.setAttribute('aria-pressed',n===dTempName); b.addEventListener('click',()=>{ dTempName=n; document.querySelectorAll('#d-tempchips button').forEach(x=>x.setAttribute('aria-pressed',x===b)); if(hgt) $('d-temph').value=hgt; calcDips(); }); $('d-tempchips').appendChild(b); });
+  $('d-start').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; setStart(b.dataset.s); calcDips(); });
+  function setStart(v){ dStart=v; $('d-start').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.s===v)); $('d-tempfields').hidden=v!=='temp'; }
   $('d-date').value=new Date().toISOString().slice(0,10);
   const SLAT={surf:false,bind:false,base:false,sub:true,cap:true};
   $('d-mode').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; setMode(b.dataset.m); calcDips(); });
@@ -1992,7 +2105,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     else { layers.forEach(l=>{ if(SLAT[l.k]) slats.push({k:l.k,n:'Top of '+shortName(l.k),dip:l.top}); }); }
     slats=slats.filter((s,i,a)=>a.findIndex(x=>x.dip===s.dip)===i).sort((a,b)=>b.dip-a.dip);
     slats.forEach(s=>{ s.fromFoot=prof+s.dip; s.belowTop=total-s.dip; });
-    return {kerb,kh,face,bed,race,prof,th,layers,total,bound,sub,cap,topRace,botRace,subBot,l1,l2,short,slats,trav:prof+total,
+    const temp=kerb&&dStart==='temp'; const tempH=temp?n0('d-temph'):0; const binderDip=th.surf; const tempMake=temp?topRace-binderDip-tempH:0;
+    // datum for the dip tables: top of kerb (permanent) or top of temp kerb = binder level
+    const datum=!kerb?0:temp?binderDip:-face; const datumName=!kerb?'finished level':temp?'top of temp kerb (binder level)':'top of kerb';
+    return {kerb,kh,face,bed,race,prof,th,layers,total,bound,sub,cap,topRace,botRace,subBot,l1,l2,short,slats,trav:prof+total,temp,tempH,tempName:dTempName,binderDip,tempMake,datum,datumName,
       name:$('d-name').value.trim(),site:$('d-site').value.trim(),client:$('d-client').value.trim(),by:$('d-by').value.trim(),date:$('d-date').value,ref:$('d-ref').value.trim(),rev:$('d-rev').value.trim()||'A'};
   }
   function calcDips(){
@@ -2000,6 +2116,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     if(M.kerb&&M.face>=M.kh) warn.push('Face showing must be less than the kerb height.');
     if(M.kerb&&M.l1<=0&&M.sub>0) warn.push('No stone under the race: the bottom of the race is at or below the bottom of the sub-base. Check the depths.');
     if(M.kerb&&M.short>0) warn.push(`The race wants to sit ${M.short} mm below the sub-base, so the 1st layer is capped at the full sub-base of ${M.sub} mm. Dig ${M.short} mm deeper under the kerb line.`);
+    if(M.temp&&M.tempMake<0) warn.push(`The ${M.tempName.toLowerCase()} (${M.tempH} mm) stands ${-M.tempMake} mm above binder level on this race. Use a lower temporary kerb or drop the race.`);
     if(!M.layers.length) warn.push('Enter at least one layer.');
     if(!M.kerb&&M.slats.length<2) warn.push('Tick slat on at least one layer.');
     $('d-warn').textContent=warn.join(' ');
@@ -2009,20 +2126,23 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       d.innerHTML=`<span>${i===0?'Top slat':i===M.slats.length-1?'Bottom slat':'Slat '+(i+1)} · ${s.n.toLowerCase()}</span><b>${s.fromFoot} mm from foot${i?` · ${s.belowTop} below top`:''}</b>`; sr.appendChild(d); });
     const d2=document.createElement('div'); d2.className='row'; d2.style.borderColor='#4A4A46'; d2.innerHTML=`<span>Profiles at finished level +${M.prof}</span><b></b>`; sr.appendChild(d2);
     // dips from FL
-    const frl=$('d-frl'); frl.innerHTML='';
-    const rows=[]; if(M.kerb) rows.push(['Top of kerb',-M.face]); rows.push([M.kerb?'FRL / channel':'Finished level',0]);
-    M.layers.forEach(l=>rows.push(['Top of '+shortName(l.k),l.top]));
-    if(M.kerb){ rows.push(['Top of race',M.topRace],['Bottom of race / top of 1st layer',M.botRace]); }
+    const frl=$('d-frl'); frl.innerHTML=''; $('d-fromh').textContent='Dips from '+M.datumName;
+    const rows=[]; if(M.kerb&&!M.temp) rows.push(['Top of kerb',-M.face]); rows.push([M.kerb?'FRL / channel':'Finished level',0]);
+    M.layers.forEach(l=>{ if(l.top>0 && !(M.temp&&l.top===M.binderDip)) rows.push(['Top of '+shortName(l.k),l.top]); });
+    if(M.kerb){ rows.push(['Top of race',M.topRace],['Bottom of race / top of 1st layer',M.botRace]); if(M.temp) rows.push([`Top of temp kerb (${M.tempName.toLowerCase()}) / binder level`,M.binderDip],[`Underside of temp kerb`,M.binderDip+M.tempH]); }
     rows.push(['Formation',M.total]);
+    const fmtDip=v=>{ const d=v-M.datum; return d<0?`${-d} mm up`:d===0?'datum':`${d} mm`; };
     const seen=new Set(); rows.sort((a,b)=>a[1]-b[1]).forEach(([n,v])=>{ const key=n; if(seen.has(key)) return; seen.add(key); const hl=M.slats.some(s=>s.dip===v&&v>0);
-      const tr=document.createElement('tr'); tr.innerHTML=`<td>${hl?'<b>'+n+'</b>':n}</td><td class="n">${hl?'<b>':''}${v<0?'+'+(-v):v} mm${hl?'</b>':''}</td>`; if(hl) tr.style.background='var(--hivis)'; frl.appendChild(tr); });
+      const tr=document.createElement('tr'); tr.innerHTML=`<td>${hl?'<b>'+n+'</b>':n}</td><td class="n">${hl?'<b>':''}${fmtDip(v)}${hl?'</b>':''}</td>`; if(hl) tr.style.background='var(--hivis)'; frl.appendChild(tr); });
     if(M.kerb){ const r2=$('d-race2'); r2.innerHTML='';
-      const froms=[['FRL',0],...M.layers.filter(l=>['surf','bind','base'].includes(l.k)).map(l=>['Top of '+shortName(l.k),l.bot])];
+      const froms=[...(M.datum!==0?[[M.temp?'Top of temp kerb':'Top of kerb',M.datum]]:[]),['FRL',0],...M.layers.filter(l=>['surf','bind','base'].includes(l.k)).map(l=>['Top of '+shortName(l.k),l.bot])];
       froms.forEach(([n,off])=>{ const tr=document.createElement('tr'); const f=v=>v<0?`${-v} mm up`:`${v} mm`; tr.innerHTML=`<td>${n}</td><td class="n"><b>${f(M.topRace-off)}</b></td><td class="n"><b>${f(M.botRace-off)}</b></td>`; r2.appendChild(tr); });
-      $('d-total').textContent=M.total+' mm'; $('d-subv').textContent=M.sub+' mm'; $('d-l1').textContent=M.l1+' mm'; $('d-l2').textContent=M.l2>0?M.l2+' mm':'NA'; }
+      $('d-total').textContent=M.total+' mm'; $('d-subv').textContent=M.sub+' mm'; $('d-l1').textContent=M.l1+' mm'; $('d-l2').textContent=M.l2>0?M.l2+' mm':'NA';
+      const tb=$('d-tempout'); if(tb) tb.hidden=!M.temp; if(M.temp){ $('d-tmake').textContent=`${Math.max(0,M.tempMake)} mm`; $('d-ttop').textContent=`binder level, ${M.binderDip} below FRL`;
+        $('d-tempsum').textContent=`${M.tempName} ${M.tempH} mm set on the race with ${Math.max(0,M.tempMake)} mm of build-up under it, so its top sits at binder level. The ${M.kh} HB kerb goes in later. All dips below are measured from the top of the temporary kerb.`; } }
     drawDips();
   }
-  ['d-name','d-site','d-client','d-by','d-date','d-ref','d-rev','d-kh','d-face','d-bed','d-race','d-prof','d-surf','d-bind','d-base','d-sub','d-cap'].forEach(id=>$(id).addEventListener('input',calcDips));
+  ['d-name','d-site','d-client','d-by','d-date','d-ref','d-rev','d-kh','d-face','d-bed','d-race','d-prof','d-surf','d-bind','d-base','d-sub','d-cap','d-temph'].forEach(id=>$(id).addEventListener('input',calcDips));
   const LCOL={surf:'#3a3a38',bind:'#575753',base:'#75746e',sub:'#EFEEE9',cap:'#DDD9CC'};
   const LCOLP={surf:[58,58,56],bind:[87,87,83],base:[117,116,110],sub:[239,238,233],cap:[221,217,204]};
   // ---- on-screen section (drawing-style) ----
@@ -2073,8 +2193,18 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       if(M.bed>0) g+=`<rect x="${kx}" y="${kerbBotY}" width="${kw}" height="${P(M.bed)}" fill="url(#dp-sand)" stroke="#161616" stroke-width="1"/>`;
       // kerb: HB profile with chamfered front top edge
       const kerbTopY=kerbBotY-P(M.kh); const ch=P(Math.min(20,M.kh*0.08));
-      g+=`<polygon points="${kx},${kerbTopY} ${kx+kw-ch},${kerbTopY} ${kx+kw},${kerbTopY+ch} ${kx+kw},${kerbBotY} ${kx},${kerbBotY}" fill="#fff" stroke="#161616" stroke-width="2"/>`;
-      g+=T(kx+kw/2+4,(kerbTopY+kerbBotY)/2,`${M.kh} HB`,{a:'middle',w:700,c:'#161616',s:10,r:-90});
+      if(M.temp){
+        g+=`<polygon points="${kx},${kerbTopY} ${kx+kw-ch},${kerbTopY} ${kx+kw},${kerbTopY+ch} ${kx+kw},${kerbBotY} ${kx},${kerbBotY}" fill="none" stroke="#8a8a84" stroke-width="1.2" stroke-dasharray="5 3"/>`;
+        g+=T(kx+kw/2+4,(kerbTopY+kerbBotY)/2,`${M.kh} HB later`,{a:'middle',w:600,c:'#8a8a84',s:9.5,r:-90});
+        const tTop=frlY+P(M.binderDip), tBot=tTop+P(M.tempH), make=Math.max(0,M.tempMake);
+        if(make>0) g+=`<rect x="${kx}" y="${tBot}" width="${kw}" height="${P(make)}" fill="url(#dp-conc)" stroke="#161616" stroke-width="1"/>`;
+        g+=`<rect x="${kx}" y="${tTop}" width="${kw}" height="${P(M.tempH)}" fill="#C8553D" stroke="#161616" stroke-width="2"/>`;
+        g+=`<line x1="${kx+kw}" y1="${tTop}" x2="${roadX2}" y2="${tTop}" stroke="#161616" stroke-width=".8" stroke-dasharray="3 3"/>`;
+        g+=T(24,20,`TEMPORARY KERB: ${M.tempName.toUpperCase()} ${M.tempH} · top at binder -${M.binderDip}${make>0?' · on '+make+' make-up':''} · HB later`,{w:700,c:'#C8553D',s:10});
+      } else {
+        g+=`<polygon points="${kx},${kerbTopY} ${kx+kw-ch},${kerbTopY} ${kx+kw},${kerbTopY+ch} ${kx+kw},${kerbBotY} ${kx},${kerbBotY}" fill="#fff" stroke="#161616" stroke-width="2"/>`;
+        g+=T(kx+kw/2+4,(kerbTopY+kerbBotY)/2,`${M.kh} HB`,{a:'middle',w:700,c:'#161616',s:10,r:-90});
+      }
       // footway side ground
       g+=`<rect x="20" y="${kerbTopY}" width="${leftX-20}" height="${botRaceY-kerbTopY}" fill="url(#dp-ground)"/><rect x="${leftX}" y="${kerbTopY}" width="${kx-leftX}" height="${botRaceY-kerbTopY}" fill="url(#dp-ground)"/>`;
       g+=`<line x1="20" y1="${kerbTopY}" x2="${kx}" y2="${kerbTopY}" stroke="#161616" stroke-width="1.8"/>`;
@@ -2084,8 +2214,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       g+=`<line x1="${kx+kw+24}" y1="${kerbTopY}" x2="${kx+kw+24}" y2="${frlY}" stroke="#161616" stroke-width="1"/><line x1="${kx+kw+21}" y1="${kerbTopY+3}" x2="${kx+kw+27}" y2="${kerbTopY-3}" stroke="#161616" stroke-width="1.3"/><line x1="${kx+kw+21}" y1="${frlY+3}" x2="${kx+kw+27}" y2="${frlY-3}" stroke="#161616" stroke-width="1.3"/>`+T(kx+kw+30,(kerbTopY+frlY)/2+4,`${M.face} face`,{w:700,c:'#161616',s:10});
       // dimension chain on the left, all from FRL
       const chain=[[M.topRace,'top of race'],[M.botRace,'btm of race'],[M.subBot,M.cap>0?'top of capping':'formation'],[M.total,'formation']].filter((d,i,a)=>a.findIndex(x=>x[0]===d[0])===i);
-      chain.forEach((d,i)=>{ const x=leftX-16-i*30; g+=ext(x-4,leftX,frlY)+ext(x-4,leftX,frlY+P(d[0]))+dimL(x,frlY,frlY+P(d[0]),`${d[0]} ${d[1]}`); });
-      g+=ext(leftX-16-(chain.length-1)*30-4,roadX,frlY);
+      const dY=frlY+P(M.datum);
+      chain.forEach((d,i)=>{ const x=leftX-16-i*30; g+=ext(x-4,leftX,dY)+ext(x-4,leftX,frlY+P(d[0]))+dimL(x,dY,frlY+P(d[0]),`${d[0]-M.datum} ${d[1]}`); });
+      g+=ext(leftX-16-(chain.length-1)*30-4,M.temp?kx:kx+kw,dY);
       g+=T(roadX2-6,frlY-6,'FRL',{a:'end',w:700,c:'#B3261E',s:11});
     } else {
       const chain=M.slats.filter(sl=>sl.dip>0).slice().reverse();
@@ -2093,7 +2224,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       g+=ext(leftX-16-(chain.length-1)*30-4,roadX,frlY);
       g+=T(roadX2-6,frlY-6,'FINISHED LEVEL',{a:'end',w:700,c:'#B3261E',s:11});
     }
-    g+=T(W/2,H-8,`${M.name||(M.kerb?'Road construction':'Area construction')} · section · mm · not to scale`,{a:'middle',s:10});
+    g+=T(W/2,H-8,`${M.name||(M.kerb?'Road construction':'Area construction')} · dims from ${M.datumName} · not to scale`,{a:'middle',s:10});
     return g+'</svg>';
   }
   function drawDips(){ $('d-sk').innerHTML=dipsSVG(); }
@@ -2113,27 +2244,38 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     // ===== SHEET 1 =====
     let y=pdfHeader(doc,M.kerb?'ROAD BUILD-UP & DIPS':'AREA BUILD-UP & DIPS',sub);
     y=cellRow(doc,Mg,y,CW,11,[{label:'Site',value:M.site||'–',w:CW*0.35},{label:'Client',value:M.client||'–',w:CW*0.25},{label:'Prepared by',value:M.by||'–',w:CW*0.25},{label:'Date',value:fmtDate(M.date),w:CW*0.15}]);
-    if(M.kerb) y=cellRow(doc,Mg,y,CW,11,[{label:'Road / construction type',value:M.name||'–',w:CW*0.4,bold:true},{label:'Kerb',value:`${M.kh} HB · ${M.face} face · ${M.bed} bed`,w:CW*0.35},{label:'Race',value:`${M.race} deep`,w:CW*0.25}]);
+    if(M.kerb) y=cellRow(doc,Mg,y,CW,11,[{label:'Road / construction type',value:M.name||'–',w:CW*0.34,bold:true},{label:'Kerb',value:`${M.kh} HB · ${M.face} face · ${M.bed} bed`,w:CW*0.3},{label:'Race',value:`${M.race} deep`,w:CW*0.14},{label:'Start with',value:M.temp?`Temp ${M.tempName.toLowerCase()} ${M.tempH}`:'Permanent kerb',w:CW*0.22,bold:M.temp}]);
     else y=cellRow(doc,Mg,y,CW,11,[{label:'Area / construction type',value:M.name||'–',w:CW*0.6,bold:true},{label:'Profiles',value:'Finished level +'+M.prof,w:CW*0.4}]);
-    const lc=[...M.layers.map(l=>({label:l.n.replace(' (Type 1)',''),value:l.t+' mm',w:CW/(M.layers.length+1)})),{label:'Total construction',value:M.total+' mm',w:CW/(M.layers.length+1),bold:true}];
+    const lw=(CW-CW*0.22)/Math.max(1,M.layers.length); const lc=[...M.layers.map(l=>({label:l.n.replace(' (Type 1)','').replace(' course',''),value:l.t+' mm',w:lw})),{label:'Total construction',value:M.total+' mm',w:CW*0.22,bold:true}];
     y=cellRow(doc,Mg,y,CW,11,lc); y+=6;
     doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text(M.kerb?'SECTION THROUGH KERB LINE':'SECTION THROUGH THE AREA',Mg,y); y+=3;
     pdfSection1(doc,Mg,y,CW,70); y+=76;
     const tw=(CW-8)/2;
-    const frlN=[]; if(M.kerb) frlN.push(['Top of kerb',-M.face]); frlN.push([M.kerb?'FRL / channel':'Finished level',0]);
-    M.layers.forEach(l=>frlN.push(['Top of '+shortName(l.k),l.top]));
+    const frlN=[]; if(M.kerb&&!M.temp) frlN.push(['Top of kerb',-M.face]); frlN.push([M.kerb?'FRL / channel':'Finished level',0]);
+    M.layers.forEach(l=>{ if(l.top>0 && !(M.temp&&l.top===M.binderDip)) frlN.push(['Top of '+shortName(l.k),l.top]); });
     if(M.kerb) frlN.push(['Top of race',M.topRace],['Bottom of race / top of 1st layer',M.botRace]);
+    if(M.temp) frlN.push([`Top of temp kerb (${M.tempName.toLowerCase()}) / binder`,M.binderDip],['Underside of temp kerb',M.binderDip+M.tempH]);
     frlN.push(['Formation',M.total]);
     const uniqN=[]; frlN.sort((a,b)=>a[1]-b[1]).forEach(r=>{ if(!uniqN.some(u=>u[0]===r[0])) uniqN.push(r); });
-    const uniq=uniqN.map(r=>[r[0],r[1]<0?'+'+(-r[1])+' mm':r[1]===0?'0':r[1]+' mm']);
+    const uniq=uniqN.map(r=>{ const d=r[1]-M.datum; return [r[0],d<0?`${-d} mm up`:d===0?'datum':d+' mm']; });
     const hlIdx=uniqN.map((r,i)=>M.slats.some(s=>s.dip===r[1]&&r[1]>0)?i:-1).filter(i=>i>=0);
-    const y1=tbl(Mg,y,tw,'DIPS FROM '+(M.kerb?'FRL':'FINISHED LEVEL'),[{l:'To',w:tw*0.7},{l:'Dip',w:tw*0.3,r:true}],uniq,hlIdx);
+    const y1=tbl(Mg,y,tw,'DIPS FROM '+M.datumName.toUpperCase(),[{l:'To',w:tw*0.7},{l:'Dip',w:tw*0.3,r:true}],uniq,hlIdx);
     let y2=y;
-    if(M.kerb){ const raceRows=[['FRL',M.topRace+' mm',M.botRace+' mm']]; M.layers.filter(l=>['surf','bind','base'].includes(l.k)).forEach(l=>{ const f=v=>v<0?`${-v} mm up`:`${v} mm`; raceRows.push(['Top of '+shortName(l.k),f(M.topRace-l.bot),f(M.botRace-l.bot)]); });
+    if(M.kerb){ const raceRows=[]; if(M.datum!==0) raceRows.push([M.temp?'Top of temp kerb':'Top of kerb',(M.topRace-M.datum)+' mm',(M.botRace-M.datum)+' mm']); raceRows.push(['FRL',M.topRace+' mm',M.botRace+' mm']); M.layers.filter(l=>['surf','bind','base'].includes(l.k)).forEach(l=>{ const f=v=>v<0?`${-v} mm up`:`${v} mm`; raceRows.push(['Top of '+shortName(l.k),f(M.topRace-l.bot),f(M.botRace-l.bot)]); });
       y2=tbl(Mg+tw+8,y,tw,'DIPS TO THE RACE',[{l:'Measured from',w:tw*0.44},{l:'Top of race',w:tw*0.28,r:true},{l:'Bottom',w:tw*0.28,r:true}],raceRows); }
     else { y2=tbl(Mg+tw+8,y,tw,'TRAVELLER SLATS',[{l:'Slat',w:tw*0.55},{l:'From foot',w:tw*0.25,r:true},{l:'Below top',w:tw*0.2,r:true}],M.slats.map(s=>[s.n,s.fromFoot+' mm',s.belowTop+' mm'])); }
-    y=Math.max(y1,y2)+5;
-    if(M.kerb){ y=cellRow(doc,Mg,y,CW,11,[{label:'Sub-base',value:M.sub+' mm',w:CW*0.25,size:10.5},{label:'1st layer (race sits in)',value:M.l1+' mm',w:CW*0.25,bold:true,size:10.5},{label:'2nd layer (after kerbing)',value:M.l2>0?M.l2+' mm':'NA',w:CW*0.25,size:10.5},{label:M.cap>0?'Capping':'Bituminous',value:(M.cap>0?M.cap:M.bound)+' mm',w:CW*0.25,size:10.5}]); y+=4; }
+    // right column: stone summary and temporary kerb under the race table
+    let yr=y2+4; const rx=Mg+tw+8, hw=tw/2;
+    if(M.kerb){
+      yr=cellRow(doc,rx,yr,tw,11,[{label:'Sub-base',value:M.sub+' mm',w:hw,size:9},{label:'1st layer (race sits in)',value:M.l1+' mm',w:hw,bold:true,size:9}]);
+      yr=cellRow(doc,rx,yr,tw,11,[{label:'2nd layer (after kerbing)',value:M.l2>0?M.l2+' mm':'NA',w:hw,size:9},{label:M.cap>0?'Capping':'Bituminous',value:(M.cap>0?M.cap:M.bound)+' mm',w:hw,size:9}]);
+      if(M.temp){ yr+=3; doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text('TEMPORARY KERB',rx,yr+2); yr+=4.5;
+        yr=cellRow(doc,rx,yr,tw,11,[{label:'Type',value:`${M.tempName} ${M.tempH} mm`,w:hw,bold:true,size:9},{label:'Build-up under it (on the race)',value:Math.max(0,M.tempMake)+' mm',w:hw,bold:true,size:9}]);
+        yr=cellRow(doc,rx,yr,tw,11,[{label:'Top of temp kerb',value:`binder level, ${M.binderDip} below FRL`,w:hw,size:9},{label:'Permanent kerb',value:`${M.kh} HB later`,w:hw,size:9}]); }
+    } else {
+      yr=cellRow(doc,rx,yr,tw,11,[{label:'Total construction',value:M.total+' mm',w:hw,bold:true,size:9},{label:'Traveller',value:M.trav+' mm',w:hw,bold:true,size:9}]);
+    }
+    y=Math.max(y1+4,yr+2);
     doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...GREY);
     const notes=M.kerb?[
       `Top of race: kerb ${M.kh} less face ${M.face} plus bed ${M.bed} = ${M.topRace}`,
@@ -2141,21 +2283,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       `Total: ${M.layers.map(l=>l.t).join(' + ')} = ${M.total}`,
       `1st layer: bottom of sub-base ${M.subBot} less ${M.botRace} = ${M.l1}. Race cast on it.` + (M.short>0?` Capped; dig ${M.short} deeper.`:''),
       M.l2>0?`2nd layer: sub-base ${M.sub} less ${M.l1} = ${M.l2}, after kerbing.`:`No 2nd layer: sub-base used up by the 1st.`,
-      `All figures mm below FRL.`]:[
+      M.temp?`Temp kerb: top at binder ${M.binderDip}, ${M.tempName.toLowerCase()} ${M.tempH}, make-up on race ${Math.max(0,M.tempMake)}.`:`All figures mm below FRL.`]:[
       `Total construction: ${M.layers.map(l=>l.t).join(' + ')} = ${M.total} mm.`,
       `Traveller: profiles ${M.prof} plus total ${M.total} = ${M.trav} mm.`,
       `Slats from the foot: ${M.slats.map(s=>s.fromFoot).join(', ')} mm.`,
       `All figures mm below finished level.`];
-    if(y<241){ const half=(CW-6)/2, top=y; let cy=y, col=0; notes.forEach((n,i)=>{ if(i===Math.ceil(notes.length/2)){ col=1; cy=top; } const l=doc.splitTextToSize('.  '+n,half); doc.text(l,Mg+col*(half+6),cy); cy+=l.length*3.2; }); }
-    titleBlock(252);
+    if(y<247){ const half=(CW-6)/2, top=y; let cy=y, col=0; notes.forEach((n,i)=>{ if(i===Math.ceil(notes.length/2)){ col=1; cy=top; } const l=doc.splitTextToSize('.  '+n,half); doc.text(l,Mg+col*(half+6),cy); cy+=l.length*3.2; }); }
+    titleBlock(258);
     // ===== SHEET 2 =====
     doc.addPage(); y=pdfHeader(doc,'PROFILES & TRAVELLER',sub);
     doc.setFillColor(...INK); doc.roundedRect(Mg,y,CW,14+M.slats.length*7,1.5,1.5,'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...HIVIS); doc.text('ONE TRAVELLER  ·  SLATS MEASURED FROM THE FOOT',Mg+6,y+7);
     doc.setFontSize(24); doc.text(`${M.trav} mm`,Mg+6,y+20);
     doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...PAPER); doc.text(`profiles ${M.prof} + total ${M.total}`,Mg+6,y+26);
-    let ry=y+8; const rx=Mg+CW*0.45, rv=W-Mg-6;
-    M.slats.forEach((s,i)=>{ doc.setFont('helvetica',i===0?'bold':'normal'); doc.setFontSize(9); doc.setTextColor(...(i===0?HIVIS:PAPER)); doc.text(`${i===0?'Top slat':'Slat '+(i+1)}  ·  ${s.n}`,rx,ry); doc.setFont('helvetica','bold'); doc.setTextColor(255,255,255); doc.text(`${s.fromFoot} mm${i?'   ('+s.belowTop+' below top)':''}`,rv,ry,{align:'right'}); doc.setDrawColor(74,74,70); doc.setLineWidth(0.2); doc.line(rx,ry+2,rv,ry+2); ry+=7; });
+    let ry=y+8; const rx2=Mg+CW*0.45, rv=W-Mg-6;
+    M.slats.forEach((s,i)=>{ doc.setFont('helvetica',i===0?'bold':'normal'); doc.setFontSize(9); doc.setTextColor(...(i===0?HIVIS:PAPER)); doc.text(`${i===0?'Top slat':'Slat '+(i+1)}  ·  ${s.n}`,rx2,ry); doc.setFont('helvetica','bold'); doc.setTextColor(255,255,255); doc.text(`${s.fromFoot} mm${i?'   ('+s.belowTop+' below top)':''}`,rv,ry,{align:'right'}); doc.setDrawColor(74,74,70); doc.setLineWidth(0.2); doc.line(rx2,ry+2,rv,ry+2); ry+=7; });
     y+=14+M.slats.length*7+8;
     doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text('ELEVATION',Mg,y); y+=3;
     pdfTravellers(doc,Mg,y,CW,102); y+=108;
@@ -2164,7 +2306,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       `Make one traveller ${M.trav} mm long, top slat at the top.`+(M.slats.length>1?` Fix the other slats at ${M.slats.slice(1).map(s=>s.fromFoot+' mm').join(' and ')} from the foot.`:''),
       `Dig to formation. Sight across the rails: when the TOP slat is on the line, the dig is right.`,
       ...M.slats.slice(1).map((s,i)=>`Lay the ${s.k==='cap'?'capping':s.k==='stone'?'1st layer of stone, '+M.l1+' mm':shortName(s.k)}. Stand the traveller on it: when slat ${i+2} is on the line, it is right.`+(s.k==='stone'?' Cast the race on it.':'')),
-      ...(M.kerb?[M.l2>0?`Set the kerbs, then bring the sub-base up with the 2nd layer of ${M.l2} mm.`:`Set the kerbs. The sub-base is complete at the 1st layer.`]:[]),
+      ...(M.kerb?[M.temp?`Set the temporary kerb (${M.tempName.toLowerCase()} ${M.tempH} mm) on the race with ${Math.max(0,M.tempMake)} mm make-up, top at binder level, then bring the sub-base up${M.l2>0?' with the 2nd layer of '+M.l2+' mm':''}. The ${M.kh} HB kerb goes in later.`:(M.l2>0?`Set the kerbs, then bring the sub-base up with the 2nd layer of ${M.l2} mm.`:`Set the kerbs. The sub-base is complete at the 1st layer.`)]:[]),
       `This traveller is for ${M.name||'this construction'} only. Make a new one for a different construction.`];
     steps.forEach((t,i)=>{ doc.setFillColor(...INK); doc.circle(Mg+2.5,y-1.2,2.5,'F'); doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.text(String(i+1),Mg+2.5,y-0.2,{align:'center'});
       doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...INK); const l=doc.splitTextToSize(t,CW-10); doc.text(l,Mg+8,y); y+=l.length*3.8+1.8; });
@@ -2202,16 +2344,28 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...INK); doc.text(`RACE ${M.race}`,X(rx+rw/2),Y(topRaceY+P(M.race)/2)+1,{align:'center'});
       const kerbBotY=topRaceY-P(M.bed); if(M.bed>0){ doc.setFillColor(251,247,232); doc.setDrawColor(...INK); doc.setLineWidth(0.3); doc.rect(X(kx),Y(kerbBotY),kw,P(M.bed),'FD'); }
       const kerbTopY=kerbBotY-P(M.kh); const ch=P(Math.min(20,M.kh*0.08));
-      doc.setFillColor(255,255,255); doc.setDrawColor(...INK); doc.setLineWidth(0.6);
-      doc.lines([[kw-ch,0],[ch,ch],[0,kerbBotY-kerbTopY-ch],[-kw,0],[0,-(kerbBotY-kerbTopY)]],X(kx),Y(kerbTopY),[1,1],'FD',true);
-      doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.text(`${M.kh} HB`,X(kx)+kw/2+1,Y((kerbTopY+kerbBotY)/2)+doc.getTextWidth(`${M.kh} HB`)/2,{angle:90});
+      if(M.temp){
+        doc.setDrawColor(140,140,132); doc.setLineWidth(0.35); doc.setLineDashPattern([1.2,0.8],0);
+        doc.lines([[kw-ch,0],[ch,ch],[0,kerbBotY-kerbTopY-ch],[-kw,0],[0,-(kerbBotY-kerbTopY)]],X(kx),Y(kerbTopY),[1,1],'D',true); doc.setLineDashPattern([],0);
+        doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(140,140,132); doc.text(`${M.kh} HB later`,X(kx)+kw/2+1,Y((kerbTopY+kerbBotY)/2)+doc.getTextWidth(`${M.kh} HB later`)/2,{angle:90});
+        const tTop=frlY+P(M.binderDip), make=Math.max(0,M.tempMake), tBot=tTop+P(M.tempH);
+        if(make>0){ doc.setFillColor(255,255,255); doc.setDrawColor(...INK); doc.setLineWidth(0.3); doc.rect(X(kx),Y(tBot),kw,P(make),'FD'); doc.setFillColor(138,138,132); for(let yy=tBot+0.9;yy<tBot+P(make)-0.5;yy+=1.6) for(let xx=kx+0.8;xx<kx+kw-0.5;xx+=1.8) doc.circle(X(xx),Y(yy),0.22,'F'); doc.setDrawColor(...INK); doc.rect(X(kx),Y(tBot),kw,P(make)); }
+        doc.setFillColor(200,85,61); doc.setDrawColor(...INK); doc.setLineWidth(0.5); doc.rect(X(kx),Y(tTop),kw,P(M.tempH),'FD');
+        doc.setDrawColor(...INK); doc.setLineWidth(0.25); doc.setLineDashPattern([1,1],0); doc.line(X(kx)+kw,Y(tTop),X(roadX2),Y(tTop)); doc.setLineDashPattern([],0);
+        doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(200,85,61); doc.text(`TEMPORARY KERB: ${M.tempName.toUpperCase()} ${M.tempH}  ·  top at binder level -${M.binderDip}${make>0?'  ·  on '+make+' mm make-up on the race':''}  ·  ${M.kh} HB kerb later`,X(6),Y(4));
+      } else {
+        doc.setFillColor(255,255,255); doc.setDrawColor(...INK); doc.setLineWidth(0.6);
+        doc.lines([[kw-ch,0],[ch,ch],[0,kerbBotY-kerbTopY-ch],[-kw,0],[0,-(kerbBotY-kerbTopY)]],X(kx),Y(kerbTopY),[1,1],'FD',true);
+        doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.text(`${M.kh} HB`,X(kx)+kw/2+1,Y((kerbTopY+kerbBotY)/2)+doc.getTextWidth(`${M.kh} HB`)/2,{angle:90});
+      }
       doc.setDrawColor(185,183,174); doc.setLineWidth(0.2); for(let xx=5;xx<kx;xx+=2.2) doc.line(X(xx),Y(kerbTopY),X(Math.max(xx-2.2,5)),Y(Math.min(kerbTopY+2.2,botRaceY)));
       doc.setDrawColor(...INK); doc.setLineWidth(0.6); doc.line(X(4),Y(kerbTopY),X(kx),Y(kerbTopY));
       doc.setFont('helvetica','bold'); doc.setFontSize(5.8); doc.setTextColor(...GREY); doc.text('FOOTWAY / VERGE',X(5),Y(kerbTopY)-1.5);
       ext(kx+kw,kx+kw+8,kerbTopY); { const x=kx+kw+7; doc.setDrawColor(...INK); doc.setLineWidth(0.3); doc.line(X(x),Y(kerbTopY),X(x),Y(frlY)); [kerbTopY,frlY].forEach(yy=>doc.line(X(x)-1,Y(yy)+1,X(x)+1,Y(yy)-1)); doc.setFont('helvetica','bold'); doc.setFontSize(5.8); doc.setTextColor(...INK); doc.text(`${M.face} face`,X(x)+2,Y((kerbTopY+frlY)/2)+1); }
       const chain=[[M.topRace,'top of race'],[M.botRace,'btm of race'],[M.subBot,M.cap>0?'top of capping':'formation'],[M.total,'formation']].filter((d,i,a)=>a.findIndex(x=>x[0]===d[0])===i);
-      chain.forEach((d,i)=>{ const x=leftX-4-i*7; ext(x-1,leftX,frlY+P(d[0])); dimv(x,frlY,frlY+P(d[0]),`${d[0]} ${d[1]}`); });
-      ext(leftX-4-(chain.length-1)*7-1,roadX,frlY);
+      const dY=frlY+P(M.datum);
+      chain.forEach((d,i)=>{ const x=leftX-4-i*7; ext(x-1,leftX,frlY+P(d[0])); dimv(x,dY,frlY+P(d[0]),`${d[0]-M.datum} ${d[1]}`); });
+      ext(leftX-4-(chain.length-1)*7-1,M.temp?kx:kx+kw,dY);
       doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(179,38,30); doc.text('FRL',X(roadX2)-1.5,Y(frlY)-1.5,{align:'right'});
     } else {
       const chain=M.slats.filter(sl=>sl.dip>0).slice().reverse();
@@ -2219,7 +2373,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       ext(leftX-4-(chain.length-1)*7-1,roadX,frlY);
       doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(179,38,30); doc.text('FINISHED LEVEL',X(roadX2)-1.5,Y(frlY)-1.5,{align:'right'});
     }
-    doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(...GREY); doc.text(`Section  ·  mm below ${M.kerb?'FRL':'finished level'}  ·  not to scale`,X(Wd/2),Y(Ht)-1.5,{align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(...GREY); doc.text(`Section  ·  dimension chain from ${M.datumName}  ·  level labels below ${M.kerb?'FRL':'finished level'}  ·  not to scale`,X(Wd/2),Y(Ht)-1.5,{align:'center'});
   }
   function pdfTravellers(doc,x0,y0,Wd,Ht){
     const M=D; const X=x=>x0+x, Y=y=>y0+y;
@@ -2265,7 +2419,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     if(M.slats.length>1){ doc.setTextColor(120,120,114); doc.text(`ON ${last.n.replace('Top of ','').toUpperCase()}: slat ${M.slats.length} on the line`,X(tx2),Y(formY)+7,{align:'center'}); }
     doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...GREY); doc.text('Same traveller every time. Whichever slat sits on the sight line tells you which level you are on.  ·  not to scale',X(Wd/2),Y(Ht)-2,{align:'center'});
   }
-  $('d-reset').addEventListener('click',()=>{ const dflt={'d-name':'','d-site':'','d-client':'','d-by':'','d-ref':'','d-rev':'','d-date':new Date().toISOString().slice(0,10),'d-kh':'255','d-face':'125','d-bed':'25','d-race':'150','d-prof':'1000','d-surf':'50','d-bind':'70','d-base':'190','d-sub':'200','d-cap':''}; Object.entries(dflt).forEach(([k,v])=>$(k).value=v); Object.assign(SLAT,{surf:false,bind:false,base:false,sub:true,cap:true}); setMode('kerb'); calcDips(); });
+  $('d-reset').addEventListener('click',()=>{ const dflt={'d-name':'','d-site':'','d-client':'','d-by':'','d-ref':'','d-rev':'','d-date':new Date().toISOString().slice(0,10),'d-kh':'255','d-face':'125','d-bed':'25','d-race':'150','d-prof':'1000','d-surf':'50','d-bind':'70','d-base':'190','d-sub':'200','d-cap':''}; Object.entries(dflt).forEach(([k,v])=>$(k).value=v); Object.assign(SLAT,{surf:false,bind:false,base:false,sub:true,cap:true}); setMode('kerb'); setStart('perm'); calcDips(); });
   pdfActions('d',buildDips,()=>`RJH_RoadDips_${(D.name||'road').replace(/\W/g,'')}.pdf`,'d-status',()=>true);
   setMode('kerb');
 
@@ -2337,8 +2491,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   // Road dips
   registerSave('dips',{section:'panel-dips',
     name:()=>V('d-name').trim()?`Dips · ${V('d-name').trim()}`:'', site:()=>V('d-site').trim(),
-    get:()=>({f:['d-name','d-kh','d-face','d-bed','d-race','d-prof','d-surf','d-bind','d-base','d-sub','d-site','d-client','d-by','d-date','d-ref','d-rev','d-cap'].map(V),mode:dMode,slat:{...SLAT}}),
-    set:d=>{ ['d-name','d-kh','d-face','d-bed','d-race','d-prof','d-surf','d-bind','d-base','d-sub','d-site','d-client','d-by','d-date','d-ref','d-rev','d-cap'].forEach((id,i)=>{ if(d.f[i]!==undefined) S(id,d.f[i]); }); if(d.slat) Object.assign(SLAT,d.slat); setMode(d.mode||'kerb'); calcDips(); },
+    get:()=>({f:['d-name','d-kh','d-face','d-bed','d-race','d-prof','d-surf','d-bind','d-base','d-sub','d-site','d-client','d-by','d-date','d-ref','d-rev','d-cap','d-temph'].map(V),mode:dMode,slat:{...SLAT},start:dStart,tempName:dTempName}),
+    set:d=>{ ['d-name','d-kh','d-face','d-bed','d-race','d-prof','d-surf','d-bind','d-base','d-sub','d-site','d-client','d-by','d-date','d-ref','d-rev','d-cap','d-temph'].forEach((id,i)=>{ if(d.f[i]!==undefined) S(id,d.f[i]); }); if(d.slat) Object.assign(SLAT,d.slat); if(d.tempName){ dTempName=d.tempName; document.querySelectorAll('#d-tempchips button').forEach(x=>x.setAttribute('aria-pressed',x.textContent===dTempName)); } setStart(d.start||'perm'); setMode(d.mode||'kerb'); calcDips(); },
     clear:()=>{ $('d-reset').click(); },
     hasContent:d=>d.f&&d.f[0] });
 
