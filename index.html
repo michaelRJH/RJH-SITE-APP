@@ -565,6 +565,20 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   .saverow .unsent{background:#EFEEE9;color:var(--ink-2)}
   .savegroup{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-2);padding:10px 0 2px;border-bottom:2px solid var(--ink);margin-bottom:2px}
 
+  .fd-tools{display:flex;gap:6px;margin:8px 0}
+  .fd-tools .tb{appearance:none;border:2px solid var(--ink);background:var(--field);color:var(--ink);border-radius:var(--r);font:inherit;font-weight:700;font-size:13px;padding:7px 10px;cursor:pointer;min-width:38px}
+  .fd-tools .tb[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+  .fd-canvas{background:#fff;border:2px solid var(--ink);border-radius:var(--r);overflow:hidden;touch-action:none;user-select:none}
+  .fd-canvas svg{display:block;width:100%}
+  .fd-side{border:2px solid var(--ink);border-left:8px solid var(--hivis);border-radius:var(--r);background:var(--field);padding:10px 12px 6px;margin:10px 0}
+  .fd-side .lhead{margin-bottom:8px;align-items:center}
+  .fdi .lrow,.fdi .lhead{grid-template-columns:1.2fr 1.1fr 1.4fr 0.6fr 32px}
+  .fd-sec{margin-bottom:10px}
+
+  .fst .lrow{grid-template-columns:1fr 1fr 32px}
+  .fst .lhead{grid-template-columns:1fr 1fr 32px}
+  .fd-canvas .drag{cursor:grab}
+
 </style>
 </head>
 <body>
@@ -597,7 +611,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 <div class="wrap">
   <header>
     <img src="data:image/png;base64,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" alt="R.J. Howard Engineers Ltd, Civil Engineering Contractors">
-    <div class="sub"><h1>Site Calculator</h1><small id="ver">v18 · offline</small></div>
+    <div class="sub"><h1>Site Calculator</h1><small id="ver">v20 · offline</small></div>
   </header>
 
   <!-- HOME -->
@@ -630,6 +644,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     <div class="grid">
       <button class="tile rec" data-go="panel-dw"><b>Dayworks</b><span>Signed sheet, PDF</span></button>
       <button class="tile rec" data-go="panel-th"><b>Trial holes</b><span>Log with sketch, PDF</span></button>
+      <button class="tile rec" data-go="panel-fd"><b>Foundations</b><span>Plot record, draw the footing</span></button>
     </div>
     <h2>Saved on this phone</h2>
     <button class="btn" type="button" id="home-saved">Show saved sheets</button>
@@ -937,6 +952,109 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       <button class="btn" type="button" id="d-reset">Reset</button>
     </div>
     <p class="note" id="d-status">One sheet per road type or area. Print it for the cabin wall.</p>
+  </section>
+
+  <!-- FOUNDATIONS -->
+  <section id="panel-fd" data-title="Foundation record" hidden>
+    <h2>Plot</h2>
+    <div class="grid2">
+      <div class="field"><label for="fd-dev">Developer</label><div class="in"><input id="fd-dev" type="text" placeholder="Strata"></div></div>
+      <div class="field"><label for="fd-site">Site</label><div class="in"><input id="fd-site" type="text" placeholder="Expression"></div></div>
+      <div class="field"><label for="fd-plot">Plot</label><div class="in"><input id="fd-plot" type="text" placeholder="12"></div></div>
+      <div class="field"><label for="fd-type">House type</label><div class="in"><input id="fd-type" type="text" placeholder="H3-2100 Bologna"></div></div>
+      <div class="field"><label for="fd-ftype">Foundation type</label><div class="in"><input id="fd-ftype" type="text" value="Engineered strip"></div></div>
+      <div class="field"><label for="fd-ffl">FFL</label><div class="in"><input id="fd-ffl" type="number" inputmode="decimal" step="0.001" placeholder="102.250"><span class="unit">m</span></div></div>
+      <div class="field"><label for="fd-by">By</label><div class="in"><input id="fd-by" type="text" placeholder="Name"></div></div>
+      <div class="field"><label for="fd-date">Date</label><div class="in"><input id="fd-date" type="date"></div></div>
+    </div>
+
+    <h2>Draw the footing</h2>
+    <p class="note">Tap the corners in order round the house. Sides snap square. Tap the first corner again to close. Then tap a side to true it up, or drag a corner to move it.</p>
+    <div class="fd-tools">
+      <button type="button" class="tb" id="fd-mode-draw" aria-pressed="true">Corners</button>
+      <button type="button" class="tb" id="fd-mode-wall" aria-pressed="false">Internal wall</button>
+      <button type="button" class="tb" id="fd-undo">Undo</button>
+      <button type="button" class="tb" id="fd-clear">Clear</button>
+      <span style="flex:1"></span>
+      <button type="button" class="tb" id="fd-fit">Fit</button>
+      <button type="button" class="tb" id="fd-zoom-out">−</button>
+      <button type="button" class="tb" id="fd-zoom-in">+</button>
+    </div>
+    <div class="fd-canvas" id="fd-canvas"></div>
+    <div class="fd-tools" style="margin-top:8px">
+      <button type="button" class="tb" id="fd-tpl-list">House types ▾</button>
+      <button type="button" class="tb" id="fd-tpl-save">Save as house type</button>
+    </div>
+    <div class="savelist" id="fd-tpl-box" hidden></div>
+    <div class="warn" id="fd-warn"></div>
+    <div id="fd-side" class="fd-side" hidden>
+      <div class="lhead" style="grid-template-columns:1fr auto"><span id="fd-side-title">Side A–B</span><button type="button" class="x" id="fd-side-close" style="height:28px;width:28px;border-radius:4px">×</button></div>
+      <div class="row3">
+        <div class="field"><label for="fs-len">Length</label><div class="in"><input id="fs-len" type="number" inputmode="decimal" step="0.05"><span class="unit">m</span></div></div>
+        <div class="field"><label for="fs-w">Width</label><div class="in"><input id="fs-w" type="number" inputmode="numeric" step="25"><span class="unit">mm</span></div></div>
+        <div class="field"><label for="fs-label">Name (optional)</label><div class="in"><input id="fs-label" type="text" placeholder="Front"></div></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label for="fs-conc">Concrete</label><div class="in"><input id="fs-conc" type="number" inputmode="numeric" step="25"><span class="unit">mm</span></div></div>
+        <div class="field"><label for="fs-exc">Excavation (design)</label><div class="in"><input id="fs-exc" type="number" inputmode="numeric" step="25"><span class="unit">mm</span></div></div>
+        <div class="field"><label for="fs-excA">As dug (if deeper)</label><div class="in"><input id="fs-excA" type="number" inputmode="numeric" step="25" placeholder="as design"><span class="unit">mm</span></div></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label for="fs-tb">Trench block</label><div class="in"><input id="fs-tb" type="number" inputmode="numeric" step="75"><span class="unit">mm</span></div></div>
+        <div class="field"><label for="fs-fb">Commons + facings</label><div class="in"><input id="fs-fb" type="number" inputmode="numeric" step="75"><span class="unit">mm</span></div></div>
+        <div class="field"><label>Steps in this side</label><button class="btn" type="button" id="fs-addstep" style="margin:0;padding:9px">+ Add step</button></div>
+      </div>
+      <div class="fst" id="fs-steps"></div>
+      <div class="btnrow" style="margin-top:4px"><button class="btn" type="button" id="fs-apply-all">Apply depths to all sides</button><button class="btn" type="button" id="fs-delete">Delete this side</button></div>
+    </div>
+
+    <h2>Standard build-up for the plot</h2>
+    <p class="note">New sides start with these. Change a side by tapping it on the drawing.</p>
+    <div class="row3">
+      <div class="field"><label for="fd-w">Width</label><div class="in"><input id="fd-w" type="number" inputmode="numeric" step="25" value="600"><span class="unit">mm</span></div></div>
+      <div class="field"><label for="fd-conc">Concrete depth</label><div class="in"><input id="fd-conc" type="number" inputmode="numeric" step="25" value="450"><span class="unit">mm</span></div></div>
+      <div class="field"><label for="fd-exc">Excavation depth</label><div class="in"><input id="fd-exc" type="number" inputmode="numeric" step="25" value="650"><span class="unit">mm</span></div></div>
+      <div class="field"><label for="fd-tb">Trench block</label><div class="in"><input id="fd-tb" type="number" inputmode="numeric" step="75" value="375"><span class="unit">mm</span></div></div>
+      <div class="field"><label for="fd-fb">Commons + facings</label><div class="in"><input id="fd-fb" type="number" inputmode="numeric" step="75" value="375"><span class="unit">mm</span></div></div>
+      <div class="field"><label for="fd-dpc">FFL to DPC</label><div class="in"><input id="fd-dpc" type="number" inputmode="numeric" step="25" value="150"><span class="unit">mm</span></div></div>
+    </div>
+
+    <h2>Sides</h2>
+    <table class="out"><thead><tr><th>Side</th><th class="n">Length</th><th class="n">Width</th><th class="n">Conc</th><th class="n">Exc</th><th class="n">m³</th></tr></thead><tbody id="fd-rows"></tbody></table>
+    <div class="stat"><div class="box"><small>Design concrete</small><b id="fd-m3d">–</b></div><div class="box"><small>Extra for over-dig and steps</small><b id="fd-m3x">–</b></div></div>
+
+    <h2>Build-up sections</h2>
+    <div id="fd-sections"></div>
+    <h2>Steps</h2>
+    <div id="fd-stepsecs"><p class="note">Add a step to a side and its long section appears here.</p></div>
+
+    <h2>Concrete</h2>
+    <div class="ticket" aria-live="polite">
+      <p class="eyebrow">Approx concrete from the drawing</p>
+      <p class="big" id="fd-m3">0.00<span>m³</span></p>
+      <div class="row"><span>Delivered (from tickets)</span><b><input id="fd-poured" type="number" inputmode="decimal" step="0.5" placeholder="0.0" style="width:90px;font:inherit;font-weight:700;text-align:right;border:0;border-bottom:2px solid var(--ink);background:transparent"> m³</b></div>
+      <div class="row"><span>Difference</span><b id="fd-diff">–</b></div>
+    </div>
+    <div class="field" style="margin-top:12px"><label for="fd-reason">Over-dig / extra concrete reason and who instructed it</label><div class="in"><input id="fd-reason" type="text" placeholder="e.g. soft spot at C–D, engineer J Smith instructed 300 deeper"></div></div>
+
+    <h2>Inspections</h2>
+    <div class="fdi"><div class="lhead"><span>Phase</span><span>Date</span><span>NHBC details</span><span>Score</span><span></span></div><div id="fd-insp"></div></div>
+    <button class="btn" type="button" id="fd-addinsp">+ Add inspection</button>
+
+    <h2>Photos</h2>
+    <label class="btn filebtn">Add photos<input type="file" id="fd-photo" accept="image/*" multiple></label>
+    <div class="photos" id="fd-photos"></div>
+
+    <h2>Comments</h2>
+    <div class="field"><textarea id="fd-notes" placeholder="Anything to record"></textarea></div>
+
+    <div class="btnrow">
+      <button class="btn primary" type="button" id="fd-share">Share PDF</button>
+      <button class="btn primary" type="button" id="fd-download">Download PDF</button>
+      <button class="btn" type="button" id="fd-open">Open PDF</button>
+      <button class="btn" type="button" id="fd-copy">Copy summary</button>
+    </div>
+    <p class="note" id="fd-status">Two-sheet record: plan and side table, then build-up sections, concrete, inspections and sign-off.</p>
   </section>
 
   <!-- DAYWORKS -->
@@ -1640,6 +1758,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     'panel-radius':[`Halving and quartering: enter any two of radius, chord and mid-ordinate. String the chord, offset the middle, then halve each half. The tables give every offset.`,`Offsets from tangent: string a line along the tangent from the start of the curve and offset square off it at each peg.`,`Radius is to the kerb face. Peg spacing defaults to one kerb, 915 mm.`],
     'panel-dips':[`Kerbed road: kerb, bed and race set the dips; the layers set the total construction. Area: layers only.`,`Profiles sit at +1000 above finished level. The traveller is cut to the formation, with a slat for each level the lads check: dig, capping, top of the 1st layer of stone.`,`Starting with a temporary kerb? Choose it and the dips are measured from its top, which is binder level, and it tells you the build-up under it on the race.`],
     'panel-dw':[`Hours and quantities only, no rates. Fill in labour, plant and materials, add photos, get the client rep to sign with a finger, then Share PDF.`,`Save it first so it is on the phone if the signal drops. The office prices it.`,`Instructed by is the person who asked for the work. That name matters later.`],
+    'panel-fd':[`Tap the corners of the house in order. Sides snap square. Tap the first corner again to close. Then tap a side to type its real length off the drawing, or drag a corner to move it. Undo goes back as many steps as you like.`,`Tap a side to set its width, depths and a name (Front, Bay). Put the as-dug depth in if you went deeper than design and the extra concrete is worked out and shown in pink. Add a step to a side and it draws the long section with the lap. Save the drawing as a house type and next plot of that type is one tap.`,`It draws a section for every different build-up from formation to FFL, gives design concrete and the extra for over-dig and steps, and you type the delivered total from the tickets. Inspections, photos, comments, then Share PDF.`],
     'panel-th':[`One sheet per site, as many holes as you dig. Add a hole, give it a reference and location, then tap materials in order from the top and set the depth each one goes down to.`,`Water strike, standing level, sides and services go on the log. Add a photo of the face.`,`The PDF draws every hole side by side to the same scale with a summary table and key.`]
   };
   PANELS.forEach(pnl=>{ const txt=HELP[pnl.id]; if(!txt) return; const bar=pnl.querySelector('.toolbar'); if(!bar) return;
@@ -1946,7 +2065,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     $(inputId).addEventListener('change',async e=>{ for(const f of e.target.files){ const d=await shrink(f); store().push(d); } e.target.value=''; render(); });
     return render; }
   function shrink(file){ return new Promise(res=>{ const im=new Image(); im.onload=()=>{ const max=1200; const sc=Math.min(1,max/Math.max(im.width,im.height)); const c=document.createElement('canvas'); c.width=im.width*sc; c.height=im.height*sc; c.getContext('2d').drawImage(im,0,0,c.width,c.height); res(c.toDataURL('image/jpeg',0.72)); URL.revokeObjectURL(im.src); }; im.src=URL.createObjectURL(file); }); }
-  const TOOL_OF_PREFIX={g:'grad',dw:'dw',th:'th',d:'dips'};
+  const TOOL_OF_PREFIX={g:'grad',dw:'dw',th:'th',d:'dips',fd:'fd'};
   function pdfActions(prefix,build,nameFn,statusId,validFn){ const sentHook=()=>{ if(typeof markSent==='function') markSent(TOOL_OF_PREFIX[prefix]); };
     const ok=()=>{ if(!validFn()){ toast('Fill in the sheet first'); return false; } if(!window.jspdf){ $(statusId).textContent='PDF tool not loaded. Reload the page.'; return false; } return true; };
     const err=e=>{ $(statusId).textContent='PDF error: '+(e.message||e); toast('PDF error'); };
@@ -2474,6 +2593,288 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   pdfActions('d',buildDips,()=>`RJH_RoadDips_${(D.name||'road').replace(/\W/g,'')}.pdf`,'d-status',()=>true);
   setMode('kerb');
 
+  // ---- Foundation record: tap the corners, true it up, record the pour ----
+  $('fd-date').value=new Date().toISOString().slice(0,10);
+  const FD={pts:[],closed:false,sides:[],walls:[],photos:[],mode:'draw',sel:null,wallStart:null,ppm:22,ox:1,oy:1,drag:null,hist:[]};
+  const GRID=0.5; const SNAP=v=>Math.round(v/GRID)*GRID;
+  const std=()=>({w:n0('fd-w'),conc:n0('fd-conc'),exc:n0('fd-exc'),tb:n0('fd-tb'),fb:n0('fd-fb'),excA:'',label:'',steps:[]});
+  const fdRender=photoStore('fd-photo','fd-photos',()=>FD.photos);
+  const cv=$('fd-canvas'); const CW_=560, CH_=380;
+  const snap=()=>JSON.stringify({pts:FD.pts,sides:FD.sides,walls:FD.walls,closed:FD.closed});
+  const push=()=>{ FD.hist.push(snap()); if(FD.hist.length>40) FD.hist.shift(); };
+  function toM(e){ const r=cv.getBoundingClientRect(); const sx=CW_/r.width; const px=(e.clientX-r.left)*sx, py=(e.clientY-r.top)*sx; return {x:SNAP(px/FD.ppm-FD.ox), y:SNAP(py/FD.ppm-FD.oy)}; }
+  const P=(x,y)=>[(x+FD.ox)*FD.ppm,(y+FD.oy)*FD.ppm];
+  const letter=i=>{ let s=''; i=i+1; while(i>0){ const m=(i-1)%26; s=String.fromCharCode(65+m)+s; i=Math.floor((i-1)/26); } return s; };
+  const sideName=i=>`${letter(i)}–${letter((i+1)%FD.pts.length)}`;
+  const sideLen=i=>{ const a=FD.pts[i], b=FD.pts[(i+1)%FD.pts.length]; return Math.hypot(b.x-a.x,b.y-a.y); };
+  const lapFor=(drop,depth)=>Math.max(depth,2*drop,300);   // Approved Document A: overlap at least the foundation thickness, twice the step, or 300
+  function orderClockwise(){ if(FD.pts.length<3) return; let area=0; for(let i=0;i<FD.pts.length;i++){ const a=FD.pts[i], b=FD.pts[(i+1)%FD.pts.length]; area+=a.x*b.y-b.x*a.y; }
+    if(area<0){ FD.pts.reverse(); FD.sides.reverse(); FD.sides.push(FD.sides.shift()); }
+    let k=0; FD.pts.forEach((p,i)=>{ const q=FD.pts[k]; if(p.y<q.y-1e-9||(Math.abs(p.y-q.y)<1e-9&&p.x<q.x)) k=i; });
+    FD.pts=FD.pts.slice(k).concat(FD.pts.slice(0,k)); FD.sides=FD.sides.slice(k).concat(FD.sides.slice(0,k)); }
+  function distToSeg(p,a,b){ const dx=b.x-a.x, dy=b.y-a.y; const L2=dx*dx+dy*dy; let t=L2?((p.x-a.x)*dx+(p.y-a.y)*dy)/L2:0; t=Math.max(0,Math.min(1,t)); return Math.hypot(p.x-(a.x+t*dx),p.y-(a.y+t*dy)); }
+  function moveCorner(i,m){ const n=FD.pts.length, prev=FD.pts[(i-1+n)%n], next=FD.pts[(i+1)%n], cur=FD.pts[i];
+    // keep the two adjacent sides square: whichever axis the neighbour shared, it keeps sharing
+    if(n>=3){ if(prev.y===cur.y) prev.y=m.y; else prev.x=m.x; if(next.y===cur.y) next.y=m.y; else next.x=m.x; }
+    FD.pts[i]={x:m.x,y:m.y}; }
+  cv.addEventListener('pointerdown',e=>{ e.preventDefault(); const m=toM(e);
+    if(FD.mode==='wall'){ if(!FD.closed){ toast('Close the outline first'); return; } if(!FD.wallStart){ FD.wallStart=m; drawFd(); return; }
+      let b={...m}; if(Math.abs(b.x-FD.wallStart.x)>Math.abs(b.y-FD.wallStart.y)) b.y=FD.wallStart.y; else b.x=FD.wallStart.x;
+      if(Math.hypot(b.x-FD.wallStart.x,b.y-FD.wallStart.y)<GRID){ FD.wallStart=null; drawFd(); return; }
+      push(); FD.walls.push({a:FD.wallStart,b,...std(),w:450}); FD.wallStart=null; drawFd(); return; }
+    if(FD.closed){
+      const ci=FD.pts.findIndex(p=>Math.hypot(p.x-m.x,p.y-m.y)<=0.45);
+      if(ci>=0){ FD.drag={i:ci,moved:false,from:snap()}; cv.setPointerCapture(e.pointerId); return; }
+      let best=null,bd=0.45; for(let i=0;i<FD.pts.length;i++){ const d=distToSeg(m,FD.pts[i],FD.pts[(i+1)%FD.pts.length]); if(d<bd){ bd=d; best={t:'side',i}; } }
+      FD.walls.forEach((w,i)=>{ const d=distToSeg(m,w.a,w.b); if(d<bd){ bd=d; best={t:'wall',i}; } });
+      FD.sel=best; openSide(); drawFd(); return; }
+    if(FD.pts.length>=3 && Math.hypot(m.x-FD.pts[0].x,m.y-FD.pts[0].y)<=0.6){ closeShape(); return; }
+    let p={...m}; if(FD.pts.length){ const q=FD.pts[FD.pts.length-1]; if(Math.abs(p.x-q.x)>Math.abs(p.y-q.y)) p.y=q.y; else p.x=q.x; if(p.x===q.x&&p.y===q.y) return; }
+    push(); FD.pts.push(p); FD.sides.push(std()); drawFd(); });
+  cv.addEventListener('pointermove',e=>{ if(!FD.drag) return; const m=toM(e); const cur=FD.pts[FD.drag.i]; if(m.x===cur.x&&m.y===cur.y) return; FD.drag.moved=true; moveCorner(FD.drag.i,m); drawFd(); });
+  const endDrag=e=>{ if(!FD.drag) return; const d=FD.drag; FD.drag=null; if(d.moved){ FD.hist.push(d.from); if(FD.hist.length>40) FD.hist.shift(); orderClockwise(); FD.sel=null; $('fd-side').hidden=true; drawFd(); } };
+  cv.addEventListener('pointerup',endDrag); cv.addEventListener('pointercancel',endDrag);
+  function closeShape(){ push(); const n=FD.pts.length; const a=FD.pts[n-1], b=FD.pts[0];
+    if(a.x!==b.x && a.y!==b.y){ const prev=FD.pts[n-2]; const p=(prev.y===a.y)?{x:a.x,y:b.y}:{x:b.x,y:a.y}; FD.pts.push(p); FD.sides.push(std()); }
+    FD.closed=true; orderClockwise(); FD.sel=null; $('fd-side').hidden=true; drawFd(); toast('Closed. Tap a side to true it up, drag a corner to move it.'); }
+  $('fd-mode-draw').addEventListener('click',()=>setFdMode('draw')); $('fd-mode-wall').addEventListener('click',()=>setFdMode('wall'));
+  function setFdMode(m){ FD.mode=m; FD.wallStart=null; $('fd-mode-draw').setAttribute('aria-pressed',m==='draw'); $('fd-mode-wall').setAttribute('aria-pressed',m==='wall'); drawFd(); }
+  $('fd-undo').addEventListener('click',()=>{ const s=FD.hist.pop(); if(!s){ toast('Nothing to undo'); return; } const o=JSON.parse(s); FD.pts=o.pts; FD.sides=o.sides; FD.walls=o.walls; FD.closed=o.closed; FD.sel=null; FD.wallStart=null; $('fd-side').hidden=true; drawFd(); });
+  $('fd-clear').addEventListener('click',()=>{ if(!confirm('Clear the drawing?')) return; push(); FD.pts=[]; FD.sides=[]; FD.walls=[]; FD.closed=false; FD.sel=null; $('fd-side').hidden=true; drawFd(); });
+  $('fd-zoom-in').addEventListener('click',()=>{ FD.ppm=Math.min(60,FD.ppm*1.25); drawFd(); }); $('fd-zoom-out').addEventListener('click',()=>{ FD.ppm=Math.max(8,FD.ppm/1.25); drawFd(); });
+  $('fd-fit').addEventListener('click',()=>{ if(!FD.pts.length) return; const xs=FD.pts.map(p=>p.x), ys=FD.pts.map(p=>p.y); const w=Math.max(...xs)-Math.min(...xs), h=Math.max(...ys)-Math.min(...ys); FD.ppm=Math.max(8,Math.min(60,Math.min((CW_-90)/Math.max(w,1),(CH_-90)/Math.max(h,1)))); FD.ox=2-Math.min(...xs); FD.oy=2-Math.min(...ys); drawFd(); });
+  // ---- side editor ----
+  function selObj(){ if(!FD.sel) return null; return FD.sel.t==='side'?FD.sides[FD.sel.i]:FD.walls[FD.sel.i]; }
+  function openSide(){ const o=selObj(); if(!o){ $('fd-side').hidden=true; return; } $('fd-side').hidden=false; o.steps=o.steps||[];
+    const len=FD.sel.t==='side'?sideLen(FD.sel.i):Math.hypot(o.b.x-o.a.x,o.b.y-o.a.y);
+    $('fd-side-title').textContent=FD.sel.t==='side'?`Side ${sideName(FD.sel.i)}${o.label?' · '+o.label:''}`:`Internal wall ${FD.sel.i+1}${o.label?' · '+o.label:''}`;
+    $('fs-len').value=len.toFixed(2); $('fs-w').value=o.w; $('fs-label').value=o.label||''; $('fs-conc').value=o.conc; $('fs-exc').value=o.exc; $('fs-excA').value=o.excA||''; $('fs-tb').value=o.tb; $('fs-fb').value=o.fb;
+    renderSteps(); $('fd-side').scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  function renderSteps(){ const o=selObj(); const box=$('fs-steps'); box.innerHTML=''; if(!o||!o.steps.length) return;
+    box.innerHTML='<div class="lhead"><span>Distance from start (m)</span><span>Drop (mm)</span><span></span></div>';
+    o.steps.forEach((st,i)=>{ const r=document.createElement('div'); r.className='lrow'; r.innerHTML=`<div class="in"><input type="number" inputmode="decimal" step="0.05" value="${st.at}"></div><div class="in"><input type="number" inputmode="numeric" step="75" value="${st.drop}"></div><button type="button" class="x">×</button>`;
+      const ins=r.querySelectorAll('input'); ins[0].addEventListener('input',()=>{ st.at=parseFloat(ins[0].value)||0; drawFd(); }); ins[1].addEventListener('input',()=>{ st.drop=parseFloat(ins[1].value)||0; drawFd(); }); r.querySelector('.x').addEventListener('click',()=>{ push(); o.steps.splice(i,1); renderSteps(); drawFd(); }); box.appendChild(r); }); }
+  $('fs-addstep').addEventListener('click',()=>{ const o=selObj(); if(!o) return; push(); o.steps=o.steps||[]; const len=FD.sel.t==='side'?sideLen(FD.sel.i):Math.hypot(o.b.x-o.a.x,o.b.y-o.a.y); o.steps.push({at:+(len/2).toFixed(2),drop:300}); renderSteps(); drawFd(); });
+  $('fd-side-close').addEventListener('click',()=>{ FD.sel=null; $('fd-side').hidden=true; drawFd(); });
+  ['fs-w','fs-conc','fs-exc','fs-excA','fs-tb','fs-fb','fs-label'].forEach(id=>$(id).addEventListener('input',()=>{ const o=selObj(); if(!o) return; o.w=n0('fs-w'); o.conc=n0('fs-conc'); o.exc=n0('fs-exc'); o.excA=$('fs-excA').value; o.tb=n0('fs-tb'); o.fb=n0('fs-fb'); o.label=$('fs-label').value.trim(); drawFd(); }));
+  $('fs-len').addEventListener('change',()=>{ const L=parseFloat($('fs-len').value); if(!(L>0)||!FD.sel) return; push();
+    if(FD.sel.t==='wall'){ const w=FD.walls[FD.sel.i]; const dx=Math.sign(w.b.x-w.a.x), dy=Math.sign(w.b.y-w.a.y); w.b={x:w.a.x+dx*L,y:w.a.y+dy*L}; drawFd(); return; }
+    const i=FD.sel.i, n=FD.pts.length, a=FD.pts[i], b=FD.pts[(i+1)%n]; const cur=sideLen(i); const dx=Math.sign(b.x-a.x), dy=Math.sign(b.y-a.y); const d=L-cur;
+    for(let k=i+1;k<n;k++){ FD.pts[k]={x:FD.pts[k].x+dx*d,y:FD.pts[k].y+dy*d}; }
+    drawFd(); });
+  $('fs-apply-all').addEventListener('click',()=>{ const o=selObj(); if(!o) return; push(); FD.sides.forEach(s=>{ s.conc=o.conc; s.exc=o.exc; s.tb=o.tb; s.fb=o.fb; }); FD.walls.forEach(s=>{ s.conc=o.conc; s.exc=o.exc; s.tb=o.tb; s.fb=o.fb; }); drawFd(); toast('Applied to all sides'); });
+  $('fs-delete').addEventListener('click',()=>{ if(!FD.sel) return; push(); if(FD.sel.t==='wall'){ FD.walls.splice(FD.sel.i,1); } else { FD.pts.splice(FD.sel.i,1); FD.sides.splice(FD.sel.i,1); if(FD.pts.length<3) FD.closed=false; } FD.sel=null; $('fd-side').hidden=true; drawFd(); });
+  // ---- house type templates ----
+  $('fd-tpl-save').addEventListener('click',async()=>{ if(!FD.closed){ toast('Close the outline first'); return; } const name=(prompt('Name for this house type',$('fd-type').value.trim()||'')||'').trim(); if(!name) return;
+    const data={pts:FD.pts,sides:FD.sides,walls:FD.walls,closed:true,ppm:FD.ppm,std:['fd-w','fd-conc','fd-exc','fd-tb','fd-fb','fd-dpc','fd-ftype'].map(id=>$(id).value)};
+    try{ await DB.put({id:'fdtpl-'+Date.now(),tool:'fdtpl',name,site:$('fd-dev').value.trim(),date:new Date().toISOString(),data}); toast('Saved house type: '+name); }catch(e){ toast('Could not save'); } });
+  $('fd-tpl-list').addEventListener('click',async()=>{ const box=$('fd-tpl-box'); if(!box.hidden){ box.hidden=true; return; } const all=(await DB.all()).filter(r=>r.tool==='fdtpl').sort((a,b)=>a.name.localeCompare(b.name)); box.innerHTML=all.length?'':'<p class="note">No house types saved yet. Draw one, then tap Save as house type.</p>';
+    all.forEach(r=>{ const row=document.createElement('div'); row.className='saverow'; row.innerHTML=`<div><b>${r.name}</b><small>${r.site?r.site+' · ':''}${r.data.pts.length} corners · saved ${new Date(r.date).toLocaleDateString('en-GB')}</small></div><button type="button" class="open">Use</button><button type="button" class="x">×</button>`;
+      row.querySelector('.open').addEventListener('click',()=>{ push(); const d=r.data; FD.pts=JSON.parse(JSON.stringify(d.pts)); FD.sides=JSON.parse(JSON.stringify(d.sides)); FD.walls=JSON.parse(JSON.stringify(d.walls)); FD.closed=true; FD.ppm=d.ppm||22; if(d.std) ['fd-w','fd-conc','fd-exc','fd-tb','fd-fb','fd-dpc','fd-ftype'].forEach((id,i)=>{ if(d.std[i]!==undefined) $(id).value=d.std[i]; }); if(!$('fd-type').value.trim()) $('fd-type').value=r.name; FD.sel=null; $('fd-side').hidden=true; box.hidden=true; drawFd(); toast('Loaded '+r.name); });
+      row.querySelector('.x').addEventListener('click',async()=>{ if(!confirm('Delete house type "'+r.name+'"?')) return; await DB.del(r.id); row.remove(); }); box.appendChild(row); }); box.hidden=false; });
+  // ---- model ----
+  function fdModel(){
+    const n=FD.pts.length; const ffl=num('fd-ffl'), dpc=n0('fd-dpc');
+    const enrich=(s,L,name)=>{ const excA=parseFloat(s.excA); const over=(!isNaN(excA)&&excA>s.exc)?excA-s.exc:0; const concEff=s.conc+over; const steps=(s.steps||[]).filter(st=>st.drop>0).map(st=>({...st,lap:lapFor(st.drop,concEff)}));
+      const stepM3=steps.reduce((a,st)=>a+st.lap/1000*s.w/1000*st.drop/1000,0); return {...s,name,L,over,concEff,steps,m3d:L*s.w/1000*s.conc/1000,m3:L*s.w/1000*concEff/1000+stepM3,stepM3,overM3:L*s.w/1000*over/1000}; };
+    const sides=FD.closed?FD.pts.map((p,i)=>{ const s=enrich(FD.sides[i],sideLen(i),sideName(i)); s.a=p; s.b=FD.pts[(i+1)%n]; return s; }):[];
+    const outerW=sides.length?Math.max(...sides.map(s=>s.w)):600;
+    const walls=FD.walls.map((w,i)=>{ const L=Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y); const s=enrich(w,Math.max(0,L-outerW/1000),'Int '+(i+1)); s.Lraw=L; return s; });
+    const all=[...sides,...walls]; const m3=all.reduce((a,s)=>a+s.m3,0), m3d=all.reduce((a,s)=>a+s.m3d,0), m3x=m3-m3d;
+    let closeErr=null; if(FD.closed&&n>=3){ const sx=sides.reduce((a,s)=>a+(s.b.x-s.a.x),0), sy=sides.reduce((a,s)=>a+(s.b.y-s.a.y),0); if(Math.abs(sx)>1e-6||Math.abs(sy)>1e-6) closeErr={sx,sy}; }
+    const key=s=>`${s.w}|${s.conc}|${s.exc}|${s.tb}|${s.fb}|${s.over}`; const groups={}; all.forEach(s=>{ (groups[key(s)]=groups[key(s)]||{...s,names:[]}).names.push(s.name+(s.label?' '+s.label:'')); });
+    const builds=Object.values(groups).map(g=>{ const toc=isNaN(ffl)?NaN:ffl-dpc/1000-(g.tb+g.fb)/1000; const form=isNaN(toc)?NaN:toc-g.concEff/1000; const gl=isNaN(form)?NaN:form+(g.exc+g.over)/1000; return {...g,toc,form,gl,dpcAbove:g.tb+g.fb+g.conc-g.exc}; });
+    return {n,ffl,dpc,sides,walls,all,m3,m3d,m3x,closeErr,builds,poured:parseFloat($('fd-poured').value)||0,
+      dev:$('fd-dev').value.trim(),site:$('fd-site').value.trim(),plot:$('fd-plot').value.trim(),type:$('fd-type').value.trim(),ftype:$('fd-ftype').value.trim(),by:$('fd-by').value.trim(),date:$('fd-date').value,reason:$('fd-reason').value.trim(),notes:$('fd-notes').value.trim(),
+      insp:[...$('fd-insp').querySelectorAll('.lrow')].map(r=>[...r.querySelectorAll('input')].map(i=>i.value.trim())).filter(v=>v.some(x=>x))};
+  }
+  const FDM={};
+  // ---- plan (SVG) ----
+  function planSVG(){
+    const W=CW_,H=CH_,ppm=FD.ppm; let g=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+    g+=`<defs><pattern id="fdgrid" width="${GRID*ppm}" height="${GRID*ppm}" patternUnits="userSpaceOnUse" x="${FD.ox*ppm}" y="${FD.oy*ppm}"><path d="M ${GRID*ppm} 0 L 0 0 0 ${GRID*ppm}" fill="none" stroke="#E4E2DB" stroke-width="1"/></pattern><pattern id="fdgrid5" width="${5*GRID*ppm}" height="${5*GRID*ppm}" patternUnits="userSpaceOnUse" x="${FD.ox*ppm}" y="${FD.oy*ppm}"><path d="M ${5*GRID*ppm} 0 L 0 0 0 ${5*GRID*ppm}" fill="none" stroke="#CFCDC4" stroke-width="1.2"/></pattern></defs>`;
+    g+=`<rect width="${W}" height="${H}" fill="url(#fdgrid)"/><rect width="${W}" height="${H}" fill="url(#fdgrid5)"/>`;
+    const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.s||11}" font-weight="${o.w||600}" fill="${o.c||'#161616'}" text-anchor="${o.a||'middle'}" style="${F}">${t}</text>`;
+    const n=FD.pts.length;
+    const band=(a,b,w,sel,over)=>{ const [x1,y1]=P(a.x,a.y),[x2,y2]=P(b.x,b.y); return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${sel?'#F2A900':over?'#F3C9BE':'#D9D6CC'}" stroke-width="${Math.max(6,w/1000*ppm)}" stroke-linecap="square"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#161616" stroke-width="1.6" stroke-dasharray="${sel?'':'6 3'}"/>`; };
+    if(FD.closed){ FD.pts.forEach((p,i)=>{ const s=FD.sides[i]; g+=band(p,FD.pts[(i+1)%n],s.w,FD.sel&&FD.sel.t==='side'&&FD.sel.i===i,parseFloat(s.excA)>s.exc); }); }
+    else { for(let i=0;i<n-1;i++){ const [x1,y1]=P(FD.pts[i].x,FD.pts[i].y),[x2,y2]=P(FD.pts[i+1].x,FD.pts[i+1].y); g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#161616" stroke-width="2"/>`; } }
+    FD.walls.forEach((w,i)=>{ g+=band(w.a,w.b,w.w,FD.sel&&FD.sel.t==='wall'&&FD.sel.i===i,parseFloat(w.excA)>w.exc); });
+    // step marks
+    const stepMark=(a,b,st,w)=>{ const L=Math.hypot(b.x-a.x,b.y-a.y)||1; const t=Math.min(1,Math.max(0,st.at/L)); const [x,y]=P(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t); const horiz=a.y===b.y; const h=Math.max(8,w/1000*ppm/2+6); return `<line x1="${horiz?x:x-h}" y1="${horiz?y-h:y}" x2="${horiz?x:x+h}" y2="${horiz?y+h:y}" stroke="#B3261E" stroke-width="3"/>`+T(horiz?x:x+h+4,horiz?y-h-4:y+4,`step ${st.drop}`,{s:9,c:'#B3261E',a:horiz?'middle':'start'}); };
+    if(FD.closed) FD.pts.forEach((p,i)=>{ (FD.sides[i].steps||[]).forEach(st=>{ g+=stepMark(p,FD.pts[(i+1)%n],st,FD.sides[i].w); }); });
+    FD.walls.forEach(w=>(w.steps||[]).forEach(st=>{ g+=stepMark(w.a,w.b,st,w.w); }));
+    if(FD.wallStart){ const [x,y]=P(FD.wallStart.x,FD.wallStart.y); g+=`<circle cx="${x}" cy="${y}" r="6" fill="#F2A900" stroke="#161616" stroke-width="1.5"/>`; }
+    FD.pts.forEach((p,i)=>{ const [x,y]=P(p.x,p.y); const dragging=FD.drag&&FD.drag.i===i; g+=`<circle cx="${x}" cy="${y}" r="${dragging?9:i===0&&!FD.closed?9:6}" fill="${dragging||(i===0&&!FD.closed)?'#F2A900':'#fff'}" stroke="#161616" stroke-width="2"/>`;
+      if(FD.closed){ const cx=FD.pts.reduce((a,q)=>a+q.x,0)/n, cy=FD.pts.reduce((a,q)=>a+q.y,0)/n; const dx=p.x-cx, dy=p.y-cy; const L=Math.hypot(dx,dy)||1; g+=T(x+dx/L*20,y+dy/L*20+4,letter(i),{s:13,w:800}); } });
+    if(FD.closed){ const cx=FD.pts.reduce((a,q)=>a+q.x,0)/n, cy=FD.pts.reduce((a,q)=>a+q.y,0)/n;
+      FD.pts.forEach((p,i)=>{ const q=FD.pts[(i+1)%n]; const mx=(p.x+q.x)/2, my=(p.y+q.y)/2; const horiz=p.y===q.y; const out=horiz?(my<cy?-1:1):(mx<cx?-1:1); const off=(FD.sides[i].w/1000*ppm)/2+14;
+        const [x,y]=P(mx,my); const tx=horiz?x:x+out*off, ty=horiz?y+out*off+(out>0?8:0):y+4; const s=FD.sides[i]; const L=sideLen(i); const bw=L<1.2?38:60;
+        g+=`<rect x="${tx-bw/2}" y="${ty-11}" width="${bw}" height="15" rx="3" fill="#fff" stroke="#161616" stroke-width="1"/>`+T(tx,ty,`${L.toFixed(2)}`,{s:L<1.2?9.5:11});
+        if(L>=1.5) g+=T(horiz?x:x-out*off*0.6, horiz?y-out*off*0.6+4:y+4, `${s.w}${s.label?' '+s.label:''}`,{s:9,c:'#4A4A46',w:500}); }); }
+    FD.walls.forEach((w,i)=>{ const [x,y]=P((w.a.x+w.b.x)/2,(w.a.y+w.b.y)/2); const L=Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y); g+=`<rect x="${x-30}" y="${y-19}" width="60" height="15" rx="3" fill="#fff" stroke="#161616" stroke-width="1"/>`+T(x,y-8,`${L.toFixed(2)} · ${w.w}`,{s:10}); });
+    if(!n) g+=T(W/2,H/2,'Tap the first corner',{s:14,c:'#8a8a84',w:500});
+    else if(!FD.closed) g+=T(W/2,H-10,`${n} corner${n===1?'':'s'} · tap the first corner again to close`,{s:11,c:'#4A4A46',w:500});
+    g+=T(W-8,14,`grid ${GRID} m`,{s:10,c:'#8a8a84',a:'end',w:500});
+    return g+'</svg>';
+  }
+  function fitView(){ if(!FD.pts.length){ FD.ox=1; FD.oy=1; return; } const xs=FD.pts.map(p=>p.x).concat(FD.walls.flatMap(w=>[w.a.x,w.b.x])), ys=FD.pts.map(p=>p.y).concat(FD.walls.flatMap(w=>[w.a.y,w.b.y])); FD.ox=Math.max(FD.ox,2-Math.min(...xs)); FD.oy=Math.max(FD.oy,2-Math.min(...ys)); }
+  function drawFd(){ fitView(); const M=fdModel(); Object.assign(FDM,M); cv.innerHTML=planSVG();
+    const warn=[]; if(M.closeErr) warn.push(`The outline does not close: sides are out by ${Math.abs(M.closeErr.sx).toFixed(2)} m across and ${Math.abs(M.closeErr.sy).toFixed(2)} m up and down. Check the lengths.`);
+    M.builds.forEach(b=>{ if(b.dpcAbove<150) warn.push(`${b.names.join(', ')}: DPC only ${b.dpcAbove} mm above ground (block ${b.tb} + brick ${b.fb} + concrete ${b.conc} − excavation ${b.exc}). Needs 150.`); if(b.conc>b.exc) warn.push(`${b.names.join(', ')}: concrete ${b.conc} is deeper than the excavation ${b.exc}.`); });
+    M.all.forEach(s=>s.steps.forEach(st=>{ if(st.at>s.L) warn.push(`${s.name}: step at ${st.at} m is beyond the end of the side (${s.L.toFixed(2)} m).`); }));
+    $('fd-warn').textContent=warn.join(' ');
+    const rows=$('fd-rows'); rows.innerHTML='';
+    M.all.forEach(s=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td><b>${s.name}</b>${s.label?' <small>'+s.label+'</small>':''}${s.steps.length?' <small style="color:#B3261E">'+s.steps.length+' step'+(s.steps.length>1?'s':'')+'</small>':''}</td><td class="n">${s.L.toFixed(2)} m</td><td class="n">${s.w}</td><td class="n">${s.concEff}${s.over?' <small>(+'+s.over+')</small>':''}</td><td class="n">${s.exc+s.over}${s.over?' <small style="color:#B3261E">dug</small>':''}</td><td class="n"><b>${s.m3.toFixed(2)}</b></td>`; rows.appendChild(tr); });
+    if(!M.sides.length) rows.innerHTML='<tr><td colspan="6" style="color:var(--ink-2)">Close the outline to see the sides</td></tr>';
+    $('fd-m3').innerHTML=M.m3.toFixed(2)+'<span>m³</span>'; $('fd-m3d').textContent=M.m3d.toFixed(2)+' m³'; $('fd-m3x').textContent=(M.m3x>0?'+':'')+M.m3x.toFixed(2)+' m³';
+    $('fd-diff').textContent=M.poured?`${(M.poured-M.m3>=0?'+':'')}${(M.poured-M.m3).toFixed(2)} m³ (${M.m3?((M.poured-M.m3)/M.m3*100).toFixed(0):'–'}%)`:'enter delivered';
+    const sec=$('fd-sections'); sec.innerHTML=''; M.builds.forEach(b=>{ const d=document.createElement('div'); d.className='sk fd-sec'; d.innerHTML=sectionSVG(b,M); sec.appendChild(d); });
+    if(!M.builds.length) sec.innerHTML='<p class="note">Sections appear once the outline is closed.</p>';
+    const ss=$('fd-stepsecs'); ss.innerHTML=''; const stepped=M.all.filter(s=>s.steps.length); stepped.forEach(s=>{ const d=document.createElement('div'); d.className='sk fd-sec'; d.innerHTML=stepSVG(s,M); ss.appendChild(d); });
+    if(!stepped.length) ss.innerHTML='<p class="note">Add a step to a side and its long section appears here.</p>';
+  }
+  // ---- build-up section (SVG) ----
+  function sectionSVG(b,M){
+    const W=560,H=300; const s=0.22, Pm=v=>v*s; const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.s||10.5}" font-weight="${o.w||600}" fill="${o.c||'#161616'}" text-anchor="${o.a||'start'}" ${o.r?`transform="rotate(${o.r} ${x} ${y})"`:''} style="${F}">${t}</text>`;
+    const cx=300, ww=Math.max(30,Pm(b.w)); const fflY=40; const dpcY=fflY+Pm(M.dpc); const tocY=dpcY+Pm(b.tb+b.fb); const fbY=dpcY+Pm(b.fb); const botD=tocY+Pm(b.conc); const botY=tocY+Pm(b.concEff); const glY=botY-Pm(b.exc+b.over);
+    let g=`<svg viewBox="0 0 ${W} ${H}">${HATCH}`;
+    g+=`<rect x="20" y="${glY}" width="${cx-ww/2-20}" height="${H-glY-20}" fill="url(#h45)"/><rect x="${cx+ww/2}" y="${glY}" width="${W-20-cx-ww/2}" height="${H-glY-20}" fill="url(#h45)"/><rect x="${cx-ww/2}" y="${botY}" width="${ww}" height="${H-botY-20}" fill="url(#h45)"/>`;
+    g+=`<line x1="20" y1="${glY}" x2="${cx-ww/2}" y2="${glY}" stroke="#161616" stroke-width="1.6"/><line x1="${cx+ww/2}" y1="${glY}" x2="${W-20}" y2="${glY}" stroke="#161616" stroke-width="1.6"/>`;
+    g+=`<rect x="${cx-ww/2}" y="${glY}" width="${ww}" height="${botY-glY}" fill="#F7F6F2" stroke="#161616" stroke-width="1.4"/>`;
+    g+=`<rect x="${cx-ww/2}" y="${tocY}" width="${ww}" height="${botY-tocY}" fill="url(#conc)" stroke="#161616" stroke-width="1.6"/>`;
+    if(b.over>0){ g+=`<rect x="${cx-ww/2}" y="${botD}" width="${ww}" height="${botY-botD}" fill="#F3C9BE" fill-opacity=".8" stroke="#B3261E" stroke-width="1.2" stroke-dasharray="4 2"/>`+T(cx,(botD+botY)/2+4,`+${b.over} over-dig`,{a:'middle',s:9.5,c:'#B3261E'}); }
+    const bw=Math.max(22,Pm(300)); const bx=cx-bw/2;
+    if(b.tb>0){ g+=`<rect x="${bx}" y="${fbY}" width="${bw}" height="${tocY-fbY}" fill="#EFEEE9" stroke="#161616" stroke-width="1.2"/>`; for(let y=fbY+Pm(225);y<tocY-2;y+=Pm(225)) g+=`<line x1="${bx}" y1="${y}" x2="${bx+bw}" y2="${y}" stroke="#161616" stroke-width=".7"/>`; }
+    if(b.fb>0){ g+=`<rect x="${bx}" y="${dpcY}" width="${bw}" height="${fbY-dpcY}" fill="#E8C4B0" stroke="#161616" stroke-width="1.2"/>`; for(let y=dpcY+Pm(75);y<fbY-1;y+=Pm(75)) g+=`<line x1="${bx}" y1="${y}" x2="${bx+bw}" y2="${y}" stroke="#161616" stroke-width=".6"/>`; }
+    g+=`<line x1="${bx-6}" y1="${dpcY}" x2="${bx+bw+6}" y2="${dpcY}" stroke="#B3261E" stroke-width="2.5"/>`+T(bx+bw+10,dpcY+4,`DPC${isNaN(M.ffl)?'':' '+fmt3(M.ffl-M.dpc/1000)}`,{c:'#B3261E'});
+    g+=`<line x1="${bx-40}" y1="${fflY}" x2="${bx+bw+40}" y2="${fflY}" stroke="#161616" stroke-width="1.2" stroke-dasharray="6 3"/>`+T(bx+bw+10,fflY-4,`FFL${isNaN(M.ffl)?'':' '+fmt3(M.ffl)}`,{w:700});
+    g+=T(cx+ww/2+8,tocY+4,`TOC${isNaN(b.toc)?'':' '+fmt3(b.toc)}`,{s:10}); g+=T(cx+ww/2+8,botY+4,`formation${isNaN(b.form)?'':' '+fmt3(b.form)}`,{s:10}); g+=T(W-24,glY-5,`GL${isNaN(b.gl)?'':' '+fmt3(b.gl)}`,{s:10,a:'end'});
+    g+=dimV(cx-ww/2-16,glY,botY,`${b.exc+b.over} exc`); g+=dimV(cx-ww/2-44,tocY,botY,`${b.concEff} conc`); g+=dimV(bx-18,fbY,tocY,`${b.tb} block`); g+=dimV(bx-18,dpcY,fbY,`${b.fb} brick`); g+=dimV(bx-46,fflY,dpcY,`${M.dpc}`);
+    g+=dimH(cx-ww/2,cx+ww/2,botY+18,`${b.w}`);
+    g+=T(W/2,H-6,`${b.names.join(', ')} · formation to FFL · mm · not to scale`,{a:'middle',s:10,w:500,c:'#4A4A46'});
+    return g+'</svg>';
+  }
+  // ---- stepped long section (SVG) ----
+  function stepSVG(s,M){
+    const W=560,H=240; const T=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.s||10.5}" font-weight="${o.w||600}" fill="${o.c||'#161616'}" text-anchor="${o.a||'start'}" style="${F}">${t}</text>`;
+    const steps=s.steps.slice().sort((a,b)=>a.at-b.at); const totalDrop=steps.reduce((a,st)=>a+st.drop,0);
+    const x1=40,x2=W-40; const sx=(x2-x1)/Math.max(s.L,0.1); const vs=Math.min(0.25,110/Math.max(totalDrop+s.concEff,300)); const Pv=v=>v*vs;
+    const topY0=60; let g=`<svg viewBox="0 0 ${W} ${H}">${HATCH}`;
+    // build the profile: segments between steps, each dropping by drop; lap drawn as the higher level continuing past the step
+    let curTop=topY0, x=x1; const segs=[]; let prevAt=0;
+    steps.forEach(st=>{ const xs=x1+st.at*sx; segs.push({x0:x,x1:xs,top:curTop}); x=xs; curTop+=Pv(st.drop); });
+    segs.push({x0:x,x1:x2,top:curTop});
+    const d=Pv(s.concEff);
+    segs.forEach(sg=>{ g+=`<rect x="${sg.x0}" y="${sg.top}" width="${sg.x1-sg.x0}" height="${d}" fill="url(#conc)" stroke="#161616" stroke-width="1.6"/>`; });
+    // laps: higher segment overlaps lower by lap length beyond the step
+    steps.forEach((st,i)=>{ const xs=x1+st.at*sx; const lapPx=Math.min(st.lap/1000*sx,x2-xs); const top=segs[i].top; g+=`<rect x="${xs}" y="${top}" width="${lapPx}" height="${d}" fill="url(#conc)" stroke="#161616" stroke-width="1.6"/>`;
+      g+=`<line x1="${xs}" y1="${top+d-1}" x2="${xs}" y2="${segs[i+1].top}" stroke="#161616" stroke-width="1.6"/>`;
+      g+=dimH(xs,xs+lapPx,top-12,`lap ${st.lap}`); g+=dimV(xs+lapPx+14,top,segs[i+1].top,`drop ${st.drop}`);
+      g+=T(xs,H-38,`step at ${st.at.toFixed(2)} m`,{a:'middle',s:10,c:'#B3261E'}); g+=`<line x1="${xs}" y1="${segs[i+1].top+d}" x2="${xs}" y2="${H-48}" stroke="#B3261E" stroke-width="1" stroke-dasharray="3 3"/>`; });
+    g+=dimH(x1,x2,H-16,`${s.name}${s.label?' '+s.label:''} · ${s.L.toFixed(2)} m`);
+    g+=T(x1,topY0-30,`${letter(FD.pts.findIndex(p=>p===s.a))||'start'}`,{s:12,w:800}); g+=T(x2,topY0-30,`${s.b?letter(FD.pts.findIndex(p=>p===s.b)):'end'}`,{s:12,w:800,a:'end'});
+    g+=T(x1,topY0-8,`TOC${isNaN(M.ffl)?'':' '+fmt3(M.ffl-M.dpc/1000-(s.tb+s.fb)/1000)}`,{s:10}); g+=T(x2,curTop+d+14,`${s.concEff} thick · ${s.w} wide`,{s:10,a:'end'});
+    g+=T(W/2,H-4,`Long section · lap = greater of thickness, 2 × step, 300 (Approved Document A) · not to scale`,{a:'middle',s:9.5,w:500,c:'#4A4A46'});
+    return g+'</svg>';
+  }
+  ['fd-ffl','fd-dpc','fd-poured','fd-w','fd-conc','fd-exc','fd-tb','fd-fb','fd-dev','fd-site','fd-plot','fd-type','fd-ftype','fd-by','fd-date','fd-reason','fd-notes'].forEach(id=>$(id).addEventListener('input',()=>{ if(['fd-w','fd-conc','fd-exc','fd-tb','fd-fb'].includes(id)&&!FD.closed){ FD.sides.forEach(s=>Object.assign(s,{w:n0('fd-w'),conc:n0('fd-conc'),exc:n0('fd-exc'),tb:n0('fd-tb'),fb:n0('fd-fb')})); } drawFd(); }));
+  $('fd-addinsp').addEventListener('click',()=>listRow($('fd-insp'),[{p:'Foundation'},{p:'Date',t:'date'},{p:'Details'},{p:'Score',t:'number'}],drawFd).querySelector('input').focus());
+  // ---- summary + PDF ----
+  function fdSummary(){ const M=FDM; let s=`RJH FOUNDATION RECORD · Plot ${M.plot||'?'} · ${M.site}\n${M.type} · ${M.ftype} · FFL ${isNaN(M.ffl)?'?':fmt3(M.ffl)}\n`; M.all.forEach(x=>s+=`${x.name}${x.label?' '+x.label:''}: ${x.L.toFixed(2)} m × ${x.w} wide, conc ${x.concEff}, exc ${x.exc+x.over}${x.over?' (over-dig +'+x.over+')':''}${x.steps.length?', '+x.steps.length+' step(s)':''}\n`); s+=`Concrete: design ${M.m3d.toFixed(2)} m3, with over-dig and steps ${M.m3.toFixed(2)} m3${M.poured?`, delivered ${M.poured} m3`:''}\n${M.by} · ${fmtDate(M.date)}`; return s; }
+  $('fd-copy').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(fdSummary()); toast('Copied'); }catch(e){ toast('Could not copy'); } });
+  function pdfPlan_fd(doc,x0,y0,Wd,Ht,M){
+    doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.rect(x0,y0,Wd,Ht);
+    if(!FD.pts.length){ doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...GREY); doc.text('No outline drawn',x0+Wd/2,y0+Ht/2,{align:'center'}); return; }
+    const xs=FD.pts.map(p=>p.x).concat(FD.walls.flatMap(w=>[w.a.x,w.b.x])), ys=FD.pts.map(p=>p.y).concat(FD.walls.flatMap(w=>[w.a.y,w.b.y]));
+    const minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys); const pad=16; const sc=Math.min((Wd-2*pad)/Math.max(maxx-minx,1),(Ht-2*pad)/Math.max(maxy-miny,1));
+    const X=x=>x0+pad+(x-minx)*sc+((Wd-2*pad)-(maxx-minx)*sc)/2, Y=y=>y0+pad+(y-miny)*sc+((Ht-2*pad)-(maxy-miny)*sc)/2; const n=FD.pts.length;
+    const band=(a,b,w,over)=>{ doc.setDrawColor(...(over?[243,201,190]:[217,214,204])); doc.setLineWidth(Math.max(1.5,w/1000*sc)); doc.setLineCap('square'); doc.line(X(a.x),Y(a.y),X(b.x),Y(b.y)); doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.setLineDashPattern([1.5,1],0); doc.line(X(a.x),Y(a.y),X(b.x),Y(b.y)); doc.setLineDashPattern([],0); };
+    FD.pts.forEach((p,i)=>band(p,FD.pts[(i+1)%n],FD.sides[i].w,parseFloat(FD.sides[i].excA)>FD.sides[i].exc)); FD.walls.forEach(w=>band(w.a,w.b,w.w,parseFloat(w.excA)>w.exc));
+    const mark=(a,b,st,w)=>{ const L=Math.hypot(b.x-a.x,b.y-a.y)||1; const t=Math.min(1,Math.max(0,st.at/L)); const x=X(a.x+(b.x-a.x)*t), y=Y(a.y+(b.y-a.y)*t); const horiz=a.y===b.y; const h=Math.max(2.5,w/1000*sc/2+1.5); doc.setDrawColor(179,38,30); doc.setLineWidth(0.9); if(horiz) doc.line(x,y-h,x,y+h); else doc.line(x-h,y,x+h,y); doc.setFont('helvetica','bold'); doc.setFontSize(5.5); doc.setTextColor(179,38,30); doc.text(`step ${st.drop}`,horiz?x:x+h+1,horiz?y-h-1:y+1,{align:horiz?'center':'left'}); };
+    FD.pts.forEach((p,i)=>(FD.sides[i].steps||[]).forEach(st=>mark(p,FD.pts[(i+1)%n],st,FD.sides[i].w))); FD.walls.forEach(w=>(w.steps||[]).forEach(st=>mark(w.a,w.b,st,w.w)));
+    const cx=FD.pts.reduce((a,q)=>a+q.x,0)/n, cy=FD.pts.reduce((a,q)=>a+q.y,0)/n;
+    FD.pts.forEach((p,i)=>{ doc.setFillColor(255,255,255); doc.setDrawColor(...INK); doc.setLineWidth(0.5); doc.circle(X(p.x),Y(p.y),1.6,'FD'); const dx=p.x-cx,dy=p.y-cy,L=Math.hypot(dx,dy)||1; doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...INK); doc.text(letter(i),X(p.x)+dx/L*5.5,Y(p.y)+dy/L*5.5+1.2,{align:'center'});
+      const q=FD.pts[(i+1)%n]; const mx=(p.x+q.x)/2,my=(p.y+q.y)/2; const horiz=p.y===q.y; const out=horiz?(my<cy?-1:1):(mx<cx?-1:1); const off=(FD.sides[i].w/1000*sc)/2+4; const Ls=sideLen(i);
+      const tx=horiz?X(mx):X(mx)+out*off, ty=horiz?Y(my)+out*off+(out>0?2:-0.5):Y(my)+1; doc.setFont('helvetica','bold'); doc.setFontSize(Ls<1.2?6:7); const t=`${Ls.toFixed(2)}`; const tw=doc.getTextWidth(t)+2; doc.setFillColor(255,255,255); doc.setDrawColor(...INK); doc.setLineWidth(0.25); doc.rect(tx-tw/2,ty-2.6,tw,3.6,'FD'); doc.text(t,tx,ty,{align:'center'});
+      if(Ls>=1.5){ doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...GREY); doc.text(`${FD.sides[i].w}${FD.sides[i].label?' '+FD.sides[i].label:''}`,horiz?X(mx):X(mx)-out*off*0.5,horiz?Y(my)-out*off*0.5+1:Y(my)+1,{align:'center'}); } });
+    FD.walls.forEach(w=>{ const L=Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y); doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...INK); const t=`${L.toFixed(2)} · ${w.w}`; const tw=doc.getTextWidth(t)+2; const tx=X((w.a.x+w.b.x)/2), ty=Y((w.a.y+w.b.y)/2)-3; doc.setFillColor(255,255,255); doc.setDrawColor(...INK); doc.setLineWidth(0.25); doc.rect(tx-tw/2,ty-2.6,tw,3.6,'FD'); doc.text(t,tx,ty,{align:'center'}); });
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...GREY); doc.text('Plan · lengths in m along the trench centreline · widths in mm · corners clockwise from top left · pink = dug deeper than design · red tick = step',x0+Wd/2,y0+Ht-2,{align:'center'});
+  }
+  function pdfSection_fd(doc,x0,y0,Wd,Ht,b,M){
+    doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.rect(x0,y0,Wd,Ht);
+    const tot=M.dpc+b.tb+b.fb+b.concEff; const s=Math.min(0.07,(Ht-22)/(tot+120)); const Pm=v=>v*s; const cx=x0+Wd*0.52, ww=Math.max(8,Pm(b.w));
+    const fflY=y0+8, dpcY=fflY+Pm(M.dpc), fbY=dpcY+Pm(b.fb), tocY=dpcY+Pm(b.tb+b.fb), botD=tocY+Pm(b.conc), botY=tocY+Pm(b.concEff), glY=botY-Pm(b.exc+b.over);
+    doc.setDrawColor(185,183,174); doc.setLineWidth(0.2); for(let xx=x0+4;xx<x0+Wd-4;xx+=2.2){ if(xx>cx-ww/2-2.2&&xx<cx+ww/2+2.2) continue; doc.line(xx,glY,Math.max(xx-2.2,x0+4),Math.min(glY+2.2,y0+Ht-2)); }
+    doc.setDrawColor(...INK); doc.setLineWidth(0.5); doc.line(x0+4,glY,cx-ww/2,glY); doc.line(cx+ww/2,glY,x0+Wd-4,glY);
+    doc.setFillColor(247,246,242); doc.setLineWidth(0.4); doc.rect(cx-ww/2,glY,ww,botY-glY,'FD');
+    doc.setFillColor(255,255,255); doc.rect(cx-ww/2,tocY,ww,botY-tocY,'F'); doc.setFillColor(138,138,132); for(let yy=tocY+1;yy<botY-0.6;yy+=1.6) for(let xx=cx-ww/2+0.8+(Math.round(yy*3)%2?0.8:0);xx<cx+ww/2-0.6;xx+=1.8) doc.circle(xx,yy,0.25,'F'); doc.setDrawColor(...INK); doc.setLineWidth(0.5); doc.rect(cx-ww/2,tocY,ww,botY-tocY);
+    if(b.over>0){ doc.setFillColor(243,201,190); doc.setDrawColor(179,38,30); doc.setLineWidth(0.3); doc.setLineDashPattern([1,0.7],0); doc.rect(cx-ww/2,botD,ww,botY-botD,'FD'); doc.setLineDashPattern([],0); doc.setFont('helvetica','bold'); doc.setFontSize(5.5); doc.setTextColor(179,38,30); doc.text(`+${b.over}`,cx,(botD+botY)/2+1,{align:'center'}); }
+    const bw=Math.max(6,Pm(300)), bx=cx-bw/2;
+    if(b.tb>0){ doc.setFillColor(239,238,233); doc.setDrawColor(...INK); doc.setLineWidth(0.35); doc.rect(bx,fbY,bw,tocY-fbY,'FD'); doc.setLineWidth(0.2); for(let yy=fbY+Pm(225);yy<tocY-0.5;yy+=Pm(225)) doc.line(bx,yy,bx+bw,yy); }
+    if(b.fb>0){ doc.setFillColor(232,196,176); doc.setLineWidth(0.35); doc.rect(bx,dpcY,bw,fbY-dpcY,'FD'); doc.setLineWidth(0.15); for(let yy=dpcY+Pm(75);yy<fbY-0.3;yy+=Pm(75)) doc.line(bx,yy,bx+bw,yy); }
+    doc.setDrawColor(179,38,30); doc.setLineWidth(0.7); doc.line(bx-2,dpcY,bx+bw+2,dpcY); doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(179,38,30); doc.text(`DPC${isNaN(M.ffl)?'':' '+fmt3(M.ffl-M.dpc/1000)}`,bx+bw+4,dpcY+1);
+    doc.setDrawColor(...INK); doc.setLineWidth(0.3); doc.setLineDashPattern([1.5,1],0); doc.line(bx-10,fflY,bx+bw+10,fflY); doc.setLineDashPattern([],0); doc.setTextColor(...INK); doc.text(`FFL${isNaN(M.ffl)?'':' '+fmt3(M.ffl)}`,bx+bw+4,fflY-1);
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...INK); doc.text(`TOC${isNaN(b.toc)?'':' '+fmt3(b.toc)}`,cx+ww/2+3,tocY+1); doc.text(`formation${isNaN(b.form)?'':' '+fmt3(b.form)}`,cx+ww/2+3,botY+1); doc.text(`GL${isNaN(b.gl)?'':' '+fmt3(b.gl)}`,x0+Wd-5,glY-1.5,{align:'right'});
+    const dimv=(x,y1,y2,t)=>{ doc.setDrawColor(...INK); doc.setLineWidth(0.3); doc.line(x,y1,x,y2); [y1,y2].forEach(yy=>doc.line(x-1,yy+1,x+1,yy-1)); doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...INK); doc.text(t,x-1,(y1+y2)/2+doc.getTextWidth(t)/2,{angle:90}); };
+    dimv(cx-ww/2-5,glY,botY,`${b.exc+b.over} exc`); dimv(cx-ww/2-12,tocY,botY,`${b.concEff} conc`); dimv(bx-5,fbY,tocY,`${b.tb} block`); dimv(bx-5,dpcY,fbY,`${b.fb} brick`); dimv(bx-12,fflY,dpcY,`${M.dpc}`);
+    doc.setDrawColor(...INK); doc.setLineWidth(0.3); doc.line(cx-ww/2,botY+5,cx+ww/2,botY+5); doc.setFontSize(6); doc.text(`${b.w}`,cx,botY+8.5,{align:'center'});
+    doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...INK); const nm=b.names.join(', '); doc.text(doc.splitTextToSize(nm,Wd-8)[0],x0+3,y0+4.5);
+  }
+  function pdfStep_fd(doc,x0,y0,Wd,Ht,s,M){
+    doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.rect(x0,y0,Wd,Ht);
+    const steps=s.steps.slice().sort((a,b)=>a.at-b.at); const totalDrop=steps.reduce((a,st)=>a+st.drop,0);
+    const x1=x0+10,x2=x0+Wd-10; const sx=(x2-x1)/Math.max(s.L,0.1); const vs=Math.min(0.05,(Ht-26)/Math.max(totalDrop+s.concEff,300)); const Pv=v=>v*vs; const top0=y0+12;
+    let curTop=top0, x=x1; const segs=[]; steps.forEach(st=>{ const xs=x1+st.at*sx; segs.push({x0:x,x1:xs,top:curTop}); x=xs; curTop+=Pv(st.drop); }); segs.push({x0:x,x1:x2,top:curTop}); const d=Pv(s.concEff);
+    const conc=(xa,ya,w,h)=>{ doc.setFillColor(255,255,255); doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.rect(xa,ya,w,h,'FD'); doc.setFillColor(138,138,132); for(let yy=ya+0.9;yy<ya+h-0.5;yy+=1.5) for(let xx=xa+0.8+(Math.round(yy*3)%2?0.8:0);xx<xa+w-0.5;xx+=1.7) doc.circle(xx,yy,0.22,'F'); doc.setDrawColor(...INK); doc.rect(xa,ya,w,h); };
+    segs.forEach(sg=>conc(sg.x0,sg.top,sg.x1-sg.x0,d));
+    steps.forEach((st,i)=>{ const xs=x1+st.at*sx; const lapPx=Math.min(st.lap/1000*sx,x2-xs); conc(xs,segs[i].top,lapPx,d);
+      doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...INK); doc.text(`lap ${st.lap}`,xs+lapPx/2,segs[i].top-1.5,{align:'center'}); doc.text(`drop ${st.drop}`,xs+lapPx+1.5,(segs[i].top+segs[i+1].top)/2+d/2+1);
+      doc.setTextColor(179,38,30); doc.text(`step at ${st.at.toFixed(2)} m`,xs,y0+Ht-4,{align:'center'}); });
+    doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(...INK); doc.text(`${s.name}${s.label?' '+s.label:''}  ·  ${s.L.toFixed(2)} m  ·  ${s.concEff} thick × ${s.w} wide`,x0+3,y0+5);
+    doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(...GREY); doc.text('lap = greater of thickness, 2 x step, 300',x0+Wd-3,y0+5,{align:'right'});
+  }
+  function buildFd(){
+    const M=FDM; const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:'mm',format:'a4'}); const W=210,Mg=16,CW=W-2*Mg;
+    const sub=`Plot ${M.plot||'?'}  ·  ${M.site||''}  ·  ${fmtDate(M.date)}`;
+    let y=pdfHeader(doc,'FOUNDATION RECORD',sub);
+    y=cellRow(doc,Mg,y,CW,11,[{label:'Developer',value:M.dev||'–',w:CW*0.25},{label:'Site',value:M.site||'–',w:CW*0.3},{label:'Plot',value:M.plot||'–',w:CW*0.15,bold:true,size:12},{label:'House type',value:M.type||'–',w:CW*0.3}]);
+    y=cellRow(doc,Mg,y,CW,11,[{label:'Foundation type',value:M.ftype||'–',w:CW*0.3},{label:'FFL',value:isNaN(M.ffl)?'–':fmt3(M.ffl),w:CW*0.15,bold:true},{label:'FFL to DPC',value:M.dpc+' mm',w:CW*0.15},{label:'Recorded by',value:M.by||'–',w:CW*0.25},{label:'Date',value:fmtDate(M.date),w:CW*0.15}]);
+    y+=5; doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text('FOUNDATION PLAN',Mg,y); y+=3;
+    pdfPlan_fd(doc,Mg,y,CW,96,M); y+=102;
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('SIDES',Mg,y); y+=2.5;
+    const cols=[{l:'Side',w:CW*0.16},{l:'Length',w:CW*0.12,r:true},{l:'Width',w:CW*0.1,r:true},{l:'Concrete',w:CW*0.13,r:true},{l:'Excavation',w:CW*0.15,r:true},{l:'Top of conc',w:CW*0.17,r:true},{l:'m3',w:CW*0.17,r:true}];
+    let cx=Mg; doc.setFillColor(...INK); doc.rect(Mg,y,CW,6,'F'); doc.setFontSize(6.5); doc.setTextColor(...PAPER); cols.forEach(c=>{ doc.text(c.l.toUpperCase(),c.r?cx+c.w-2.5:cx+2.5,y+4,{align:c.r?'right':'left'}); cx+=c.w; }); y+=6;
+    M.all.forEach((s,i)=>{ if(y>262){ doc.addPage(); y=pdfHeader(doc,'FOUNDATION RECORD (CONT.)',sub); } const b=M.builds.find(b=>b.names.includes(s.name+(s.label?' '+s.label:''))); const vals=[s.name+(s.label?' '+s.label:'')+(s.steps.length?' *':''),s.L.toFixed(2)+' m',s.w,s.concEff+(s.over?' (+'+s.over+')':''),(s.exc+s.over)+(s.over?' dug':''),b&&!isNaN(b.toc)?fmt3(b.toc):'–',s.m3.toFixed(2)];
+      doc.setFillColor(...(i%2?PAPER:[255,255,255])); doc.setDrawColor(...LINE); doc.setLineWidth(0.25); doc.rect(Mg,y,CW,6.5,'FD'); cx=Mg; cols.forEach((c,k)=>{ doc.setFont('helvetica',k===0||k===6?'bold':'normal'); doc.setFontSize(8); doc.setTextColor(...(s.over&&(k===3||k===4)?[179,38,30]:INK)); doc.text(String(vals[k]),c.r?cx+c.w-2.5:cx+2.5,y+4.6,{align:c.r?'right':'left'}); cx+=c.w; }); y+=6.5; });
+    doc.setFillColor(...PAPER); doc.setDrawColor(...LINE); doc.rect(Mg,y,CW,6.5,'FD'); doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...INK); doc.text(`Concrete: design ${M.m3d.toFixed(2)} m3  ·  over-dig and steps +${M.m3x.toFixed(2)} m3`,Mg+2.5,y+4.6); doc.text(M.m3.toFixed(2)+' m3',W-Mg-2.5,y+4.6,{align:'right'}); y+=6.5;
+    if(M.all.some(s=>s.steps.length)){ doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(...GREY); doc.text('* side has one or more steps, see sheet 2',Mg,y+4); y+=5; }
+    if(M.closeErr){ doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(179,38,30); doc.text(`Outline does not close: out by ${Math.abs(M.closeErr.sx).toFixed(2)} m across, ${Math.abs(M.closeErr.sy).toFixed(2)} m up and down.`,Mg,y+5); y+=6; }
+    // ===== sheet 2 =====
+    doc.addPage(); y=pdfHeader(doc,'FOUNDATION RECORD · BUILD-UP',sub);
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text('BUILD-UP SECTIONS · FORMATION TO FFL',Mg,y); y+=3;
+    const bw=(CW-6)/2; let col=0, rowY=y;
+    M.builds.forEach((b,i)=>{ if(col===2){ col=0; rowY+=64; } if(rowY+58>236){ doc.addPage(); y=pdfHeader(doc,'FOUNDATION RECORD · BUILD-UP (CONT.)',sub); rowY=y; col=0; } pdfSection_fd(doc,Mg+col*(bw+6),rowY,bw,58,b,M); col++; });
+    y=rowY+64;
+    const stepped=M.all.filter(s=>s.steps.length);
+    if(stepped.length){ if(y+46>236){ doc.addPage(); y=pdfHeader(doc,'FOUNDATION RECORD · BUILD-UP (CONT.)',sub); } doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text('STEPS · LONG SECTIONS',Mg,y); y+=3;
+      stepped.forEach(s=>{ if(y+42>236){ doc.addPage(); y=pdfHeader(doc,'FOUNDATION RECORD · BUILD-UP (CONT.)',sub); } pdfStep_fd(doc,Mg,y,CW,40,s,M); y+=44; }); }
+    if(y+40>236){ doc.addPage(); y=pdfHeader(doc,'FOUNDATION RECORD · RECORD',sub); }
+    y=cellRow(doc,Mg,y,CW,12,[{label:'Design concrete',value:M.m3d.toFixed(2)+' m3',w:CW*0.2,size:10},{label:'With over-dig and steps',value:M.m3.toFixed(2)+' m3',w:CW*0.2,bold:true,size:10},{label:'Delivered',value:M.poured?M.poured.toFixed(2)+' m3':'–',w:CW*0.2,bold:true,size:10},{label:'Difference',value:M.poured?((M.poured-M.m3>=0?'+':'')+(M.poured-M.m3).toFixed(2)+' m3'):'–',w:CW*0.2,size:10},{label:'Date poured',value:fmtDate(M.date),w:CW*0.2,size:10}]);
+    if(M.reason){ y+=4; doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...INK); doc.text('Over-dig / extra concrete:',Mg,y); doc.setFont('helvetica','normal'); const l=doc.splitTextToSize(M.reason,CW-42); doc.text(l,Mg+42,y); y+=l.length*4; }
+    y+=6; doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text('INSPECTIONS',Mg,y); y+=2.5;
+    const ic=[{l:'Phase',w:CW*0.25},{l:'Date',w:CW*0.15},{l:'NHBC details',w:CW*0.45},{l:'Score',w:CW*0.15,r:true}]; cx=Mg; doc.setFillColor(...INK); doc.rect(Mg,y,CW,6,'F'); doc.setFontSize(6.5); doc.setTextColor(...PAPER); ic.forEach(c=>{ doc.text(c.l.toUpperCase(),c.r?cx+c.w-2.5:cx+2.5,y+4,{align:c.r?'right':'left'}); cx+=c.w; }); y+=6;
+    if(!M.insp.length){ doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...GREY); doc.text('None recorded',Mg+2.5,y+5); y+=7; }
+    M.insp.forEach((r,i)=>{ if(y>262){ doc.addPage(); y=pdfHeader(doc,'FOUNDATION RECORD · RECORD (CONT.)',sub); } doc.setFillColor(...(i%2?PAPER:[255,255,255])); doc.setDrawColor(...LINE); doc.setLineWidth(0.25); doc.rect(Mg,y,CW,6.5,'FD'); cx=Mg; const vals=[r[0]||'–',r[1]?fmtDate(r[1]):'–',(r[2]||'–').slice(0,60),r[3]||'–']; ic.forEach((c,k)=>{ doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...INK); doc.text(vals[k],c.r?cx+c.w-2.5:cx+2.5,y+4.6,{align:c.r?'right':'left'}); cx+=c.w; }); y+=6.5; });
+    if(M.notes){ y+=5; if(y>230){ doc.addPage(); y=42; } doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text('COMMENTS',Mg,y); y+=5; doc.setFont('helvetica','normal'); doc.setFontSize(9); const l=doc.splitTextToSize(M.notes,CW); doc.text(l,Mg,y); y+=l.length*4.2; }
+    y=pdfPhotos(doc,FD.photos,y+4,'PHOTOS');
+    if(y>250){ doc.addPage(); y=42; } else y=Math.max(y,250);
+    const sw=(CW-10)/2; cellRow(doc,Mg,y,sw,18,[{label:'Recorded by',value:M.by||'',w:sw*0.62},{label:'Date',value:fmtDate(M.date),w:sw*0.38}]); cellRow(doc,Mg+sw+10,y,sw,18,[{label:'Checked by',value:'',w:sw*0.62},{label:'Date',value:'',w:sw*0.38}]);
+    stampFooters(doc); return doc;
+  }
+  pdfActions('fd',buildFd,()=>`RJH_Foundation_Plot${(FDM.plot||'').replace(/\W/g,'')}_${$('fd-date').value}.pdf`,'fd-status',()=>FD.closed||FD.pts.length>0);
+  drawFd();
+
   // ---- Saving: IndexedDB store on the phone, with draft autosave ----
   const DB=(()=>{ let dbp=null;
     const open=()=>dbp||(dbp=new Promise((res,rej)=>{ const r=indexedDB.open('rjh-site-app',1); r.onupgradeneeded=()=>{ const d=r.result; if(!d.objectStoreNames.contains('saved')) d.createObjectStore('saved',{keyPath:'id'}); }; r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }));
@@ -2481,7 +2882,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     return { all:()=>tx('readonly',st=>st.getAll()), put:rec=>tx('readwrite',st=>st.put(rec)), del:id=>tx('readwrite',st=>st.delete(id)) }; })();
   const SAVERS={}; const SENT_PENDING={};
   async function markSent(tool){ const o=SAVERS[tool]; if(!o) return; if(!o.currentId){ SENT_PENDING[tool]=true; return; } try{ const all=await DB.all(); const r=all.find(x=>x.id===o.currentId); if(r){ r.sent=new Date().toISOString(); await DB.put(r); const sec=$(o.section); const st=sec.querySelector('.s-state'); if(st) st.textContent='PDF sent'; } }catch(e){} }
-  const TOOLNAMES={grad:'Gradient sheet',dw:'Dayworks',th:'Trial holes',lv:'Level book',dips:'Road dips'};
+  const TOOLNAMES={grad:'Gradient sheet',dw:'Dayworks',th:'Trial holes',lv:'Level book',dips:'Road dips',fd:'Foundation record'};
   function registerSave(tool,opts){ SAVERS[tool]=opts; const sec=$(opts.section);
     const bar=document.createElement('div'); bar.className='savebar';
     bar.innerHTML=`<button type="button" class="s-save">Save</button><button type="button" class="s-list">Saved</button><button type="button" class="s-new">New</button><span class="s-state"></span>`;
@@ -2516,7 +2917,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     ['home-site','home-client','home-by'].forEach(id=>$(id).addEventListener('input',()=>{ SITE.set({site:$('home-site').value.trim(),client:$('home-client').value.trim(),by:$('home-by').value.trim()}); siteSummary(); })); })();
   // fill site/client/name into a tool's fields when they are empty
   function prefill(map){ const o=SITE.get(); Object.entries(map).forEach(([k,id])=>{ if(o[k]&&$(id)&&!$(id).value.trim()) $(id).value=o[k]; }); }
-  const PREFILL={grad:{site:'g-site',by:'g-by'},dw:{site:'dw-site',client:'dw-client',by:'dw-by'},th:{site:'th-site',by:'th-by'},dips:{site:'d-site',client:'d-client',by:'d-by'}};
+  const PREFILL={grad:{site:'g-site',by:'g-by'},dw:{site:'dw-site',client:'dw-client',by:'dw-by'},th:{site:'th-site',by:'th-by'},dips:{site:'d-site',client:'d-client',by:'d-by'},fd:{site:'fd-site',client:'fd-dev',by:'fd-by'}};
   document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{ const tool=Object.keys(PREFILL).find(k=>SAVERS[k]&&SAVERS[k].section===b.dataset.go); if(tool) prefill(PREFILL[tool]); const o=SAVERS[tool]; if(o&&o.recalc) o.recalc(); }));
 
   // ---- per-tool serialisers ----
@@ -2561,6 +2962,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     set:d=>{ ['d-name','d-kh','d-face','d-bed','d-race','d-prof','d-surf','d-bind','d-base','d-sub','d-site','d-client','d-by','d-date','d-ref','d-rev','d-cap','d-temph'].forEach((id,i)=>{ if(d.f[i]!==undefined) S(id,d.f[i]); }); if(d.slat) Object.assign(SLAT,d.slat); if(d.tempName){ dTempName=d.tempName; document.querySelectorAll('#d-tempchips button').forEach(x=>x.setAttribute('aria-pressed',x.textContent===dTempName)); } setStart(d.start||'perm'); setMode(d.mode||'kerb'); calcDips(); },
     clear:()=>{ $('d-reset').click(); },
     hasContent:d=>d.f&&d.f[0] });
+
+  // Foundation record
+  registerSave('fd',{section:'panel-fd',recalc:drawFd,
+    name:()=>{ const p=V('fd-plot').trim(); return p?`Plot ${p}${V('fd-type').trim()?' · '+V('fd-type').trim():''}`:''; }, site:()=>V('fd-site').trim(),
+    get:()=>({f:['fd-dev','fd-site','fd-plot','fd-type','fd-ftype','fd-ffl','fd-by','fd-date','fd-w','fd-conc','fd-exc','fd-tb','fd-fb','fd-dpc','fd-poured','fd-reason','fd-notes'].map(V),pts:FD.pts,sides:FD.sides,walls:FD.walls,closed:FD.closed,ppm:FD.ppm,insp:rowsOf($('fd-insp')),photos:FD.photos.slice()}),
+    set:d=>{ ['fd-dev','fd-site','fd-plot','fd-type','fd-ftype','fd-ffl','fd-by','fd-date','fd-w','fd-conc','fd-exc','fd-tb','fd-fb','fd-dpc','fd-poured','fd-reason','fd-notes'].forEach((id,i)=>{ if(d.f[i]!==undefined) S(id,d.f[i]); });
+      FD.pts=d.pts||[]; FD.sides=(d.sides||[]).map(s=>({excA:'',label:'',steps:[],...s})); FD.walls=(d.walls||[]).map(s=>({excA:'',label:'',steps:[],...s})); FD.closed=!!d.closed; FD.ppm=d.ppm||22; FD.sel=null; FD.hist=[]; $('fd-side').hidden=true;
+      $('fd-insp').innerHTML=''; (d.insp||[]).forEach(r=>listRow($('fd-insp'),[{p:'Foundation',v:r[0]},{p:'Date',t:'date',v:r[1]},{p:'Details',v:r[2]},{p:'Score',t:'number',v:r[3]}],drawFd));
+      FD.photos.length=0; (d.photos||[]).forEach(p=>FD.photos.push(p)); fdRender(); drawFd(); },
+    clear:()=>{ ['fd-dev','fd-site','fd-plot','fd-type','fd-ffl','fd-by','fd-poured','fd-reason','fd-notes'].forEach(id=>S(id,'')); S('fd-ftype','Engineered strip'); S('fd-date',new Date().toISOString().slice(0,10)); FD.pts=[]; FD.sides=[]; FD.walls=[]; FD.closed=false; FD.sel=null; $('fd-side').hidden=true; $('fd-insp').innerHTML=''; FD.photos.length=0; fdRender(); drawFd(); },
+    hasContent:d=>(d.pts&&d.pts.length)||(d.f&&d.f[2]) });
 
   // ---- Bedding: pull pipe size and length from a gradient sheet ----
   function applyRunToBedding(name,dia,len){ const sizes=Object.keys(PIPES).map(Number); const pick=sizes.reduce((a,b)=>Math.abs(b-dia)<Math.abs(a-dia)?b:a,sizes[0]);
