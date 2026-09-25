@@ -1,7 +1,14 @@
-const CACHE='rjh-site-app-v47';
+const CACHE='rjh-site-app-v49';
 const FILES=['./','./index.html','./manifest.json','./icon-180.png','./icon-512.png'];
 self.addEventListener('install',e=>{ e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())); });
 self.addEventListener('activate',e=>{ e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())); });
-// network first so updates come through, cache fallback when offline
-self.addEventListener('fetch',e=>{ if(e.request.method!=='GET') return;
-  e.respondWith(fetch(e.request).then(r=>{ const copy=r.clone(); caches.open(CACHE).then(c=>c.put(e.request,copy)); return r; }).catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html')))); });
+const isShell=u=>{ const p=new URL(u).pathname; return p.endsWith('/')||p.endsWith('/index.html'); };
+// cache first, so the app opens straight away on a bad signal; the network copy refreshes the cache in the background
+// and, if the app itself has changed, every open page is told so it can offer the update
+self.addEventListener('fetch',e=>{ if(e.request.method!=='GET'||!e.request.url.startsWith(self.location.origin)) return;
+  e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(cached=>{
+    const net=fetch(e.request).then(r=>{ if(r&&r.ok){ const copy=r.clone(); caches.open(CACHE).then(async c=>{
+        if(cached&&isShell(e.request.url)){ const tag=x=>x.headers.get('etag')||x.headers.get('last-modified')||''; if(tag(cached)&&tag(r)&&tag(cached)!==tag(r)){ (await self.clients.matchAll()).forEach(cl=>cl.postMessage({type:'rjh-updated'})); } }
+        c.put(e.request,copy); }); } return r; }).catch(()=>null);
+    if(cached){ e.waitUntil(net); return cached; }
+    return net.then(r=>r||caches.match('./index.html')); })); });
