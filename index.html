@@ -702,6 +702,20 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 .rm-fixwrap[hidden],.rm-whywrap[hidden]{display:none}
 .rm-sum{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin:0 0 10px;font-size:15px}
 .rm-sum b{font-family:"Barlow Condensed",sans-serif;font-size:22px}
+.rm-row{appearance:none;width:100%;border:0;background:none;padding:2px 0;display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;text-align:left;font:inherit;cursor:pointer}
+.rm-no{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:22px}
+.rm-txt{font-size:15px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.rm-stt{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--ink-2);white-space:nowrap}
+.rm-item:not(.sel){padding:8px 10px;margin-bottom:6px}
+.rm-item.st-fixed .rm-stt{color:#1E6F3F}.rm-item.st-open .rm-stt{color:var(--danger)}
+.rm-said{font-size:18px;font-weight:600;margin:4px 0 10px;line-height:1.3}
+.rm-edit summary{font-size:13px;font-weight:700;color:var(--ink-2);text-decoration:underline;cursor:pointer;padding:4px 0 8px}
+.rm-big{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:4px 0 10px}
+.rm-big button{appearance:none;border:2px solid var(--ink);background:#fff;border-radius:var(--r);padding:16px 4px;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
+.rm-big button[aria-pressed=true]{background:var(--ink);color:#fff}
+.rm-big button[data-st=fixed][aria-pressed=true]{background:#1E6F3F;border-color:#1E6F3F}
+.rm-close{appearance:none;border:2px solid var(--line);background:#fff;border-radius:var(--r);padding:0 12px;height:36px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.rm-addsum{font-weight:700;padding:10px 0;cursor:pointer}
 .rm-k.fixed b{color:#1E6F3F}.rm-k.open b{color:var(--danger)}.rm-k.client b{color:#b07800}.rm-k.notours b{color:#8a8a86}</style>
 </head>
 <body>
@@ -1736,16 +1750,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
 
     <h2>Snags</h2>
     <div class="rm-sum" id="rm-sum"></div>
+    <p class="note" id="rm-howto" style="margin:0 0 8px">Tap a snag to open it. Take a before photo, fix it, tap Fixed, say how, take an after photo, then Next.</p>
     <div class="seg four" id="rm-filter" style="margin:0 0 10px"><button type="button" data-f="open" aria-pressed="true">Open</button><button type="button" data-f="fixed" aria-pressed="false">Fixed</button><button type="button" data-f="other" aria-pressed="false">Not ours</button><button type="button" data-f="all" aria-pressed="false">All</button></div>
     <div id="rm-items"></div>
-    <div class="btnrow" style="margin-top:0"><button class="btn primary" type="button" id="rm-additem">+ Add snag</button><button class="btn" type="button" id="rm-paste">Paste their list</button></div>
-    <div class="btnrow" style="margin-top:0"><label class="btn filebtn">Load their spreadsheet (xlsx or csv)<input type="file" id="rm-xlsx" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"></label></div>
-    <p class="note">A Field View export works as it is. Signed-off rows are skipped, and so are items issued to someone else.</p>
+    <details id="rm-addwrap"><summary class="rm-addsum">Add snags</summary>
+    <div class="btnrow" style="margin-top:8px"><button class="btn primary" type="button" id="rm-additem">+ Add a snag</button><button class="btn" type="button" id="rm-paste">Paste their list</button></div>
     <div class="fd-side" id="rm-pastebox" hidden>
-      <p class="note" style="margin:0 0 6px">Paste the client's list, one snag per line. Each line becomes an item. Start a line with the plot or location and a dash if you like: <b>Plot 12 - flag rocking outside front door</b></p>
-      <textarea id="rm-pastetxt" placeholder="Plot 12 - flag rocking outside front door&#10;Plot 14 - gully grate cracked&#10;Road 2 - kerb dropped by lamp column"></textarea>
+      <p class="note" style="margin:0 0 6px">One snag per line. Start a line with where and a dash: <b>Plot 12 - flag rocking outside front door</b></p>
+      <textarea id="rm-pastetxt" placeholder="Plot 12 - flag rocking outside front door&#10;Plot 14 - gully grate cracked"></textarea>
       <div class="btnrow" style="margin-top:6px"><button class="btn primary" type="button" id="rm-pastego">Add these snags</button><button class="btn" type="button" id="rm-pastex">Cancel</button></div>
     </div>
+    <div class="btnrow" style="margin-top:0"><label class="btn filebtn">Load their spreadsheet (xlsx or csv)<input type="file" id="rm-xlsx" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"></label></div>
+    <p class="note">Easiest on a PC: load the client's spreadsheet here, Save, then Send it to the lad's phone. Signed-off rows and items issued to someone else are skipped.</p>
+    </details>
 
     <h2>Signed off</h2>
     <div class="grid2">
@@ -4071,7 +4088,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     stampFooters(doc,'aw'); return doc; }
   pdfActions('aw',buildAw,()=>`RJH_AdditionalWorks_${($('aw-ref').value.trim()||'sheet').replace(/\W/g,'')}_${$('aw-date').value}.pdf`,'aw-status',()=>AW.items.length>0);
   // ---- Remedials: the client's snag list, closed out one item at a time with how it was fixed and before/after photos ----
-  const RM={items:[],nosig:'',filter:'open',keep:null};   // keep: the snag just changed stays on screen until the filter is tapped
+  const RM={items:[],nosig:'',filter:'open',keep:null,sel:null};   // keep: the snag just changed stays on screen until the filter is tapped
   const RM_ST=[['open','Open'],['fixed','Fixed'],['notours','Not ours'],['client','Needs the client']];
   const RM_FIX=['Relaid','Replaced','Reset to level','Re-jetted','Re-sealed','Made good','Cleaned','Re-pointed','Topped up','Re-compacted'];
   const rmEsc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
@@ -4081,26 +4098,38 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   function rmRender(){ const box=$('rm-items'); box.innerHTML='';
     const c=rmCounts(); $('rm-n').textContent=RM.items.length; $('rm-open').textContent=c.open+c.client;
     $('rm-sum').innerHTML=RM.items.length?`<span><b>${RM.items.length}</b> snags</span><span class="rm-k fixed"><b>${c.fixed}</b> fixed</span><span class="rm-k open"><b>${c.open}</b> open</span>${c.client?`<span class="rm-k client"><b>${c.client}</b> need the client</span>`:''}${c.notours?`<span class="rm-k notours"><b>${c.notours}</b> not ours</span>`:''}`:'<span class="note" style="margin:0">No snags yet. Add them one at a time, or paste the client\'s list.</span>';
-    let shown=0;
+    let shown=0; const openIdx=RM.items.map((it,i)=>i).filter(i=>RM.items[i].st==='open'||RM.items[i].st==='client');
     RM.items.forEach((it,i)=>{ it.st=it.st||'open'; it.before=it.before||[]; it.after=it.after||[]; if(!rmShow(it)) return; shown++;
-      const c=document.createElement('div'); c.className='rm-item st-'+it.st;
-      c.innerHTML=`<div class="aw-top"><b>Snag ${rmEsc(it.no||(i+1))}</b><span><button type="button" class="x" aria-label="Remove snag">×</button></span></div>
-        <div class="grid2"><div class="field"><label>Their number</label><div class="in"><input data-k="no" type="text" placeholder="${i+1}" value="${rmEsc(it.no)}"></div></div><div class="field"><label>Where</label><div class="in"><input data-k="where" type="text" placeholder="Plot 12 front" value="${rmEsc(it.where)}"></div></div></div>
-        <div class="field"><label>What they said is wrong</label><div class="in"><input data-k="said" type="text" placeholder="e.g. flag rocking outside front door" value="${rmEsc(it.said)}"></div></div>
-        <div class="field"><label>Before</label><div class="photos rm-ph" data-ph="before"></div><label class="btn filebtn" style="margin-top:6px">Photo of the snag<input type="file" accept="image/*" capture="environment" data-ph="before"></label></div>
-        <div class="field"><label>Status</label><div class="seg four rm-st">${RM_ST.map(([k,n])=>`<button type="button" data-st="${k}" aria-pressed="${it.st===k}">${n}</button>`).join('')}</div></div>
+      const c=document.createElement('div'); c.className='rm-item st-'+it.st+(RM.sel===i?' sel':''); const title=`${it.where?rmEsc(it.where)+' · ':''}${rmEsc(it.said||'(nothing written)')}`;
+      if(RM.sel!==i){ // compact: one tap opens it
+        c.innerHTML=`<button type="button" class="rm-row"><span class="rm-no">${rmEsc(it.no||(i+1))}</span><span class="rm-txt">${title}</span><span class="rm-stt">${rmStName(it.st)}${it.after.length||it.before.length?' · 📷':''}</span></button>`;
+        c.querySelector('.rm-row').addEventListener('click',()=>{ RM.sel=i; RM.keep=null; rmRender(); const el=$('rm-items').querySelector('.rm-item.sel'); if(el) el.scrollIntoView({block:'start',behavior:'smooth'}); });
+        box.appendChild(c); return; }
+      c.innerHTML=`<div class="aw-top"><b>Snag ${rmEsc(it.no||(i+1))}${it.where?' · '+rmEsc(it.where):''}</b><span><button type="button" class="rm-close">Close</button></span></div>
+        <p class="rm-said">${rmEsc(it.said||'')}</p>
+        <details class="rm-edit"><summary>Change the wording, number or where</summary>
+          <div class="grid2"><div class="field"><label>Their number</label><div class="in"><input data-k="no" type="text" value="${rmEsc(it.no)}"></div></div><div class="field"><label>Where</label><div class="in"><input data-k="where" type="text" placeholder="Plot 12 front" value="${rmEsc(it.where)}"></div></div></div>
+          <div class="field"><label>What they said is wrong</label><div class="in"><input data-k="said" type="text" value="${rmEsc(it.said)}"></div></div>
+          <button type="button" class="x rm-del" style="width:auto;padding:0 12px;height:36px;font-size:14px">Remove this snag</button></details>
+        <div class="field"><div class="photos rm-ph" data-ph="before"></div><label class="btn filebtn">📷 Before photo<input type="file" accept="image/*" capture="environment" data-ph="before"></label></div>
+        <div class="rm-big">${RM_ST.filter(x=>x[0]!=='open').map(([k,n])=>`<button type="button" data-st="${k}" aria-pressed="${it.st===k}">${n}</button>`).join('')}</div>
+        ${it.st!=='open'?`<div class="note" style="margin:0 0 8px;text-align:center"><a href="#" class="rm-reopen">Put it back to open</a></div>`:''}
         <div class="rm-fixwrap" ${it.st==='fixed'?'':'hidden'}>
-          <div class="field"><label>How we fixed it</label><div class="aw-mats">${RM_FIX.map(f=>`<button type="button" data-fx="${f}" aria-pressed="${(it.fixes||[]).includes(f)}">${f}</button>`).join('')}</div><div class="in" style="margin-top:6px"><input data-k="how" type="text" placeholder="anything else, e.g. relaid on fresh bed, two flags" value="${rmEsc(it.how)}"></div></div>
-          <div class="grid2"><div class="field"><label>Date fixed</label><div class="in"><input data-k="date" type="date" value="${rmEsc(it.date)}"></div></div><div class="field"><label>Fixed by</label><div class="in"><input data-k="who" type="text" placeholder="Name" value="${rmEsc(it.who)}"></div></div></div>
-          <div class="field"><label>After</label><div class="photos rm-ph" data-ph="after"></div><label class="btn primary filebtn" style="margin-top:6px">Photo of the fix<input type="file" accept="image/*" capture="environment" data-ph="after"></label></div>
+          <div class="field"><label>How we fixed it</label><div class="aw-mats">${RM_FIX.map(f=>`<button type="button" data-fx="${f}" aria-pressed="${(it.fixes||[]).includes(f)}">${f}</button>`).join('')}</div><div class="in" style="margin-top:6px"><input data-k="how" type="text" placeholder="anything else to say" value="${rmEsc(it.how)}"></div></div>
+          <div class="field"><div class="photos rm-ph" data-ph="after"></div><label class="btn primary filebtn">📷 After photo<input type="file" accept="image/*" capture="environment" data-ph="after"></label></div>
+          <details class="rm-edit"><summary>Date and who (${rmEsc(it.date?fmtDate(it.date):'today')}, ${rmEsc(it.who||'')})</summary><div class="grid2"><div class="field"><label>Date fixed</label><div class="in"><input data-k="date" type="date" value="${rmEsc(it.date)}"></div></div><div class="field"><label>Fixed by</label><div class="in"><input data-k="who" type="text" value="${rmEsc(it.who)}"></div></div></div></details>
         </div>
         <div class="rm-whywrap" ${it.st==='notours'||it.st==='client'?'':'hidden'}>
           <div class="field"><label>${it.st==='client'?'What we need from the client':'Why it is not ours'}</label><div class="in"><input data-k="why" type="text" placeholder="${it.st==='client'?'e.g. need the drive clear of materials':'e.g. damaged by the brickies, see photo'}" value="${rmEsc(it.why)}"></div></div>
           ${it.st==='notours'?`<div class="field"><label>Will we do it anyway?</label><div class="seg two rm-extra"><button type="button" data-ex="0" aria-pressed="${!it.extra}">No</button><button type="button" data-ex="1" aria-pressed="${!!it.extra}">Yes, as an extra</button></div></div>`:''}
-        </div>`;
-      c.querySelector('.x').addEventListener('click',()=>{ if((it.said||it.before.length||it.after.length)&&!confirm('Remove snag '+(it.no||(i+1))+'?')) return; RM.items.splice(i,1); rmRender(); });
-      c.querySelectorAll('input[data-k]').forEach(inp=>inp.addEventListener('input',()=>{ it[inp.dataset.k]=inp.value; if(inp.dataset.k==='no') c.querySelector('.aw-top b').textContent='Snag '+(inp.value||(i+1)); }));
-      c.querySelectorAll('[data-st]').forEach(b=>b.addEventListener('click',()=>{ it.st=b.dataset.st; RM.keep=it; if(it.st==='fixed'){ if(!it.date) it.date=today(); if(!it.who) it.who=$('rm-by').value.trim(); } rmRender(); }));
+        </div>
+        <button type="button" class="btn primary rm-next" style="margin-top:4px;padding:16px">Next open snag ▸</button>`;
+      c.querySelector('.rm-close').addEventListener('click',()=>{ RM.sel=null; RM.keep=null; rmRender(); });
+      c.querySelector('.rm-next').addEventListener('click',()=>{ const nx=openIdx.find(k=>k>i)??openIdx.find(k=>k!==i); RM.keep=null; if(nx===undefined){ RM.sel=null; rmRender(); toast('Nothing left open'); return; } RM.sel=nx; rmRender(); const el=$('rm-items').querySelector('.rm-item.sel'); if(el) el.scrollIntoView({block:'start',behavior:'smooth'}); });
+      c.querySelector('.rm-del').addEventListener('click',()=>{ if(!confirm('Remove snag '+(it.no||(i+1))+'?')) return; RM.items.splice(i,1); RM.sel=null; rmRender(); });
+      c.querySelectorAll('input[data-k]').forEach(inp=>inp.addEventListener('input',()=>{ it[inp.dataset.k]=inp.value; }));
+      c.querySelectorAll('[data-st]').forEach(b=>b.addEventListener('click',()=>{ it.st=it.st===b.dataset.st?'open':b.dataset.st; RM.keep=it; if(it.st==='fixed'){ if(!it.date) it.date=today(); if(!it.who) it.who=$('rm-by').value.trim(); } rmRender(); }));
+      const ro=c.querySelector('.rm-reopen'); if(ro) ro.addEventListener('click',e=>{ e.preventDefault(); it.st='open'; RM.keep=it; rmRender(); });
       c.querySelectorAll('[data-fx]').forEach(b=>b.addEventListener('click',()=>{ it.fixes=it.fixes||[]; const k=it.fixes.indexOf(b.dataset.fx); if(k>=0) it.fixes.splice(k,1); else it.fixes.push(b.dataset.fx); b.setAttribute('aria-pressed',k<0); }));
       c.querySelectorAll('[data-ex]').forEach(b=>b.addEventListener('click',()=>{ it.extra=b.dataset.ex==='1'; c.querySelectorAll('[data-ex]').forEach(x=>x.setAttribute('aria-pressed',x===b)); }));
       ['before','after'].forEach(ph=>{ const grid=c.querySelector(`.rm-ph[data-ph="${ph}"]`); if(!grid) return;
@@ -4109,10 +4138,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
         draw(); });
       box.appendChild(c); });
     if(RM.items.length&&!shown) box.innerHTML=`<p class="note">Nothing ${RM.filter==='open'?'still open':RM.filter==='fixed'?'fixed yet':'marked not ours'}. Tap All to see every snag.</p>`; }
-  function rmAdd(seed){ RM.items.push({st:'open',before:[],after:[],no:String(RM.items.length+1),...(seed||{})}); RM.filter=RM.filter==='fixed'||RM.filter==='other'?'open':RM.filter; $('rm-filter').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f===RM.filter)); rmRender();
-    const cs=$('rm-items').querySelectorAll('.rm-item'); const last=cs[cs.length-1]; if(last){ last.scrollIntoView({block:'start',behavior:'smooth'}); const f=last.querySelector('input[data-k=said]'); if(f&&!seed) setTimeout(()=>f.focus(),350); } }
+  function rmAdd(seed){ RM.items.push({st:'open',before:[],after:[],no:String(RM.items.length+1),...(seed||{})}); RM.sel=RM.items.length-1; RM.filter=RM.filter==='fixed'||RM.filter==='other'?'open':RM.filter; $('rm-filter').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f===RM.filter)); rmRender();
+    const cs=$('rm-items').querySelectorAll('.rm-item'); const last=cs[cs.length-1]; if(last){ last.scrollIntoView({block:'start',behavior:'smooth'}); const d=last.querySelector('details.rm-edit'); if(d&&!seed){ d.open=true; const f=last.querySelector('input[data-k=said]'); if(f) setTimeout(()=>f.focus(),350); } } }
   $('rm-additem').addEventListener('click',()=>rmAdd());
-  $('rm-filter').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(!b) return; RM.filter=b.dataset.f; RM.keep=null; $('rm-filter').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); rmRender(); });
+  $('rm-filter').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(!b) return; RM.filter=b.dataset.f; RM.keep=null; RM.sel=null; $('rm-filter').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); rmRender(); });
   $('rm-paste').addEventListener('click',()=>{ $('rm-pastebox').hidden=!$('rm-pastebox').hidden; if(!$('rm-pastebox').hidden) $('rm-pastetxt').focus(); });
   $('rm-pastex').addEventListener('click',()=>{ $('rm-pastebox').hidden=true; });
   $('rm-pastego').addEventListener('click',()=>{ const lines=$('rm-pastetxt').value.split(/\n/).map(l=>l.replace(/^\s*(\d+)[.)]\s*/,'').trim()).filter(Boolean); if(!lines.length){ toast('Nothing to add'); return; }
@@ -4225,6 +4254,15 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     try{ let rows; if(/\.csv$/i.test(f.name)||/csv|text/.test(f.type)) rows=rmCsvRows(await f.text()); else { if(typeof DecompressionStream==='undefined') throw new Error('old'); rows=rmXlsxRows(await rmUnzip(await f.arrayBuffer())); }
       rmImportRows(rows,f.name); }
     catch(err){ toast(err.message==='old'?'This phone cannot read xlsx. Save the list as CSV and load that.':'Could not read that file. Save it as CSV and try again.'); } });
+  // the list header folds to one line once the site is in, so the snags are at the top of the screen
+  (function(){ const grid=$('rm-site').closest('.grid2'), notes=$('rm-notes').closest('.field'); if(!grid) return;
+    const line=document.createElement('div'); line.className='fd-dsum'; line.style.cssText='border:2px solid var(--line);border-radius:var(--r);padding:10px 12px;display:flex;gap:10px;align-items:center;justify-content:space-between;margin:0 0 6px'; grid.before(line); let force=false;
+    const v=id=>$(id).value.trim();
+    function upd(){ const full=v('rm-site')&&!force; line.hidden=!full; grid.hidden=full; notes.hidden=full;
+      if(full) line.innerHTML=`<div style="min-width:0"><b>${rmEsc(v('rm-site'))}${v('rm-client')?' · '+rmEsc(v('rm-client')):''}</b><div class="note" style="margin:2px 0 0;overflow-wrap:anywhere">${rmEsc(v('rm-ref')||'Snag list')}${v('rm-listdate')?' · '+fmtDate(v('rm-listdate')):''}${v('rm-notes')?' · '+rmEsc(v('rm-notes').slice(0,80))+(v('rm-notes').length>80?'…':''):''}</div></div><button type="button" class="btn" style="margin:0;width:auto;padding:8px 12px">Change</button>`;
+      const b=line.querySelector('button'); if(b) b.onclick=()=>{ force=true; upd(); }; }
+    ['rm-site','rm-client','rm-ref','rm-listdate','rm-notes'].forEach(id=>$(id).addEventListener('change',()=>{ force=false; setTimeout(upd,0); }));
+    window.__rmHead=()=>{ force=false; upd(); }; setTimeout(upd,300); })();
   // share the PDF and the sheet file together, so the office can open it in the app and price it
   $('aw-share2').addEventListener('click',async()=>{ if(!AW.items.length){ toast('Add an item first'); return; } if(!window.jspdf){ $('aw-status').textContent='PDF tool not loaded. Reload the page.'; return; }
     try{ const o=SAVERS.aw; const data=o.get(); const name=o.name()||'Additional works'; const id=o.currentId||('aw-'+Date.now());
@@ -5510,8 +5548,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   registerSave('rm',{section:'panel-rm',recalc:rmRender,
     name:()=>{ const r=V('rm-ref').trim(), s=V('rm-site').trim(); return r||s?`${r||'Remedials'}${s?' · '+s:''}`:''; }, site:()=>V('rm-site').trim(),
     get:()=>({f:RM_F.map(V),items:JSON.parse(JSON.stringify(RM.items)),nosig:RM.nosig,sig:SIGS['rm-sig'].data()}),
-    set:d=>{ RM_F.forEach((id,i)=>S(id,(d.f||[])[i]||'')); if((d.f||[])[10]===undefined) $('rm-to').selectedIndex=0; RM.items=(d.items||[]).map(x=>({before:[],after:[],st:'open',...x})); RM.nosig=d.nosig||''; $('rm-nosig').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.n===RM.nosig)); SIGS['rm-sig'].load(d.sig); rmNosigUI(); rmToUI(); RM.filter='open'; $('rm-filter').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f==='open')); rmRender(); },
-    clear:()=>{ RM_F.forEach(id=>{ if(id!=='rm-to') S(id,''); }); $('rm-to').selectedIndex=0; S('rm-listdate',today()); RM.items=[]; RM.nosig=''; $('rm-nosig').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.n==='')); SIGS['rm-sig'].clear(); rmNosigUI(); rmToUI(); rmRender(); },
+    set:d=>{ RM_F.forEach((id,i)=>S(id,(d.f||[])[i]||'')); if((d.f||[])[10]===undefined) $('rm-to').selectedIndex=0; RM.items=(d.items||[]).map(x=>({before:[],after:[],st:'open',...x})); RM.nosig=d.nosig||''; $('rm-nosig').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.n===RM.nosig)); SIGS['rm-sig'].load(d.sig); rmNosigUI(); rmToUI(); RM.filter='open'; RM.sel=null; $('rm-filter').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f==='open')); rmRender(); if(window.__rmHead) window.__rmHead(); },
+    clear:()=>{ RM_F.forEach(id=>{ if(id!=='rm-to') S(id,''); }); $('rm-to').selectedIndex=0; S('rm-listdate',today()); RM.items=[]; RM.nosig=''; RM.sel=null; $('rm-nosig').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.n==='')); SIGS['rm-sig'].clear(); rmNosigUI(); rmToUI(); rmRender(); if(window.__rmHead) window.__rmHead(); },
     hasContent:d=>d.f&&(d.f[0]||d.f[2]||(d.items&&d.items.length)) });
   // Trial holes
   registerSave('th',{section:'panel-th',recalc:()=>{ saveHole(); drawHole(); },
