@@ -1,7 +1,10 @@
   // ---- v69: numbering, who is office, today's sheets, clear this phone ----
   // the next DW / AW number for this job, put in the sheet's ref box if it is empty
   async function REFFILL(tool){ const ids={dw:'dw-ref',aw:'aw-ref'}; const id=ids[tool]; if(!id||!$(id)) return; if($(id).value.trim()) return; const o=SAVERS[tool]; if(o&&o.currentId) return;
-    const s=SITE.get(); const job=s.job||($(tool+'-site')?$(tool+'-site').value.trim():''); $(id).value=await nextRef(tool,job); if(SAVERS[tool]&&SAVERS[tool]._strip) SAVERS[tool]._strip(); }
+    const s=SITE.get(); const job=s.job||($(tool+'-site')?$(tool+'-site').value.trim():''); const ref=await nextRef(tool,job);
+    // the filing may have borrowed the form to print the sheet just saved: wait for it to hand the form back, then only fill a box that is still empty on a new sheet
+    for(let i=0;window.SYNC_SWAP&&i<100;i++) await new Promise(r=>setTimeout(r,100)); if($(id).value.trim()||(o&&o.currentId)) return;
+    $(id).value=ref; if(SAVERS[tool]&&SAVERS[tool]._strip) SAVERS[tool]._strip(); }
   window.REFFILL=REFFILL;
   // office people see Office and Job set-up; everyone else sees the site screens only.
   // The list lives in RJH-Site _app/settings.json (office: emails or names), with these names until that file says otherwise.

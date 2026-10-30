@@ -36,7 +36,7 @@
       c.querySelectorAll('[data-fx]').forEach(b=>b.addEventListener('click',()=>{ it.fixes=it.fixes||[]; const k=it.fixes.indexOf(b.dataset.fx); if(k>=0) it.fixes.splice(k,1); else it.fixes.push(b.dataset.fx); b.setAttribute('aria-pressed',k<0); }));
       c.querySelectorAll('[data-ex]').forEach(b=>b.addEventListener('click',()=>{ it.extra=b.dataset.ex==='1'; c.querySelectorAll('[data-ex]').forEach(x=>x.setAttribute('aria-pressed',x===b)); }));
       ['before','after'].forEach(ph=>{ const grid=c.querySelector(`.rm-ph[data-ph="${ph}"]`); if(!grid) return;
-        const draw=()=>{ grid.innerHTML=''; it[ph].forEach((p,k)=>{ const w=document.createElement('div'); w.innerHTML=`<img src="${p.d}"><button type="button" aria-label="Remove">×</button>`; w.querySelector('button').addEventListener('click',()=>{ it[ph].splice(k,1); draw(); }); grid.appendChild(w); }); };
+        const draw=()=>{ grid.innerHTML=''; it[ph].forEach((p,k)=>{ const w=document.createElement('div'); w.innerHTML=`<img src="${rmEsc(p.d)}"><button type="button" aria-label="Remove">×</button>`; w.querySelector('button').addEventListener('click',()=>{ it[ph].splice(k,1); draw(); }); grid.appendChild(w); }); };
         c.querySelectorAll(`input[type=file][data-ph="${ph}"]`).forEach(inp=>inp.addEventListener('change',async e=>{ for(const f of e.target.files){ it[ph].push({d:await shrink(f),at:new Date().toISOString()}); } e.target.value=''; draw(); c.dispatchEvent(new Event('input',{bubbles:true})); }));
         draw(); });
       box.appendChild(c); });

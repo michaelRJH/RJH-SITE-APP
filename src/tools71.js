@@ -18,7 +18,7 @@
       if(cur&&cur.toLowerCase()===b.dataset.r.toLowerCase()) return;
       // is there a card for it on this phone already? open that; otherwise save what is open and start a new one
       const have=(await DB.all()).filter(r=>r.tool==='mh'&&String(((r.data||{}).f||[])[0]||'').trim().toLowerCase()===b.dataset.r.toLowerCase()).sort((a,b2)=>b2.date.localeCompare(a.date))[0];
-      if(cur||(o.currentId)){ try{ await saveQuiet('mh'); }catch(e){} if(o.currentId&&window.syncEnqueue) syncEnqueue('mh',o.currentId); }
+      if(cur||(o.currentId)){ try{ await saveQuiet('mh'); }catch(e){} }   // saveQuiet sends it to the office if it changed
       if(have){ o.set(have.data); o.currentId=have.id; o.rev=have.rev||0; toast('Opened card '+b.dataset.r); }
       else { o.clear(); o.currentId=null; o.rev=0; if(PREFILL.mh) prefill(PREFILL.mh); $('mh-ref').value=b.dataset.r; $('mh-ref').dispatchEvent(new Event('change',{bubbles:true})); toast('New card for '+b.dataset.r); }
       syncStatus(); mhList(); window.scrollTo(0,0); })); }

@@ -74,7 +74,7 @@
   function readMeta(tool,rec){ const m=META[tool]||{}; const g=k=>{ try{ return m[k]?m[k]():''; }catch(e){ return ''; } };
     const o={ref:g('ref')||rec.ref||'',label:g('label'),where:g('where'),date:g('date')||(rec.created||rec.date||'').slice(0,10),by:g('by'),signer:g('signer'),signed:m.signed?g('signed'):'',links:(((rec.data&&rec.data.links)||rec.links)||[]).map(l=>l.ref).filter(Boolean)};
     if(!o.label) o.label=o.ref||TYPES[tool].code; return o; }
-  function recStem(rec){ const m=rec.meta||{}; const job=(rec.job||rec.site||'').trim(); return safeName([m.label,m.where,job,m.date].filter(Boolean).join(' - '))+' ('+shortId(rec.id)+')'; }
+  function recStem(rec){ const m=rec.meta||{}; const job=(rec.job||rec.site||'').trim(); return safeName([m.label||(rec.meta?'':String(rec.name||'').replace(/ · /g,' - ')),m.where,job,m.date].filter(Boolean).join(' - '))+' ('+shortId(rec.id)+')'; }
   // where a sheet goes: its job's folder if it has one, otherwise _Unfiled (hidden, the office files it)
   function recHome(rec){ if(rec.job) return {client:rec.clientFolder||'',job:rec.job}; const f=SITEMAP.folderFor(rec.site); return f&&f.job?f:null; }
   function recBases(rec){ const h=recHome(rec); const t=TYPES[rec.tool]; if(h) { const jb=(h.client?h.client+'/':'')+h.job; return {pdf:`${jb}/${M365.records}/${t.folder}`,json:`${jb}/${M365.app}/sheets`,job:h.job,client:h.client}; }
@@ -86,7 +86,7 @@
       const v={at:Date.now(),rows}; this.set(job,v); return v; } };
   async function nextRef(tool,job){ const t=TYPES[tool]; if(!t||!t.num) return ''; let mx=0; const re=new RegExp('^'+t.code+'-(\\d+)','i');
     const reg=JOBREG.get(job); ((reg&&reg.rows)||[]).filter(r=>r.type===t.folder).forEach(r=>{ const m=String(r.ref||r.title).match(re); if(m) mx=Math.max(mx,+m[1]); });
-    try{ (await DB.all()).filter(r=>r.tool===tool&&((r.job||r.site||'').toLowerCase()===String(job||'').toLowerCase())).forEach(r=>{ const m=String((r.meta&&r.meta.ref)||r.ref||'').match(re); if(m) mx=Math.max(mx,+m[1]); }); }catch(e){}
+    try{ (await DB.all()).filter(r=>r.tool===tool&&((r.job||r.site||'').toLowerCase()===String(job||'').toLowerCase())).forEach(r=>{ const f=(r.data&&r.data.f)||[]; [(r.meta&&r.meta.ref),r.ref,tool==='dw'?f[3]:tool==='aw'?f[4]:''].forEach(v=>{ const m=String(v||'').trim().match(re); if(m) mx=Math.max(mx,+m[1]); }); }); }catch(e){}
     return t.code+'-'+String(mx+1).padStart(3,'0'); }
   // ---- building the PDF for a sheet that is not on screen: one at a time, drafts paused while the form is borrowed ----
   let ENQ=Promise.resolve(); window.SYNC_SWAP=false;
@@ -94,11 +94,11 @@
   async function enqueueOne(tool,id){ const t=TYPES[tool]; let rec=await DB.get(id); if(!rec||!t||t.local) return;
     const b=pdfBuildFor(tool), o=SAVERS[tool]; let pdf=null, meta=null; const rev=(rec.rev||0)+1;
     if(o){ const onScreen=o.currentId===id; let snap=null, snapId=null, snapRev=0;
-      try{ if(!onScreen){ window.SYNC_SWAP=true; snap=o.get(); snapId=o.currentId; snapRev=o.rev; o.set(rec.data); o.currentId=id; await new Promise(r=>setTimeout(r,250)); }
+      try{ if(!onScreen){ window.SYNC_SWAP=true; document.body.classList.add('swapping'); snap=o.get(); snapId=o.currentId; snapRev=o.rev; o.set(rec.data); o.currentId=id; await new Promise(r=>setTimeout(r,250)); }
         o.rev=rev; meta=readMeta(tool,rec);
         if(b&&b.valid()&&window.jspdf){ const r=await b.build(); pdf=r instanceof Blob?r:r.output('blob'); } }
       catch(e){ console.warn('pdf for filing',e); }
-      finally{ if(snap){ try{ o.set(snap); o.currentId=snapId; o.rev=snapRev; }catch(e){} } else o.rev=rev; window.SYNC_SWAP=false; } }
+      finally{ if(snap){ try{ o.set(snap); o.currentId=snapId; o.rev=snapRev; }catch(e){} } else o.rev=rev; window.SYNC_SWAP=false; document.body.classList.remove('swapping'); } }
     const cur=await DB.get(id); if(!cur) return; cur.rev=rev; if(meta) cur.meta=meta; else cur.meta=cur.meta||readMeta(tool,cur); if(!cur.job){ const h=recHome(cur); if(h){ cur.job=h.job; cur.clientFolder=h.client; } }
     if(cur.meta&&t.num){ if(!cur.meta.ref){ cur.meta.ref=cur.ref||await nextRef(tool,cur.job||cur.site); if(!cur.meta.label||cur.meta.label===t.code) cur.meta.label=cur.meta.ref; } cur.ref=cur.meta.ref; }
     await DB.put(cur);
@@ -123,7 +123,7 @@
   // the register row: what the office filters on. Older lists without the newer columns still get the basics
   const REG_BASE=['Title','Site','Type','By','SheetDate','SheetId','Link','Status'];
   async function regWrite(rec,it,web,appPath){ if(!M365.listId) return; const m=rec.meta||{}; const t=TYPES[rec.tool];
-    const full={Title:[m.label,m.where].filter(Boolean).join(' · ')||t.name,Site:rec.job||rec.site||'',Client:rec.clientFolder||'',Type:t.folder,Ref:m.ref||m.label||'',Where:m.where||'',Foreman:m.by||'',By:it.by||AUTH.who(),SignedBy:m.signer||'',Signed:m.signed||'',WorkDate:m.date||'',Rev:String(rec.rev||1),Linked:(m.links||[]).join(', '),SheetDate:it.created,SheetId:rec.id,AppFile:appPath,...(web?{Link:{Url:web,Description:'PDF'}}:{})};
+    const full={Title:[m.label,m.where].filter(Boolean).join(' · ')||rec.name||t.name,Site:rec.job||rec.site||'',Client:rec.clientFolder||'',Type:t.folder,Ref:m.ref||m.label||'',Where:m.where||'',Foreman:m.by||'',By:it.by||AUTH.who(),SignedBy:m.signer||'',Signed:m.signed||'',WorkDate:m.date||'',Rev:String(rec.rev||1),Linked:(m.links||[]).join(', '),SheetDate:it.created,SheetId:rec.id,AppFile:appPath,...(web?{Link:{Url:web,Description:'PDF'}}:{})};
     const L=`/sites/${M365.siteId}/lists/${M365.listId}/items`;
     if(!rec.listItemId){ const q=await graph(`${L}?$filter=fields/SheetId eq '${String(rec.id).replace(/'/g,"''")}'&$select=id&$top=1`,{headers:{Prefer:'HonorNonIndexedQueriesWarningMayFailRandomly'}}); if(q.value&&q.value[0]) rec.listItemId=q.value[0].id; }   // a failed lookup throws: try again later rather than make a second row
     const send=async f=>{ if(rec.listItemId){ await graph(`${L}/${rec.listItemId}/fields`,{method:'PATCH',json:f}); } else { const r=await graph(L,{method:'POST',json:{fields:{...f,Status:'New'}}}); if(r&&r.id) rec.listItemId=r.id; } };
@@ -133,24 +133,33 @@
     try{ await send(full); }catch(e){ if(e.status===400&&/not recognized|does not exist|Field/i.test(e.message)){ try{ localStorage.setItem('rjh-reg-basic',String(Date.now())); }catch(x){} await send(basic()); } else throw e; } }
   let syncBusy=false, syncAgain=false;
   async function syncRun(){ if(!navigator.onLine) return; if(syncBusy){ syncAgain=true; return; } syncAgain=false; const q=(await SQ.all()).sort((a,b)=>a.created.localeCompare(b.created)); if(!q.length){ syncStatus(); return; } if(!(await AUTH.token())){ syncStatus(); return; } syncBusy=true; let sent=0;
-    try{ for(const it of q){ SYNC_INFLIGHT=it.id; try{ if(it.files&&!it.json){ it.pdf=(it.files.find(f=>/\.pdf$/i.test(f.name))||{}).blob||null; it.json=(it.files.find(f=>/\.json$/i.test(f.name))||{}).blob; it.stem=''; }   // queued by v68
+    try{ for(const it of q){ if(!(await SQ.all()).some(x=>x.id===it.id)) continue; SYNC_INFLIGHT=it.id; try{ if(it.files&&!it.json){ it.pdf=(it.files.find(f=>/\.pdf$/i.test(f.name))||{}).blob||null; it.json=(it.files.find(f=>/\.json$/i.test(f.name))||{}).blob; it.stem=''; }   // queued by v68
           let rec=await DB.get(it.sheetId); if(!rec){ await SQ.del(it.id); continue; }
+          if(!rec.job&&rec.listItemId&&M365.listId&&!recHome(rec)){ try{ const f=await graph(`/sites/${M365.siteId}/lists/${M365.listId}/items/${rec.listItemId}/fields`); const m=String((f&&f.AppFile)||'').match(/^(.+)\/_app\/sheets\/[^/]+$/); if(m&&!/^_Unfiled\//.test(m[1])){ const p=m[1].split('/'); rec.job=p.pop(); rec.clientFolder=p.join('/'); const nb=recBases(rec); if(rec.syncName){ rec.syncBase=nb.pdf; rec.syncJson=`${nb.json}/${rec.syncName}.json`; } delete rec.pdfTag;   // the office moved its files there under the old name
+              const cu=await DB.get(it.sheetId); if(cu){ ['job','clientFolder','syncBase','syncJson'].forEach(k=>{ if(rec[k]!==undefined) cu[k]=rec[k]; }); delete cu.pdfTag; await DB.put(cu); } } }catch(e){ if(e.status!==404) throw e; } }
           const B=recBases(rec); const stem=it.stem||recStem(rec); await ensureFolder(B.pdf); await ensureFolder(B.json);
           // remedials: two lads on one list. Before filing over a list someone else has filed since, merge it snag by snag
-          if(rec.tool==='rm'&&rec.jsonTag&&!it.merged){ const ex=await itemAt(`${B.json}/${stem}.json`); if(ex&&ex.eTag&&ex.eTag!==rec.jsonTag&&ex['@microsoft.graph.downloadUrl']){ try{ const j=await (await fetch(ex['@microsoft.graph.downloadUrl'])).json(); const other=(j.sheets||[])[0];
-              if(other&&other.data){ const cur=await DB.get(it.sheetId)||rec; const m=mergeRm(cur.data,other.data); if(m.changed){ cur.data=m.data; cur.date=new Date().toISOString(); cur.jsonTag=ex.eTag; try{ const pe=await itemAt(`${B.pdf}/${stem}.pdf`,'eTag'); if(pe) cur.pdfTag=pe.eTag; }catch(e){} await DB.put(cur); await SQ.del(it.id); const o=SAVERS.rm; if(o&&o.currentId===cur.id){ o.set(cur.data); } toast('Snag list merged with '+(other.by||'another phone')+'\'s changes'); await enqueueOne('rm',cur.id); const nq=(await SQ.all()).find(x=>x.sheetId===cur.id); if(nq){ nq.merged=true; await SQ.put(nq); } continue; } } }catch(e){ console.warn('merge',e); } } }
+          if(rec.tool==='rm'&&rec.jsonTag){ const ex=await itemAt(`${B.json}/${stem}.json`); if(ex&&ex.eTag&&ex.eTag!==rec.jsonTag&&ex['@microsoft.graph.downloadUrl']){ try{ const j=await (await fetch(ex['@microsoft.graph.downloadUrl'])).json(); const other=(j.sheets||[])[0];
+              if(other&&other.data){ const cur=await DB.get(it.sheetId)||rec; const m=mergeRm(cur.data,other.data); if(m.changed){ cur.data=m.data; cur.date=new Date().toISOString(); cur.jsonTag=ex.eTag; try{ const pe=await itemAt(`${B.pdf}/${stem}.pdf`,'eTag'); if(pe) cur.pdfTag=pe.eTag; }catch(e){} await DB.put(cur); await SQ.del(it.id); const o=SAVERS.rm; if(o&&o.currentId===cur.id){ o.set(cur.data); } toast('Snag list merged with '+(other.by||'another phone')+'\'s changes'); await syncEnqueue('rm',cur.id); continue; } } }catch(e){ console.warn('merge',e); throw e; } } }
           // someone else changed the filed PDF since this phone last filed it: keep theirs, file ours alongside
-          let name=stem, clash=false; const oldPdf=rec.syncBase&&rec.syncName?`${rec.syncBase}/${rec.syncName}.pdf`:'';
+          let name=stem, clash=false; let oldPdf=rec.syncBase&&rec.syncName?`${rec.syncBase}/${rec.syncName}.pdf`:'', oldJson=rec.syncJson||'';
+          if(rec.forkOf&&rec.forkOf===`${B.pdf}/${stem}`&&rec.syncName&&rec.syncBase===B.pdf) name=rec.syncName;
+          // filed by v68: the old file is where its link points, with the data file next to it
+          // (v68 named files by sheet name and day, so two sheets could share one: only take it away if its data file says it is this sheet)
+          if(!rec.syncName&&rec.webUrl&&rec.syncPath){ try{ const dec=decodeURIComponent(new URL(rec.webUrl).pathname); const k=dec.indexOf('/Shared Documents/'); if(k>=0&&/\.pdf$/i.test(dec)){ const op=dec.slice(k+18), oj=op.replace(/\.pdf$/i,'.rjhsheet.json'); const jm=await itemAt(oj);
+              const j=jm&&jm['@microsoft.graph.downloadUrl']?await (await fetch(jm['@microsoft.graph.downloadUrl'])).json():null; if(j&&(j.sheets||[]).length===1&&j.sheets[0].id===rec.id){ oldPdf=op; oldJson=oj; } } }catch(e){ console.warn('v68 copy',e); } }
           if(it.pdf&&rec.pdfTag&&oldPdf===`${B.pdf}/${stem}.pdf`){ const ex=await itemAt(`${B.pdf}/${stem}.pdf`,'eTag'); if(ex&&ex.eTag&&ex.eTag!==rec.pdfTag){ clash=true; const d=new Date(); name=safeName(`${stem} also from ${it.by||'another phone'} ${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')} ${d.toTimeString().slice(0,5).replace(':','')}`); } }
           let web='', tag=''; if(it.pdf){ const r=await uploadFile(`${B.pdf}/${name}.pdf`,it.pdf); if(r){ web=r.webUrl||''; tag=r.eTag||''; } }
           const jr=await uploadFile(`${B.json}/${name}.json`,it.json);
           // renamed or moved (new ref, new plot, filed under the job at last): take the old copy away so there is only ever one
-          if(!clash&&rec.syncName&&(rec.syncName!==name||rec.syncBase!==B.pdf)){ if(oldPdf) await delAt(oldPdf); if(rec.syncJson) await delAt(rec.syncJson); }
+          const same=(a,b)=>String(a).toLowerCase()===String(b).toLowerCase();   // SharePoint names are not case sensitive: never delete what was just written
+          if(!clash&&(rec.syncName||oldPdf)&&(rec.syncName!==name||rec.syncBase!==B.pdf)){ if(oldPdf&&it.pdf&&!same(oldPdf,`${B.pdf}/${name}.pdf`)) await delAt(oldPdf);   /* no new PDF this time: keep the old one */ if(oldJson&&!same(oldJson,`${B.json}/${name}.json`)) await delAt(oldJson); }
           rec=await DB.get(it.sheetId)||rec;   // re-read: the lad may have saved again while this was going up
           await regWrite(rec,it,web||rec.webUrl||'',`${B.json}/${name}.json`);
           if(clash){ try{ await graph(`/sites/${M365.siteId}/lists/${M365.listId}/items/${rec.listItemId}/fields`,{method:'PATCH',json:{Notes:'Changed on two devices. Both kept: '+name+'.pdf'}}); }catch(e){} }
-          const fresh=await DB.get(it.sheetId)||rec; Object.assign(fresh,{listItemId:rec.listItemId,syncName:name,syncBase:B.pdf,syncJson:`${B.json}/${name}.json`,filedAt:new Date().toISOString(),syncPath:B.pdf,ref:rec.ref||fresh.ref}); if(web) fresh.webUrl=web; if(tag) fresh.pdfTag=tag; if(jr&&jr.eTag) fresh.jsonTag=jr.eTag;
-          if(!fresh.synced||fresh.synced<it.savedAt) fresh.synced=it.savedAt; await DB.put(fresh);
+          const fresh=await DB.get(it.sheetId)||rec; Object.assign(fresh,{listItemId:rec.listItemId,syncName:name,syncBase:B.pdf,syncJson:`${B.json}/${name}.json`,filedAt:new Date().toISOString(),syncPath:B.pdf,ref:rec.ref||fresh.ref}); if(web) fresh.webUrl=web; if(tag) fresh.pdfTag=tag; if(jr&&jr.eTag) fresh.jsonTag=jr.eTag; if(clash) fresh.forkOf=`${B.pdf}/${stem}`; else if(name===stem) delete fresh.forkOf;
+          const sa=it.savedAt||rec.date;   // a v68 queue item has no savedAt
+          if(sa&&(!fresh.synced||fresh.synced<sa)) fresh.synced=sa; await DB.put(fresh);
           await SQ.del(it.id); sent++; }
         catch(e){ it.tries=(it.tries||0)+1; it.err=(e.message||String(e)).slice(0,160); it.status=e.status||0; await SQ.put(it); if(e.message==='not signed in') break; } } }
     finally{ SYNC_INFLIGHT=''; syncBusy=false; if(syncAgain){ syncAgain=false; setTimeout(syncRun,50); } syncStatus(); if(sent){ toast(sent===1?'1 sheet is in the office':sent+' sheets are in the office'); if(window.onFiled) try{ window.onFiled(); }catch(e){} } } }

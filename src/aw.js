@@ -84,7 +84,7 @@
       const ab=c.querySelector('.aw-addbit'); if(ab) ab.addEventListener('click',()=>{ it.bits.push({}); awRender(); const cs=$('aw-items').querySelectorAll('.aw-item'); const f=cs[i]&&cs[i].querySelector(`[data-bsz="${it.bits.length-1}"]`); if(f) setTimeout(()=>f.focus(),100); });
       c.querySelectorAll('.aw-delbit').forEach(b=>b.addEventListener('click',()=>{ it.bits.splice(+b.dataset.b,1); awRender(); }));
       const ph=c.querySelector('.aw-ph');
-      const drawPh=()=>{ ph.innerHTML=''; (it.photos||[]).forEach((p,k)=>{ const w=document.createElement('div'); w.innerHTML=`<img src="${p.d}"><button type="button" aria-label="Remove">×</button>`; w.querySelector('button').addEventListener('click',()=>{ it.photos.splice(k,1); drawPh(); awSum(); }); ph.appendChild(w); }); };
+      const drawPh=()=>{ ph.innerHTML=''; (it.photos||[]).forEach((p,k)=>{ const w=document.createElement('div'); w.innerHTML=`<img src="${awEsc(p.d)}"><button type="button" aria-label="Remove">×</button>`; w.querySelector('button').addEventListener('click',()=>{ it.photos.splice(k,1); drawPh(); awSum(); }); ph.appendChild(w); }); };
       c.querySelector('input[type=file]').addEventListener('change',async e=>{ it.photos=it.photos||[]; for(const f of e.target.files){ it.photos.push({d:await shrink(f),at:new Date().toISOString()}); } e.target.value=''; drawPh(); awSum(); c.dispatchEvent(new Event('input',{bubbles:true})); });
       const upd=()=>{ const r=awQty(it); c.querySelector('.aw-res').innerHTML=isNaN(r.q)?`<span class="note" style="margin:0">${ty.dims?'Type the sizes to get the quantity':'Put how many'}</span>`:`<b>${fq(r.q,r.u)} ${r.u}</b>${r.extra?` <span>· ${r.extra}</span>`:''}`; awSum(); };
       AWUPD.push(upd); drawPh(); upd(); box.appendChild(c); });

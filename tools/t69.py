@@ -77,6 +77,15 @@ async def main():
             ok(len(names) == 3 and sum(1 for n in names if n.startswith('DW-001')) == 2 and any('also from' in n for n in names), 'a clash keeps both copies: ' + str(names))
             ok(sp.text(p1) == 'office edit', 'the office copy is untouched')
             ok(any('Changed on two devices' in (r['fields'].get('Notes') or '') for r in sp.rows), 'register notes the clash')
+            # and after the clash this phone keeps filing to its own copy, never back over the office's
+            await pg.fill('#dw-desc', 'Edited again on the phone'); await pg.click('#panel-dw .s-save'); await wait_for(pg, "async()=>(await SQ.all()).length===0", 6000); await pg.wait_for_timeout(300)
+            names = [x.rsplit('/', 1)[-1] for x in sp.files('Strata Homes/Expression/Site records/Dayworks/')]
+            ok(sp.text(p1) == 'office edit' and len(names) == 3, 'a second save after a clash leaves the office copy alone: ' + str(names))
+            # numbering counts a sheet saved a moment ago, before its filing has run
+            ok(await pg.evaluate("async()=>{ await DB.put({id:'dw-1700000000000',tool:'dw',name:'x',site:'Expression',job:'Expression',date:new Date().toISOString(),data:{f:['Expression','','','DW-041']}}); const n=await nextRef('dw','Expression'); await DB.del('dw-1700000000000'); return n; }") == 'DW-042', 'next number counts a just-saved sheet')
+            # opening another sheet saves the open one quietly and that goes to the office too
+            await pg.fill('#dw-desc', 'Changed then left by opening another'); cur = await pg.evaluate("()=>SAVERS.dw.currentId")
+            await pg.evaluate("async()=>{ await saveQuiet('dw'); }"); ok(await wait_for(pg, "async id=>{ const r=await DB.get(id); return r&&r.synced>=r.date; }".replace('id=>','()=>').replace('DB.get(id)', "DB.get('%s')" % cur), 8000), 'a quiet save is filed too')
             # extras numbered from the job
             await pg.evaluate("()=>go('panel-aw')"); await pg.evaluate("()=>{ document.getElementById('aw-ref').value=''; return awNextRef(); }"); await pg.wait_for_timeout(200)
             ok((await pg.input_value('#aw-ref')) == 'AW-001', 'extras numbered AW-001 for the job')

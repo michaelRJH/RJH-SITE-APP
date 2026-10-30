@@ -168,6 +168,18 @@ async def main():
             data = json.loads(sp2.text(js[0]))['sheets'][0]['data'] if js else {}
             sts = [(i['no'], i['st']) for i in data.get('items', [])]
             ok(sts == [('1', 'fixed'), ('2', 'fixed')], 'two phones on one snag list: both fixes kept: ' + str(sts))
+            # ================= a one-off sheet the office files under a job: the phone follows it there =================
+            sp3 = FakeSP(); seed(sp3); cc = await b.new_context(viewport={'width': 390, 'height': 844}); await sp3.install(cc); pc = await cc.new_page()
+            pc.on('dialog', lambda d: asyncio.ensure_future(d.accept('1') if d.type == 'prompt' else d.accept()))
+            await signin(pc); await pc.evaluate("()=>{ SITE.set({site:'Somewhere',client:'',by:'Mike'}); }")
+            await open_tool(pc, 'panel-dw'); await pc.evaluate("()=>{ document.getElementById('dw-site').value='Somewhere'; }"); await pc.fill('#dw-desc', 'One-off job'); await pc.click('#panel-dw .s-save')
+            await wait_for(pc, "async()=>(await SQ.all()).length===0&&!syncBusy", 10000); await pc.wait_for_timeout(300)
+            ok(any(f.startswith('_Unfiled/Somewhere/Dayworks/') for f in sp3.files()), 'one-off sheet goes to _Unfiled')
+            await pc.evaluate("async()=>{ await jobsRefresh(); const r=(await graph(`/sites/${M365.siteId}/lists/${M365.listId}/items?$expand=fields`)).value[0]; await ofFileUnder(ofRow(r)); }"); await pc.wait_for_timeout(500)
+            await pc.fill('#dw-desc', 'One-off job, more added'); await pc.click('#panel-dw .s-save'); await wait_for(pc, "async()=>(await SQ.all()).length===0&&!syncBusy", 10000); await pc.wait_for_timeout(300)
+            fl = sp3.files(); dws = [f for f in fl if '/Dayworks/' in f or f.startswith('_Unfiled/')]
+            ok(not any(f.startswith('_Unfiled/') and f.endswith('.pdf') for f in fl) and len([f for f in fl if f.startswith('Strata Homes/Expression/Site records/Dayworks/')]) == 1 and not any('also from' in f for f in fl) and sp3.rows[0]['fields'].get('Site') == 'Expression', 'filed under a job by the office: the next save stays there, one PDF: ' + str(dws))
+            await cc.close()
             await b.close()
     finally:
         srv.terminate()

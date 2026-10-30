@@ -85,6 +85,10 @@ class FakeSP:
                 f = json.loads(r.post_data)['fields']; bad = self.check_fields(f)
                 if bad: return await self.j(route, 400, {'error': {'code': 'invalidRequest', 'message': "Field '%s' is not recognized" % bad}})
                 row = {'id': str(len(self.rows) + 7), 'fields': f}; self.rows.append(row); return await self.j(route, 201, {'id': row['id'], 'fields': f})
+            if m == 'GET' and rid and fields:
+                row = next((x for x in self.rows if x['id'] == rid), None)
+                if not row: return await self.j(route, 404, {'error': {'code': 'itemNotFound', 'message': 'nf'}})
+                return await self.j(route, 200, row['fields'])
             if m == 'PATCH' and rid and fields:
                 f = json.loads(r.post_data); bad = self.check_fields(f)
                 if bad: return await self.j(route, 400, {'error': {'code': 'invalidRequest', 'message': "Field '%s' is not recognized" % bad}})

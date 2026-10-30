@@ -15,3 +15,25 @@ CSS.append('''.seg.of-six{display:grid;grid-template-columns:repeat(3,1fr);gap:4
 .fr-open b{display:block;font-size:15px;word-break:break-word}.fr-open small{font-size:12px;color:var(--ink-2)}.fr-rm{margin:0;width:auto;padding:8px 10px;font-size:13px}
 .fr-new{background:var(--hivis);border-radius:99px;padding:1px 7px;font-size:11px;font-weight:800;color:var(--ink);margin-left:6px}
 .js-sum{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.js-sum span{border:2px solid #1E6F3F;border-radius:99px;padding:2px 10px;font-size:13px;background:#E7F2EA}.js-sum span.zero{border-color:var(--line);background:#fff;color:var(--ink-2)}''')
+# ===== v72 fixes =====
+# a sheet saved on the way to opening another (My sheets, Today, From the office, office Open) goes to the office too; a read-only office copy is never saved
+rep("""  async function saveQuiet(tool){ const o=SAVERS[tool]; if(!o) return false; let data;""",
+    """  async function saveQuiet(tool){ const o=SAVERS[tool]; if(!o) return false; if($(o.section).classList.contains('readonly')) return false; let data;""")
+rep("""    o.currentId=id; return true; }
+  const ago=""","""    o.currentId=id; if(window.syncEnqueue) syncEnqueue(tool,id); return true; }
+  const ago=""")
+rep("""    opts.saveNow=async(loud)=>{ if(window.REFFILL) await REFFILL(tool);""","""    opts.saveNow=async(loud)=>{ if(sec.classList.contains('readonly')) return true; if(window.REFFILL) await REFFILL(tool);""")
+# New and Open leave the read-only office view, so the next sheet can be typed in and saved
+rep("""const was=had?(opts.name()||TOOLNAMES[tool]):''; opts.clear();""","""const was=had?(opts.name()||TOOLNAMES[tool]):''; if(window.readOnly) readOnly(tool,false); opts.clear();""")
+rep("""o.set(r.data); o.currentId=r.id; o.sends=r.sends||0; if(tool==='all') go(o.section);""","""if(window.readOnly) readOnly(r.tool,false); o.set(r.data); o.currentId=r.id; o.sends=r.sends||0; if(tool==='all') go(o.section);""")
+# an older copy kept from a backup is its own sheet: it must not carry the original's register row or file names (it would delete the original's files)
+rep("""await DB.put({...older,id:cid,name:older.name+' (older copy '+new Date(older.date).toLocaleDateString('en-GB')+')'});""",
+    """await DB.put((c=>{ ['listItemId','syncName','syncBase','syncJson','syncPath','pdfTag','jsonTag','webUrl','forkOf','fromOffice'].forEach(k=>delete c[k]); return c; })({...older,id:cid,name:older.name+' (older copy '+new Date(older.date).toLocaleDateString('en-GB')+')'}));""")
+# photos from a sheet someone else saved go into the page escaped
+rep('w.innerHTML=`<img src="${d}"><button','w.innerHTML=`<img src="${esc63(d)}"><button')
+rep('w.innerHTML=`<img src="${o.d}" alt="">','w.innerHTML=`<img src="${esc63(o.d)}" alt="">')
+# wording: densities, not rates
+rep('are the shared rates from the home screen','are the shared figures from the home screen',2)
+rep('They are shared rates: change them','They are shared figures: change them')
+rep("Put every rate back to the RJH defaults?","Put every density back to the RJH defaults?")
+CSS.append('body.swapping .wrap section:not([hidden]){pointer-events:none;opacity:.6}body.swapping::after{content:"One moment, filing a sheet";position:fixed;left:50%;top:12px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:99px;font-weight:700;font-size:14px;z-index:99}')

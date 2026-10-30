@@ -39,7 +39,7 @@
       bySite[site].forEach(r=>{ const age=ofAge(r.date); const row=document.createElement('div'); row.className='of-row'+(!OF_DONE.has(r.status)&&age>14?' old':''); const st=ofStatuses(r.type);
         const unsigned=r.signed&&r.signed!=='Signed';
         row.innerHTML=`<div class="of-top"><div><b>${ofEsc(r.name)}</b><small>${ofEsc(r.type)}${r.foreman?' · '+ofEsc(r.foreman):''} · ${ofDate(r.date)}${age>0?' · '+age+' day'+(age>1?'s':'')+' ago':' · today'}${r.rev&&r.rev!=='1'?' · Rev '+ofEsc(r.rev):''}</small>${unsigned?`<span class="of-flag">${ofEsc(r.signed)}</span>`:r.signer?`<small>Signed by ${ofEsc(r.signer)}</small>`:''}${r.linked?`<small>Same work as ${ofEsc(r.linked)}</small>`:''}</div>
-          <div class="of-btns">${r.link?`<a class="btn" href="${ofEsc(r.link)}" target="_blank" rel="noopener">PDF</a>`:''}<button type="button" class="btn primary of-open">Open</button></div></div>
+          <div class="of-btns">${/^https:\/\//i.test(r.link)?`<a class="btn" href="${ofEsc(r.link)}" target="_blank" rel="noopener">PDF</a>`:''}<button type="button" class="btn primary of-open">Open</button></div></div>
           <div class="of-status" style="grid-template-columns:repeat(${st.length},1fr)">${st.map(s=>`<button type="button" data-s="${ofEsc(s)}" aria-pressed="${r.status===s}">${ofEsc(s)}</button>`).join('')}</div>
           <div class="of-notes"><span>${r.notes?ofEsc(r.notes):''}</span><button type="button" class="of-note">${r.notes?'Change note':'Add a note'}</button>${!r.site||/^_Unfiled/.test(r.app)?'<button type="button" class="of-file">File under a job</button>':''}</div>`;
         row.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.s!==r.status) ofSetStatus(r,b.dataset.s,row); }));
@@ -57,13 +57,15 @@
       const jp=await ofJsonPath(r); const fresh={}; if(r.link){ try{ const dec=decodeURIComponent(new URL(r.link).pathname); const k=dec.indexOf('/Shared Documents/'); const pp=k>=0?dec.slice(k+18):''; const pm=pp&&await itemAt(pp,'eTag,name'); if(pm){ fresh.pdfTag=pm.eTag; fresh.syncName=pm.name.replace(/\.pdf$/i,''); fresh.syncBase=pp.slice(0,pp.lastIndexOf('/')); fresh.syncJson=jp; fresh.webUrl=r.link; } }catch(e){} }
       if(r.id) fresh.listItemId=r.id;
       const o=SAVERS[sh.tool]; try{ await saveQuiet(sh.tool); }catch(e){} const have=await DB.get(sh.id).catch(()=>null); if(!have||have.date<=sh.date) await DB.put({...(have||{}),...sh,...fresh,loaded:sh.date,synced:sh.date,fromOffice:true});
-      o.set(sh.data); o.currentId=sh.id; o.rev=sh.rev||0; go(o.section); readOnly(sh.tool,true,r); toast('Opened '+(sh.name||r.name)+' to read'); }
+      // this phone has a newer copy of it (an edit not yet filed): show that one, so Edit as a revision does not file the older one over it
+      const show=have&&have.date>sh.date?have:sh; if(show===have) toast('This phone has a newer copy of it, not filed yet. Showing that.');
+      o.set(show.data); o.currentId=sh.id; o.rev=show.rev||0; go(o.section); readOnly(sh.tool,true,r); toast('Opened '+(sh.name||r.name)+' to read'); }
     catch(e){ toast('Could not open it: '+(e.message||e)); } }
   function readOnly(tool,on,r){ const o=SAVERS[tool]; const sec=$(o.section); sec.classList.toggle('readonly',!!on); let b=sec.querySelector('.ro-banner');
     if(on){ if(!b){ b=document.createElement('div'); b.className='ro-banner'; (sec.querySelector('.jobstrip')||sec.querySelector('.savebar')).before(b); }
       b.innerHTML=`<b>Opened from the office list, to read.</b> ${r&&r.foreman?ofEsc(r.foreman)+"'s sheet. ":''}Nothing you do here changes it.<div class="btnrow"><button type="button" class="btn" data-ro="edit">Edit as a revision</button><button type="button" class="btn" data-ro="close">Close</button></div>`;
       b.querySelector('[data-ro=edit]').addEventListener('click',()=>{ if(!confirm('Change this sheet? It is filed again as the next revision, with your name as the one who changed it. The foreman stays on it.')) return; readOnly(tool,false); toast('Editing. Save files it as the next revision.'); });
-      b.querySelector('[data-ro=close]').addEventListener('click',()=>{ readOnly(tool,false); o.clear(); o.currentId=null; go('panel-office'); }); }
+      b.querySelector('[data-ro=close]').addEventListener('click',()=>{ readOnly(tool,false); o.clear(); o.currentId=null; DB.del('draft-'+tool).catch(()=>{}); go('panel-office'); }); }
     else if(b) b.remove(); }
   window.readOnly=readOnly;
   document.querySelectorAll('[data-go]').forEach(x=>x.addEventListener('click',()=>Object.keys(SAVERS).forEach(k=>{ const s=$(SAVERS[k].section); if(s&&s.classList.contains('readonly')){ s.classList.remove('readonly'); const b=s.querySelector('.ro-banner'); if(b) b.remove(); SAVERS[k].clear(); SAVERS[k].currentId=null; } })));
