@@ -193,6 +193,6 @@
     try{ Object.entries(SAVERS).forEach(async([tool,o])=>{ if(!o.currentId) return; const st=$(o.section)&&$(o.section).querySelector('.s-state'); if(!st||st.dataset.hold) return; const r=await DB.get(o.currentId); if(!r) return; const s=recState(r,q); st.textContent=s.t; st.dataset.k=s.k; }); }catch(e){}
     ['homeToday','doneLabels','applyRole'].forEach(f=>{ if(window[f]) try{ window[f](); }catch(e){} }); }
   // ---- wire up ----
-  AUTH.finish().then(()=>{ syncStatus(); syncRun(); });
+  AUTH.finish().then(()=>{ syncStatus(); syncRun(); let n=''; try{ n=localStorage.getItem('rjh-after-login')||''; localStorage.removeItem('rjh-after-login'); }catch(e){} if(n==='pick'&&AUTH.who()&&typeof jobPicker==='function') setTimeout(()=>jobPicker(),400); });
   window.addEventListener('online',()=>{ syncStatus(); syncRun(); }); window.addEventListener('offline',()=>syncStatus()); setInterval(()=>{ if(navigator.onLine) syncRun(); },5*60*1000); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) syncRun(); });
   Object.assign(window,{syncEnqueue,syncStatus,syncRun,syncRetry,AUTH,SQ,graph,M365,TYPES,recState,recStem,nextRef,JOBREG,plainErr,itemAt,delAt});

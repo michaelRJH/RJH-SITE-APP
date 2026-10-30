@@ -103,6 +103,11 @@ async def main():
             ok('Adjust rates' not in body and 'Change a rate' not in body, 'no "rates" wording')
             ok(not [e for e in errs], 'lad: no page errors ' + str(errs[:3]))
             await ctx.close()
+            # ================= a laptop that is not signed in: Pick your job signs in, then shows the jobs =================
+            cl = await b.new_context(viewport={'width': 1100, 'height': 800}); await sp.install(cl); pl = await cl.new_page(); pl.on('dialog', lambda d: asyncio.ensure_future(d.accept()))
+            await pl.goto(U); await pl.wait_for_timeout(700); await nosplash(pl); await pl.click('#job-change'); await pl.wait_for_load_state('load'); await pl.wait_for_timeout(2500); await nosplash(pl)
+            ok(await pl.evaluate("()=>AUTH.who()") and await pl.is_visible('#site-pick .pick'), 'laptop not signed in: Pick your job signs in and opens the job list')
+            await cl.close()
             # ================= the office: Michael =================
             ctx = await b.new_context(viewport={'width': 1100, 'height': 900}, accept_downloads=True); sp.who, sp.upn = 'Michael Howard', 'michael@rjhowardengineers.co.uk'; await sp.install(ctx)
             pg = await ctx.new_page(); errs = []; pg.on('pageerror', lambda e: errs.append(str(e))); pg.on('dialog', lambda d: asyncio.ensure_future(d.accept('Checked with Jason') if d.type == 'prompt' else d.accept()))
