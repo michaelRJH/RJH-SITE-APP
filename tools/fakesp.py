@@ -76,6 +76,8 @@ class FakeSP:
         mm = re.match(r'/sites/[^/]+/lists/[^/]+/items(?:/(\d+))?(/fields)?$', base)
         if mm:
             rid, fields = mm.group(1), mm.group(2)
+            if m == 'GET' and not rid and '$orderby' in q:
+                return await self.j(route, 400, {'error': {'code': 'invalidRequest', 'message': 'orderby not supported in the fake'}})
             if m == 'GET' and not rid:
                 flt = unquote(q.get('$filter', [''])[0]); rows = self.rows
                 fm = re.match(r"fields/(\w+) eq '(.*)'", flt)
@@ -117,7 +119,9 @@ class FakeSP:
                 if p in self.items: return await self.j(route, 409, {'error': {'code': 'nameAlreadyExists', 'message': 'exists'}})
                 self.mkdir(p); return await self.j(route, 201, self.meta(self.items[p]))
             if parent and parent not in self.items: return await self.j(route, 404, {'error': {'code': 'itemNotFound', 'message': 'nf'}})
-            exp = 'children' in q.get('$expand', [''])[0]
+            if 'children' in q.get('$expand', [''])[0]:   # real SharePoint refuses this on a folder listing
+                return await self.j(route, 400, {'error': {'code': 'invalidRequest', 'message': 'Operation not supported'}})
+            exp = False
             out = []
             for it in self.kids(parent):
                 mt = self.meta(it)

@@ -15,8 +15,11 @@
   const jEsc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const shortClient=c=>String(c||'').replace(/\s+(Homes?|Ltd|Limited|Developments?|Group|Housing)\b/gi,'').trim()||c;
   async function jobsRefresh(){ if(!(await AUTH.token())) return JOBS.list; const d=await driveId();
-    const r=await graph(`/drives/${d}/root/children?$select=name,folder&$expand=children($select=name,folder)&$top=200`); const list=[];
-    (r.value||[]).forEach(c=>{ if(!c.folder||/^_|^Forms$|^Templates?$|unfiled/i.test(c.name)) return; (c.children||[]).forEach(j=>{ if(!j.folder||/^_|^(To site|Drawings|Site records)$/.test(j.name)) return; list.push({client:c.name,job:j.name,status:'live',notice:''}); }); });
+    // SharePoint will not list folders inside folders in one go, so: the clients, then each client's jobs
+    const r=await graph(`/drives/${d}/root/children?$select=name,folder&$top=200`); const list=[];
+    const clients=(r.value||[]).filter(c=>c.folder&&!/^_|^Forms$|^Templates?$|unfiled/i.test(c.name));
+    await Promise.all(clients.map(async c=>{ try{ const k=await graph(`/drives/${d}/root:/${gpath(c.name)}:/children?$select=name,folder&$top=200`); c.children=k.value||[]; }catch(e){ c.children=[]; } }));
+    clients.forEach(c=>{ (c.children||[]).forEach(j=>{ if(!j.folder||/^_|^(To site|Drawings|Site records)$/.test(j.name)) return; list.push({client:c.name,job:j.name,status:'live',notice:''}); }); });
     // status and notice from each job's pack, a few at a time
     const known={}; try{ Object.assign(known,JSON.parse(localStorage.getItem('rjh-jobs-meta')||'{}')); }catch(e){}
     const q=[...list]; const worker=async()=>{ while(q.length){ const j=q.shift(); const k=PACK.keyOf(j.client,j.job); try{ const meta=await PACK.meta(j.client,j.job); if(known[k]&&known[k].mod===meta.lastModifiedDateTime){ Object.assign(j,known[k]); continue; } const p=await (await fetch(meta['@microsoft.graph.downloadUrl'])).json(); j.status=p.status||'live'; j.notice=p.notice||''; known[k]={status:j.status,notice:j.notice,mod:meta.lastModifiedDateTime}; }

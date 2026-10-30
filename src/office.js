@@ -13,7 +13,7 @@
       link:(f.Link&&f.Link.Url)||'',app:f.AppFile||'',linked:f.Linked||'',notes:f.Notes||'',created:it.createdDateTime,modified:it.lastModifiedDateTime}; }
   async function ofLoad(){ const box=$('of-list'); if(!(await AUTH.token())){ box.innerHTML='<p class="note">Sign in on the home screen first.</p>'; return; }
     box.innerHTML='<p class="note">Loading the list of sheets…</p>';
-    try{ let url=`/sites/${M365.siteId}/lists/${M365.listId}/items?$expand=fields&$top=500&$orderby=createdDateTime desc`; const rows=[];
+    try{ let url=`/sites/${M365.siteId}/lists/${M365.listId}/items?$expand=fields&$top=500`; const rows=[];
       while(url){ const r=await graph(url,{headers:{Prefer:'HonorNonIndexedQueriesWarningMayFailRandomly'}}); (r.value||[]).forEach(it=>rows.push(ofRow(it))); url=r['@odata.nextLink']||''; }
       OF.rows=rows; OF.loaded=Date.now(); ofFilters(); ofRender();
       if(!OF.listUrl){ try{ const l=await graph(`/sites/${M365.siteId}/lists/${M365.listId}?$select=webUrl`); OF.listUrl=l.webUrl||''; const a=$('of-splink'); if(a&&OF.listUrl){ a.href=OF.listUrl; a.hidden=false; } }catch(e){} } }
