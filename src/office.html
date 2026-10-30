@@ -1,15 +1,19 @@
-  <!-- OFFICE: every site's sheets, from the register in RJH-Site -->
+  <!-- OFFICE: every job's sheets, from the Site records list in RJH-Site -->
   <section id="panel-office" data-title="Office" hidden>
-    <p class="note" id="of-note">Every sheet filed from every site. Tap a status to move it on. Open brings the sheet into this app so you can read it, print it or download the quantities.</p>
+    <p class="note" id="of-note">Every sheet filed from every job. Tap where a sheet is up to. Open brings it in to read; Edit as a revision is a separate step.</p>
     <div class="of-bar">
-      <div class="seg four" id="of-view"><button type="button" data-v="toprice" aria-pressed="true">To price</button><button type="button" data-v="new" aria-pressed="false">New</button><button type="button" data-v="all" aria-pressed="false">All</button><button type="button" data-v="mine" aria-pressed="false">Mine</button></div>
+      <div class="seg of-six" id="of-view"><button type="button" data-v="tocheck" aria-pressed="true">To do</button><button type="button" data-v="new" aria-pressed="false">New</button><button type="button" data-v="queried" aria-pressed="false">Queried</button><button type="button" data-v="unsigned" aria-pressed="false">Not signed</button><button type="button" data-v="all" aria-pressed="false">All</button><button type="button" data-v="mine" aria-pressed="false">Mine</button></div>
       <div class="grid2" style="margin-top:8px">
-        <div class="field"><label for="of-site">Site</label><div class="in"><select id="of-site" class="of-sel"><option value="">All sites</option></select></div></div>
+        <div class="field"><label for="of-site">Job</label><div class="in"><select id="of-site" class="of-sel"><option value="">All jobs</option></select></div></div>
         <div class="field"><label for="of-type">Type</label><div class="in"><select id="of-type" class="of-sel"><option value="">All types</option></select></div></div>
+        <div class="field"><label for="of-month">Month of the work</label><div class="in"><select id="of-month" class="of-sel"><option value="">Any month</option></select></div></div>
+        <div class="field"><label>&nbsp;</label><button class="btn" type="button" id="of-refresh" style="margin:0">Refresh</button></div>
       </div>
-      <div class="btnrow" style="margin-top:0"><button class="btn" type="button" id="of-refresh">Refresh</button><button class="btn" type="button" id="of-csv">Download list (CSV)</button></div>
     </div>
-    <div class="stat"><div class="box"><small>To price</small><b id="of-n-toprice">–</b></div><div class="box"><small>Over 14 days</small><b id="of-n-old">–</b></div><div class="box"><small>This month</small><b id="of-n-month">–</b></div></div>
+    <div class="stat"><div class="box"><small>To do</small><b id="of-n-tocheck">–</b></div><div class="box"><small>Over 14 days</small><b id="of-n-old">–</b></div><div class="box"><small>Not signed</small><b id="of-n-unsigned">–</b></div></div>
+    <div class="btnrow"><button class="btn" type="button" id="of-prog">Job progress</button><button class="btn" type="button" id="of-val">Valuation sheet (CSV)</button><button class="btn" type="button" id="of-asb">Manhole as-builts (CSV)</button><button class="btn" type="button" id="of-csv">This list (CSV)</button></div>
+    <p class="note"><span id="of-exportst"></span> Downloads use the job, type and month picked above. Quantities and hours only, no prices. <a id="of-splink" href="#" target="_blank" rel="noopener" hidden>Open the list in SharePoint</a></p>
+    <div id="of-progress" class="fd-side" hidden></div>
     <div id="of-list"><p class="note">Sign in on the home screen first.</p></div>
   </section>
 

@@ -7,7 +7,6 @@ rep('''    <div class="grid"><button class="tile rec" data-go="panel-office"><b>
     '''    <div class="grid"><button class="tile rec" data-go="panel-office"><b>Office</b><span>Every site's sheets, to price, status</span></button><button class="tile rec" data-go="panel-jobsetup"><b>Job set-up</b><span>People, plots, manholes, runs, notice</span></button></div>''')
 rep('  <!-- TRIAL HOLES -->',open('jobs.html',encoding='utf-8').read()+'  <!-- TRIAL HOLES -->')
 a="  if('serviceWorker' in navigator){"; assert t.count(a)==1; t=t.replace(a,open('jobs.js',encoding='utf-8').read()+a)
-rep("(function(){ const pb=$('site-pickbtn'); if(pb) pb.addEventListener('click',sitePick); })();","(function(){ const pb=$('site-pickbtn'); if(pb) pb.addEventListener('click',()=>jobPicker()); })();")
 CSS.append('''#job-box{margin:0 0 10px}
 .job-now small{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2)}
 .job-now b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:26px;line-height:1.1}

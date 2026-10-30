@@ -5,7 +5,7 @@
     const HANDS={AS:'AS (as drawn)',OP:'OP (opposite hand)'}, FILLS={eng:'Engineered fill',trad:'Traditional'};
     const boxEl=$('fd-drgbox'), plotEl=$('fd-plot'); if(!boxEl||!plotEl) return;
     let hits=[], timer=0;
-    function find(n){ const out=[]; DRG_DEFAULT.forEach(s=>s.boxes.forEach(b=>{ if(b.k==='plan'&&(b.plots||[]).includes(n)) out.push({s,b}); })); return out; }
+    function find(n){ const out=[]; const pk=(typeof PACK!=='undefined')&&PACK.get(); ((pk&&pk.houseTypes&&pk.houseTypes.length)?pk.houseTypes:DRG_DEFAULT).forEach(s=>s.boxes.forEach(b=>{ if(b.k==='plan'&&(b.plots||[]).includes(n)) out.push({s,b}); })); return out; }
     const setV=(id,v)=>{ const e=$(id); if(!e) return; e.value=v; e.dispatchEvent(new Event('input',{bubbles:true})); e.dispatchEvent(new Event('change',{bubbles:true})); };
     const houseText=(b)=>b.house==='Garage'?('Garage '+(b.tag||'')).trim():(b.house+(b.hand?' ('+b.hand+')':''));
     let drawnId='', drawnPart=null, typedPlot='';

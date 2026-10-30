@@ -1,5 +1,5 @@
   // ---- Additional works: every kind of extra on site, measured, with the details the office needs to price it. Quantities only: no prices in the app ----
-  const AW={items:[],how:'Verbal',nosig:'',why:''};
+  const AW={items:[],how:'Verbal',nosig:'',why:'',links:[]};
   try{ localStorage.removeItem('rjh-aw-prices'); localStorage.removeItem('rjh-aw-ohp'); }catch(e){}   // v55 briefly kept rates on the phone; none are kept now
   // dims: LWD volume (m³), LW area (m²), L length (m); each item can have several bits, each with a "times" count
   const AW_TYPES={
@@ -114,7 +114,12 @@
     box.innerHTML=all.length?'':'<p class="note">No dayworks sheets saved on this phone.</p>';
     all.forEach(r=>{ const d=r.data||{}; const row=document.createElement('div'); row.className='saverow'; const nl=(d.lab||[]).length, np=(d.plant||[]).length;
       row.innerHTML=`<div><b>${awEsc(r.name||'Dayworks')}</b><div class="note" style="margin:0">${nl} labour, ${np} plant · ${new Date(r.date).toLocaleDateString('en-GB')}</div></div><button type="button" class="btn" style="margin:0;width:auto;padding:8px 12px">Copy</button>`;
-      row.querySelector('button').addEventListener('click',()=>{ (d.lab||[]).forEach(x=>awLab(x)); (d.plant||[]).forEach(x=>awPlant(x)); box.hidden=true; awSum(); const ref=(d.f||[])[3]; toast('Copied from '+(ref||'the dayworks sheet')); });
+      row.querySelector('button').addEventListener('click',async()=>{ (d.lab||[]).forEach(x=>awLab(x)); (d.plant||[]).forEach(x=>awPlant(x)); box.hidden=true; awSum(); const ref=(d.f||[])[3]||r.name;
+        if(!$('aw-desc').value.trim()&&(d.f||[])[6]){ $('aw-desc').value=d.f[6]; } if(!$('aw-loc').value.trim()&&(d.f||[])[9]){ $('aw-loc').value=d.f[9]; }
+        AW.links=AW.links||[]; if(!AW.links.some(l=>l.ref===ref)) AW.links.push({id:r.id,tool:'dw',ref}); if(window.linksDraw) linksDraw('aw');
+        // and the dayworks sheet points back at this extra, so the office never prices the same work twice
+        const awRef=$('aw-ref').value.trim(); if(awRef){ r.data.links=r.data.links||[]; if(!r.data.links.some(l=>l.ref===awRef)){ r.data.links.push({id:SAVERS.aw.currentId||'',tool:'aw',ref:awRef}); r.date=new Date().toISOString(); await DB.put(r); if(window.syncEnqueue) syncEnqueue('dw',r.id); } }
+        toast('Copied from '+ref+' and linked'); });
       box.appendChild(row); });
     box.hidden=false; });
   // names used before on this phone, offered as you type

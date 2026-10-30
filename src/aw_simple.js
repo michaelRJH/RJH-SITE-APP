@@ -27,7 +27,7 @@
       if(t==='dig'){ const ld=lc.match(/(\d+)\s*loads?/); if(ld) it.Q=ld[1]; }
       }
     else { const n=lc.replace(dimsRe,'').match(/(\d+(?:\.\d+)?)\s*(?:nr|no|loads?|hrs?|hours?)?/); if(n) it.Q=n[1];
-      if(t==='hours'){ const h=lc.match(/(\d+(?:\.\d+)?)\s*(?:hrs?|hours?)/); if(h) it.Q=h[1]; const men=raw.match(/\d+\s*(men|man|lads?)[^,.]*/i); if(men) it.S=men[0].trim(); if(/stand|wait/.test(lc)) it.opt.kind='Standing time'; else if(/attend/.test(lc)) it.opt.kind='Attendance on others'; else if(/sweep|clean/.test(lc)) it.opt.kind='Sweeping / cleaning'; }
+      if(t==='hours'){ const h=lc.match(/(\d+(?:\.\d+)?)\s*(?:hrs?|hours?)/); if(h) it.Q=h[1]; const men=raw.match(/(\d+)\s*(men|man|lads?|operatives?|blokes?)\b/i); if(men){ const n=+men[1]; it.S=n+' '+men[2]+' × '+(it.Q||'?')+' hr'; if(n>1&&it.Q) it.Q=String(+(n*parseFloat(it.Q)).toFixed(2)); it.opt.men=String(n); } /* 2 men 3 hrs is 6 man-hours */ if(/stand|wait/.test(lc)) it.opt.kind='Standing time'; else if(/attend/.test(lc)) it.opt.kind='Attendance on others'; else if(/sweep|clean/.test(lc)) it.opt.kind='Sweeping / cleaning'; }
       if(t==='loads'){ it.opt.wag='8-wheeler'; it.opt.dir=/deliver|brought|tipped in/.test(lc)?'Delivered in':'Carted away'; }
       if(t==='count'){ it.S=raw.replace(/^\s*\d+\s*(nr|no\.?)?\s*/i,'').trim(); it.desc=''; }
       if(t==='other'){ const u=lc.match(/\d+(?:\.\d+)?\s*(m3|m³|m2|m²|\bm\b|\bt\b|nr|no)/); it.U=u?(/m3|³/.test(u[1])?'m³':/m2|²/.test(u[1])?'m²':/^t/.test(u[1])?'t':/nr|no/.test(u[1])?'nr':'m'):'nr'; } }
