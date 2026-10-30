@@ -8,7 +8,7 @@
   window.REFFILL=REFFILL;
   // office people see Office and Job set-up; everyone else sees the site screens only.
   // The list lives in RJH-Site _app/settings.json (office: emails or names), with these names until that file says otherwise.
-  const OFFICE={names:['michael howard','steven gilmartin','michael gilmartin','liam barrett','simon purll','martin grainger','david howard','richard howard'],
+  const OFFICE={names:['michael howard','martin grainger','steven gilmartin','liam barrett','richard howard'],
     get(){ try{ return JSON.parse(localStorage.getItem('rjh-office')||'null'); }catch(e){ return null; } },
     is(){ const t=AUTH.get(); if(!t||!t.who) return false; const who=String(t.who).toLowerCase(), upn=String(t.upn||'').toLowerCase(); const list=((this.get()||{}).office||this.names).map(x=>String(x).toLowerCase().trim());
       return list.includes(upn)||list.includes(who)||list.some(n=>n&&who.startsWith(n)); },
