@@ -1,0 +1,87 @@
+  <!-- ADDITIONAL WORKS -->
+  <section id="panel-aw" data-title="Additional works" hidden>
+    <div class="aw-head" id="aw-head"><b id="aw-headline">Additional works</b><span id="aw-headsub"></span><button type="button" class="aw-headbtn" id="aw-headedit">Change</button></div>
+
+    <div class="field"><label for="aw-loc">Where</label><div class="in"><input id="aw-loc" type="text" placeholder="Plot 40, haul road, MH S12"></div></div>
+    <datalist id="aw-names"></datalist><datalist id="aw-cos"></datalist>
+    <div class="grid2">
+      <div class="field"><label for="aw-inst">Who asked for it</label><div class="in"><input id="aw-inst" type="text" placeholder="Name" list="aw-names" autocomplete="off"></div></div>
+      <div class="field"><label for="aw-instco">Their company</label><div class="in"><input id="aw-instco" type="text" placeholder="Strata, site manager" list="aw-cos" autocomplete="off"></div></div>
+    </div>
+    <p class="note" id="aw-instwarn" style="margin:-4px 0 10px"></p>
+    <div class="field"><label for="aw-desc">What we did</label><textarea id="aw-desc" class="aw-big" placeholder="Say it or type it. What, where, how big, why it was extra. e.g. Dug out a soft spot by plot 40 on the client's say-so, 3 x 2 x 600, filled with Type 1, 4 loads away."></textarea></div>
+
+    <div class="field"><label>Photos</label>
+      <div class="photos aw-ph" id="aw-photos"></div>
+      <label class="btn primary filebtn" style="margin-top:4px">Take photo<input type="file" id="aw-photo" accept="image/*" capture="environment"></label>
+      <label class="btn filebtn" style="margin-top:6px">Add from gallery<input type="file" id="aw-photo2" accept="image/*" multiple></label>
+    </div>
+
+    <div class="field"><label for="aw-sizes">Sizes, if you have them <span class="aw-opt">one per line, optional</span></label><textarea id="aw-sizes" placeholder="Type 1  40 x 4 x 50&#10;Dig out  3 x 2 x 600&#10;Concrete  2.4 x 1.2 x 150&#10;150 pipe  12.5&#10;3 covers raised&#10;4 loads away&#10;2 men 3 hrs standing"></textarea></div>
+    <div id="aw-sizesout" class="aw-sizesout" hidden></div>
+
+    <details id="aw-more"><summary class="aw-moresum">More detail <small>why it is extra, how we were told, measured items, labour and plant</small></summary>
+    <h2>Job</h2>
+    <div class="grid2">
+      <div class="field"><label for="aw-site">Site</label><div class="in"><input id="aw-site" type="text" placeholder="Site"></div></div>
+      <div class="field"><label for="aw-client">Client</label><div class="in"><input id="aw-client" type="text" placeholder="Client"></div></div>
+      <div class="field"><label for="aw-date">Date</label><div class="in"><input id="aw-date" type="date"></div></div>
+      <div class="field"><label for="aw-ref">Sheet ref</label><div class="in"><input id="aw-ref" type="text" placeholder="AW-001" autocapitalize="characters"></div></div>
+      <div class="field"><label for="aw-by">RJH foreman</label><div class="in"><input id="aw-by" type="text" placeholder="Name"></div></div>
+      <div class="field"><label for="aw-instdate">Date asked</label><div class="in"><input id="aw-instdate" type="date"></div></div>
+      <div class="field"><label for="aw-instref">Instruction ref</label><div class="in"><input id="aw-instref" type="text" placeholder="if there is one"></div></div>
+    </div>
+    <div class="field"><label>Why it is extra</label><div class="aw-why" id="aw-why"><button type="button" data-w="Client asked for it" aria-pressed="false">Client asked for it</button><button type="button" data-w="Damage by others" aria-pressed="false">Damage by others</button><button type="button" data-w="Unforeseen ground" aria-pressed="false">Unforeseen ground</button><button type="button" data-w="Design change" aria-pressed="false">Design change</button></div></div>
+    <div class="field" id="aw-tradewrap" hidden><label for="aw-trade">Which trade or company did the damage</label><div class="in"><input id="aw-trade" type="text" placeholder="e.g. scaffolders, Openreach"></div></div>
+    <div class="field"><label>How we were told</label><div class="seg four" id="aw-how"><button type="button" data-h="Verbal" aria-pressed="true">Verbal</button><button type="button" data-h="Email" aria-pressed="false">Email</button><button type="button" data-h="Written" aria-pressed="false">Written</button><button type="button" data-h="Site instruction" aria-pressed="false">Site instr.</button></div></div>
+
+    <h2>Measured items</h2>
+    <p class="note">The sizes you typed above turn into items here on their own. Only use this if you want to measure something properly: tap what you did, put the sizes and the details.</p>
+    <div class="aw-quick" id="aw-quick">
+      <button type="button" data-q="t1">Type 1 / stone</button><button type="button" data-q="dig">Dig out</button>
+      <button type="button" data-q="pipe">Drainage / ducts</button><button type="button" data-q="conc">Concrete</button>
+      <button type="button" data-q="pave">Flags / paving</button><button type="button" data-q="kerb">Kerbs / edging</button>
+      <button type="button" data-q="count">Number of<small>manholes, gullies, posts</small></button><button type="button" data-q="loads">Loads<small>muck away, deliveries</small></button>
+      <button type="button" data-q="area">Area<small>topsoil, membrane, seed</small></button><button type="button" data-q="hours">Hours only<small>standing, attendance</small></button>
+      <button type="button" data-q="other">Something else</button>
+    </div>
+    <div id="aw-items"></div>
+    <button class="btn" type="button" id="aw-additem" hidden>+ Add item</button>
+
+    <h2 id="aw-timeh">Labour and plant time</h2>
+    <div id="aw-timebody">
+      <p class="note">Only if the time is being claimed as well. Leave empty if the items cover it.</p>
+      <div class="dw"><div class="lhead"><span>Name</span><span>Trade</span><span>Hours</span><span></span></div><div id="aw-lab"></div></div>
+      <button class="btn" type="button" id="aw-addlab">+ Add person</button>
+      <div class="dw"><div class="lhead"><span>Machine</span><span>Operator / ref</span><span>Hours</span><span></span></div><div id="aw-plant"></div></div>
+      <div class="btnrow" style="margin-top:0"><button class="btn" type="button" id="aw-addplant">+ Add plant</button><button class="btn" type="button" id="aw-fromdw">Copy from a saved Dayworks sheet</button></div>
+      <div class="savelist" id="aw-dwlist" hidden></div>
+    </div>
+
+    <h2 id="aw-officeh">Office</h2>
+    <p class="note">Quantities only. Open the sheet the lads sent, check it, and download the quantities as a spreadsheet.</p>
+    <div class="btnrow" style="margin-top:0"><label class="btn filebtn">Load a sheet sent from site<input type="file" id="aw-load" accept=".json,application/json"></label><button class="btn" type="button" id="aw-csv">Download the quantities (CSV)</button></div>
+    </details>
+
+    <h2>Signed off</h2>
+    <div class="grid2">
+      <div class="field"><label for="aw-cname">Client rep name</label><div class="in"><input id="aw-cname" type="text" placeholder="Name" list="aw-names" autocomplete="off"></div></div>
+      <div class="field"><label for="aw-cpos">Position</label><div class="in"><input id="aw-cpos" type="text" placeholder="Site manager"></div></div>
+    </div>
+    <div class="field" id="aw-sigfield"><label>Client signature</label><div class="sigwrap"><canvas class="sig" id="aw-sig"></canvas><button type="button" class="clear" data-sig="aw-sig">Clear</button><span class="hint">Sign here</span></div></div>
+    <div class="field"><label>Not signed?</label><div class="seg four" id="aw-nosig"><button type="button" data-n="" aria-pressed="true">Signed</button><button type="button" data-n="Not on site" aria-pressed="false">Not on site</button><button type="button" data-n="Will sign later" aria-pressed="false">Sign later</button><button type="button" data-n="Refused" aria-pressed="false">Refused</button></div></div>
+    <div class="field" id="aw-nosigwrap" hidden><label for="aw-nosigwhy">Anything to add</label><div class="in"><input id="aw-nosigwhy" type="text" placeholder="e.g. said he'd check with the office"></div></div>
+
+    <h2>Send it</h2>
+    <div class="field"><label for="aw-to">Goes to</label><div class="in"><select id="aw-to" style="width:100%;border:0;background:transparent;font:inherit;font-weight:600;padding:0 8px"><option value="stevengilmartin@rjhowardengineers.co.uk">Steven Gilmartin</option><option value="liambarrett@rjhowardengineers.co.uk">Liam Barrett</option><option value="michael@rjhowardengineers.co.uk">Michael Howard</option><option value="">Someone else</option></select></div></div>
+    <div class="field" id="aw-towrap" hidden><label for="aw-toother">Their email</label><div class="in"><input id="aw-toother" type="email" placeholder="name@company.co.uk"></div></div>
+    <div class="stat"><div class="box"><small>Items</small><b id="aw-n">0</b></div><div class="box"><small>Photos</small><b id="aw-np">0</b></div></div>
+    <div class="btnrow">
+      <button class="btn primary" type="button" id="aw-share2">Send PDF and sheet</button><button type="button" id="aw-share" hidden></button>
+      <button class="btn primary" type="button" id="aw-email">Email Steven</button>
+      <button class="btn" type="button" id="aw-download">Download PDF</button>
+      <button class="btn" type="button" id="aw-open">Open PDF</button>
+    </div>
+    <p class="note" id="aw-status">Send puts the PDF and the sheet file together on WhatsApp or email, so the office can open the sheet in the app. Email writes it out as text; attach the PDF to it.</p>
+  </section>
+

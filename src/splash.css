@@ -1,0 +1,14 @@
+#splash{position:fixed;inset:0;z-index:999;display:flex;align-items:flex-end;justify-content:center;background:rgba(22,22,22,.55);padding:0 0 6vh;animation:spfade .25s ease-out}
+#splash[hidden]{display:none}
+.sp-card{position:relative;width:min(72vw,300px);animation:sprise .55s cubic-bezier(.2,1.4,.4,1) both}
+.sp-card svg{width:100%;height:auto;display:block;filter:drop-shadow(0 12px 18px rgba(0,0,0,.35))}
+.sp-card small{display:block;text-align:center;color:#fff;opacity:.7;font-size:12px;margin-top:6px}
+.sp-bubble{position:absolute;left:-6%;top:-4%;background:#fff;color:#161616;font-family:"Barlow Condensed",Impact,sans-serif;font-weight:800;font-size:26px;text-transform:uppercase;padding:8px 14px;border-radius:14px;border:3px solid #161616;transform:rotate(-6deg);animation:sppop .4s .35s cubic-bezier(.2,1.6,.4,1) both;white-space:nowrap}
+.sp-bubble::after{content:"";position:absolute;left:40%;bottom:-14px;border:8px solid transparent;border-top:10px solid #161616}
+#splash.out{animation:spfade .3s ease-in reverse both}
+#sp-wink{animation:spwink 1.6s .6s steps(1) both}
+@keyframes sprise{from{transform:translateY(120%) rotate(-4deg)}to{transform:none}}
+@keyframes sppop{from{transform:scale(0) rotate(-20deg)}to{transform:scale(1) rotate(-6deg)}}
+@keyframes spfade{from{opacity:0}to{opacity:1}}
+@keyframes spwink{0%,30%{d:path("M176 106q10 6 20 0")}31%,45%{d:path("M176 100a10 8 0 1 0 20 0a10 8 0 1 0 -20 0")}46%,100%{d:path("M176 106q10 6 20 0")}}
+@media (prefers-reduced-motion:reduce){.sp-card,.sp-bubble,#sp-wink{animation:none}}

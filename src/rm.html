@@ -1,0 +1,52 @@
+  <!-- REMEDIALS -->
+  <section id="panel-rm" data-title="Remedials" hidden>
+    <h2>The list</h2>
+    <div class="grid2">
+      <div class="field"><label for="rm-site">Site</label><div class="in"><input id="rm-site" type="text" placeholder="Site"></div></div>
+      <div class="field"><label for="rm-client">Client</label><div class="in"><input id="rm-client" type="text" placeholder="Client"></div></div>
+      <div class="field"><label for="rm-ref">Their list ref</label><div class="in"><input id="rm-ref" type="text" placeholder="Snag list 3"></div></div>
+      <div class="field"><label for="rm-listdate">Date of their list</label><div class="in"><input id="rm-listdate" type="date"></div></div>
+      <div class="field"><label for="rm-from">Raised by</label><div class="in"><input id="rm-from" type="text" placeholder="Name at the client" list="rm-names" autocomplete="off"></div></div>
+      <div class="field"><label for="rm-by">RJH foreman</label><div class="in"><input id="rm-by" type="text" placeholder="Name"></div></div>
+    </div>
+    <datalist id="rm-names"></datalist>
+    <div class="field"><label for="rm-notes">Notes</label><textarea id="rm-notes" placeholder="Anything about the list as a whole, e.g. agreed with Dave to do it over two visits"></textarea></div>
+
+    <h2>Snags</h2>
+    <div class="rm-sum" id="rm-sum"></div>
+    <p class="note" id="rm-howto" style="margin:0 0 8px">Tap a snag to open it. Take a before photo, fix it, tap Fixed, say how, take an after photo, then Next.</p>
+    <div class="seg four" id="rm-filter" style="margin:0 0 10px"><button type="button" data-f="open" aria-pressed="true">Open</button><button type="button" data-f="fixed" aria-pressed="false">Fixed</button><button type="button" data-f="other" aria-pressed="false">Not ours</button><button type="button" data-f="all" aria-pressed="false">All</button></div>
+    <div id="rm-items"></div>
+    <details id="rm-addwrap"><summary class="rm-addsum">Add snags</summary>
+    <div class="btnrow" style="margin-top:8px"><button class="btn primary" type="button" id="rm-additem">+ Add a snag</button><button class="btn" type="button" id="rm-paste">Paste their list</button></div>
+    <div class="fd-side" id="rm-pastebox" hidden>
+      <p class="note" style="margin:0 0 6px">One snag per line. Start a line with where and a dash: <b>Plot 12 - flag rocking outside front door</b></p>
+      <textarea id="rm-pastetxt" placeholder="Plot 12 - flag rocking outside front door&#10;Plot 14 - gully grate cracked"></textarea>
+      <div class="btnrow" style="margin-top:6px"><button class="btn primary" type="button" id="rm-pastego">Add these snags</button><button class="btn" type="button" id="rm-pastex">Cancel</button></div>
+    </div>
+    <div class="btnrow" style="margin-top:0"><label class="btn filebtn">Load their spreadsheet (xlsx or csv)<input type="file" id="rm-xlsx" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"></label></div>
+    <p class="note">Easiest on a PC: load the client's spreadsheet here, Save, then Send it to the lad's phone. Signed-off rows and items issued to someone else are skipped.</p>
+    </details>
+
+    <h2>Signed off</h2>
+    <div class="grid2">
+      <div class="field"><label for="rm-cname">Client rep name</label><div class="in"><input id="rm-cname" type="text" placeholder="Name" list="rm-names" autocomplete="off"></div></div>
+      <div class="field"><label for="rm-cpos">Position</label><div class="in"><input id="rm-cpos" type="text" placeholder="Site manager"></div></div>
+    </div>
+    <div class="field" id="rm-sigfield"><label>Client signature</label><div class="sigwrap"><canvas class="sig" id="rm-sig"></canvas><button type="button" class="clear" data-sig="rm-sig">Clear</button><span class="hint">Sign here</span></div></div>
+    <div class="field"><label>Not signed?</label><div class="seg four" id="rm-nosig"><button type="button" data-n="" aria-pressed="true">Signed</button><button type="button" data-n="Not on site" aria-pressed="false">Not on site</button><button type="button" data-n="Will sign later" aria-pressed="false">Sign later</button><button type="button" data-n="Refused" aria-pressed="false">Refused</button></div></div>
+    <div class="field" id="rm-nosigwrap" hidden><label for="rm-nosigwhy">Anything to add</label><div class="in"><input id="rm-nosigwhy" type="text" placeholder="e.g. wants to walk it first"></div></div>
+
+    <h2>Send it</h2>
+    <div class="field"><label for="rm-to">Goes to</label><div class="in"><select id="rm-to" style="width:100%;border:0;background:transparent;font:inherit;font-weight:600;padding:0 8px"><option value="stevengilmartin@rjhowardengineers.co.uk">Steven Gilmartin</option><option value="liambarrett@rjhowardengineers.co.uk">Liam Barrett</option><option value="michael@rjhowardengineers.co.uk">Michael Howard</option><option value="">Someone else</option></select></div></div>
+    <div class="field" id="rm-towrap" hidden><label for="rm-toother">Their email</label><div class="in"><input id="rm-toother" type="email" placeholder="name@company.co.uk"></div></div>
+    <div class="stat"><div class="box"><small>Snags</small><b id="rm-n">0</b></div><div class="box"><small>Still open</small><b id="rm-left">0</b></div></div>
+    <div class="btnrow">
+      <button class="btn primary" type="button" id="rm-share2">Share PDF and sheet</button><button type="button" id="rm-share" hidden></button>
+      <button class="btn primary" type="button" id="rm-email">Email Steven</button>
+      <button class="btn" type="button" id="rm-download">Download PDF</button>
+      <button class="btn" type="button" id="rm-open">Open PDF</button>
+    </div>
+    <p class="note" id="rm-status">The PDF is the close-out report: what they said, what we did, before and after photos, and who signed. Share it with the client once the list is done, or part way through to show progress.</p>
+  </section>
+

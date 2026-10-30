@@ -1,0 +1,12 @@
+{
+ "clientId": "8328bc3e-c40d-4ce6-a988-5c249ceeb2f3",
+ "tenantId": "b6700592-fab9-4116-868f-0c02edfef537",
+ "redirect": "https://michaelrjh.github.io/RJH-SITE-APP/",
+ "site": "rjhowardengineering.sharepoint.com:/sites/RJH-Site",
+ "driveId": "(looked up at runtime)",
+ "library": "Shared Documents",
+ "recordsFolder": "Site records",
+ "siteId": "rjhowardengineering.sharepoint.com,a0710b25-f238-4fc9-892e-a7954f243e90,5e1c7c12-7dd6-41f8-9fe8-1d67af7dda3f",
+ "listId": "2b6a5bfb-cda7-4be0-a119-402ba0dcdd91",
+ "note": "RJH-Internal is office only; the app never writes there"
+}

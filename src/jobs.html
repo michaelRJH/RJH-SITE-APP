@@ -1,0 +1,19 @@
+  <!-- JOB SET-UP (office) -->
+  <section id="panel-jobsetup" data-title="Job set-up" hidden>
+    <p class="note">What the phones on a job pick from: the people who sign things, the plots, the manhole schedule, the runs. Paste from Excel, one line each. Save and every phone on the job has it next time it syncs.</p>
+    <div class="btnrow" style="margin-top:0"><button class="btn primary" type="button" id="js-pick">Choose the job</button></div>
+    <div id="js-list" class="fd-side" hidden></div>
+    <div id="js-body" hidden>
+      <div class="aw-head"><b id="js-title"></b></div>
+      <div class="field"><label>Status</label><div class="seg two" id="js-status"><button type="button" data-s="live" aria-pressed="true">Live</button><button type="button" data-s="complete" aria-pressed="false">Complete</button></div></div>
+      <div class="field"><label for="js-notice">Notice for site <span class="aw-opt">shows on the home screen of everyone on this job</span></label><div class="in"><input id="js-notice" type="text" placeholder="e.g. Strata rep is Jason this week. No deliveries Friday."></div></div>
+      <div class="field"><label for="js-people">People <span class="aw-opt">name, company, position</span></label><textarea id="js-people" placeholder="Jason Fisher, Strata, Site manager&#10;Mark Robson, Strata, Engineer"></textarea></div>
+      <div class="field"><label for="js-plots">Plots <span class="aw-opt">plot, house type, hand, road</span></label><textarea id="js-plots" placeholder="12, Siena, LH, Road 3&#10;13, Siena, RH, Road 3"></textarea></div>
+      <div class="field"><label for="js-mh">Manholes <span class="aw-opt">ref, cover level, invert, diameter, depth, system</span></label><textarea id="js-mh" style="font-family:ui-monospace,Menlo,monospace;font-size:14px" placeholder="S12	92.450	90.120	1200	2.33	surface&#10;F12	92.380	89.900	1200	2.48	foul"></textarea>
+        <div class="btnrow" style="margin-top:6px"><label class="btn filebtn">Read manholes from a spreadsheet (xlsx or csv)<input type="file" id="js-mhfile" accept=".xlsx,.csv"></label></div></div>
+      <div class="field"><label for="js-runs">Runs <span class="aw-opt">from, to, diameter, length</span></label><textarea id="js-runs" style="font-family:ui-monospace,Menlo,monospace;font-size:14px" placeholder="S12	S11	225	38.5"></textarea></div>
+      <div class="field"><label>House types and footings</label><p class="note" id="js-ht" style="margin:0 0 6px"></p><div class="btnrow" style="margin-top:0"><label class="btn filebtn">Load house types file<input type="file" id="js-htfile" accept=".json"></label></div></div>
+      <div class="btnrow"><button class="btn primary" type="button" id="js-save">Save job</button></div>
+    </div>
+  </section>
+
