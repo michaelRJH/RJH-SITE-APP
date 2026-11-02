@@ -71,6 +71,12 @@ async def main():
             ok(rec['data'].get('design') and rec['data']['design'].get('il') == '90.120', 'design levels saved with the card')
             ok(any('/Manhole cards/MH S12 - Expression - ' in f for f in sp.files()), 'file named MH S12: ' + str([f for f in sp.files() if 'Manhole' in f]))
             await pg.evaluate("()=>mhList()"); await pg.wait_for_timeout(300); ok('1 of 3 done' in await pg.text_content('#mh-joblist'), 'progress 1 of 3 after filing')
+            # gradient sheet keeps From and To manhole on the sheet, side by side
+            await open_tool(pg, 'panel-grad')
+            ok(await pg.is_visible('#g-from') and await pg.is_visible('#g-to') and not await pg.evaluate("()=>!!document.getElementById('g-to').closest('.pdfmore')"), 'gradient sheet: To manhole is on the sheet, not hidden under More')
+            # every input that was on a sheet is still on the sheet or in its job strip, never under More
+            lost = await pg.evaluate("()=>[...document.querySelectorAll('.pdfmore input,.pdfmore select,.pdfmore textarea')].map(e=>e.id).filter(id=>!/^(aw|rm)-(to|toother)$/.test(id))")
+            ok(not lost, 'no sheet boxes hidden under More: ' + str(lost))
             # foundations: plot datalist offers plain numbers
             ok(await pg.evaluate("()=>[...document.getElementById('pack-plotno').options].map(o=>o.value).includes('42')"), 'plot list offers 42, not Plot 42')
             # extras: 2 men 3 hrs is 6 hours; link to a dayworks sheet both ways

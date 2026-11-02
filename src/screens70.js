@@ -22,7 +22,7 @@
     const box=document.createElement('div'); box.className='donebar'; box.innerHTML=`<button type="button" class="btn primary done">Done</button><button type="button" class="btn clientcopy">Give the client a copy (PDF)</button><details class="pdfmore"><summary>More: show it, download, email</summary></details>`;
     row.before(box); const more=box.querySelector('.pdfmore');
     // everything that was a way of sending goes under More
-    [row,$(p+'-towrap'),$(p+'-to')&&$(p+'-to').closest('.field')].forEach(x=>{ if(x&&x!==box) more.appendChild(x); });
+    [row,...(p==='aw'||p==='rm'?[$(p+'-towrap'),$(p+'-to')&&$(p+'-to').closest('.field')]:[])].forEach(x=>{ if(x&&x!==box) more.appendChild(x); });
     sec.querySelectorAll('.btnrow').forEach(r=>{ if(r!==row&&(r.querySelector('#'+p+'-download')||r.querySelector('#'+p+'-open')||r.querySelector('#'+p+'-share2')||r.querySelector('#'+p+'-email'))) more.appendChild(r); });
     ['dw-clear','th-clear','fd-clear'].forEach(id=>{ const x=$(id); if(x&&sec.contains(x)) x.hidden=true; });
     const st=$(p+'-status'); if(st) more.appendChild(st);
