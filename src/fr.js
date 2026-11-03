@@ -101,8 +101,8 @@
   // the same corners as a list, for anyone who would rather type
   function frCorners(){ const box=$('fr-corners'); box.innerHTML='';
     if(!FR.corners.length){ box.innerHTML='<p class="note fr-note">No corners yet.</p>'; return; }
-    const head=document.createElement('div'); head.className='fr-row fr-head'; head.innerHTML='<span>Corner</span><span>Design underside</span><span>Dug to</span><span></span>'; box.appendChild(head);
-    FR.corners.forEach((c,i)=>{ const r=document.createElement('div'); r.className='fr-row'; const df=frDiffText(c.dug,c.design);
+    const head=document.createElement('div'); head.className='fc-row fc-head'; head.innerHTML='<span>Corner</span><span>Design underside</span><span>Dug to</span><span></span>'; box.appendChild(head);
+    FR.corners.forEach((c,i)=>{ const r=document.createElement('div'); r.className='fc-row'; const df=frDiffText(c.dug,c.design);
       r.innerHTML=`<div class="in fr-k"><input type="text" value="${frEsc(c.k)}" maxlength="4" aria-label="Corner"></div>
         <div class="fr-des"><div class="in"><input type="number" inputmode="decimal" step="0.001" value="${frEsc(c.design)}" ${c.from||!FR.design?'':'readonly'} aria-label="Design level" placeholder="design"></div>${FR.design&&!c.from?'<button type="button" class="fr-chg">Change</button>':''}${c.from?`<small class="fr-was">was ${frEsc(c.from)}${c.why?': '+frEsc(c.why):''}</small>`:''}</div>
         <div class="in"><input type="number" inputmode="decimal" step="0.001" value="${frEsc(c.dug)}" aria-label="Dug level" placeholder="measured"></div>
@@ -110,13 +110,13 @@
       const [ik,id,ig]=r.querySelectorAll('input'); const upd=()=>{ const o=frDiffText(c.dug,c.design); const out=r.querySelector('.fr-out'); out.firstChild.textContent=o.t; out.dataset.k=o.k; frDraw(); if(FR.sel&&FR.sel.t==='c'&&FR.sel.i===i) frSel(); };
       ik.addEventListener('input',()=>{ c.k=ik.value.trim().toUpperCase(); ik.value=c.k; frDraw(); });
       id.addEventListener('input',()=>{ c.design=id.value; upd(); }); ig.addEventListener('input',()=>{ c.dug=ig.value; upd(); });
-      const ch=r.querySelector('.fr-chg'); if(ch) ch.addEventListener('click',()=>{ const why=prompt('Design level at '+c.k+' changed on site. Why, and who said? (e.g. soft spot, deepen 300, J Smith AWP)'); if(why===null) return; c.from=c.design; c.why=why.trim(); frCorners(); frDraw(); setTimeout(()=>{ const rr=box.querySelectorAll('.fr-row')[i+1]; if(rr) rr.querySelectorAll('input')[1].focus(); },50); });
+      const ch=r.querySelector('.fr-chg'); if(ch) ch.addEventListener('click',()=>{ const why=prompt('Design level at '+c.k+' changed on site. Why, and who said? (e.g. soft spot, deepen 300, J Smith AWP)'); if(why===null) return; c.from=c.design; c.why=why.trim(); frCorners(); frDraw(); setTimeout(()=>{ const rr=box.querySelectorAll('.fc-row')[i+1]; if(rr) rr.querySelectorAll('input')[1].focus(); },50); });
       r.querySelector('.fr-x').addEventListener('click',()=>{ if(FR.plan&&FR.plan.pts.length===FR.corners.length){ if(!frRemovePoint(i)) return; } else FR.corners.splice(i,1); FR.sel=null; frCorners(); frDraw(); frSel(); frChanged(); });
       box.appendChild(r); }); }
   function frToc(){ const o=$('fr-tocout'); const df=frDiffText($('fr-toc').value,$('fr-tocd').value); o.hidden=!df.t; o.textContent=df.t?'Top of concrete: '+df.t:''; o.dataset.k=df.k; }
   ['fr-toc','fr-tocd'].forEach(id=>$(id).addEventListener('input',frToc));
   $('fr-addcorner').addEventListener('click',()=>{ let j; if(FR.plan&&FR.plan.pts.length===FR.corners.length){ j=frAddPoint(FR.plan.pts.length-1); } else { const used=new Set(FR.corners.map(c=>c.k)); const k=[...FR_LET].find(x=>!used.has(x))||''; FR.corners.push({k,design:'',dug:'',from:'',why:''}); j=FR.corners.length-1; }
-    frCorners(); frDraw(); const rows=$('fr-corners').querySelectorAll('.fr-row'); const last=rows[j+1]; if(last) last.querySelectorAll('input')[2].focus(); });
+    frCorners(); frDraw(); const rows=$('fr-corners').querySelectorAll('.fc-row'); const last=rows[j+1]; if(last) last.querySelectorAll('input')[2].focus(); });
   $('fr-plot').addEventListener('change',()=>frFromPlot(false)); $('fr-plot').addEventListener('blur',()=>frFromPlot(false));
   // inspection: a result, not a signature
   const frPassUI=()=>{ $('fr-passed').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===FR.passed)); $('fr-inspwrap').hidden=!FR.passed; };

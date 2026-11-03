@@ -47,7 +47,7 @@ async def main():
             ok(await pg.evaluate("()=>FR.corners[1].dug==='100.900'&&document.querySelector('#fr-plan .fr-cor[data-c=\"1\"] circle:nth-of-type(2)').getAttribute('fill')==='#8a5a00'"), 'corner B amber on the plan with the level beside it')
             # A on level, C higher, via the list
             if not await pg.is_visible('#fr-addcorner'): await pg.click('#fr-cornerfold summary')
-            rows=await pg.query_selector_all('#fr-corners .fr-row:not(.fr-head)')
+            rows=await pg.query_selector_all('#fr-corners .fc-row:not(.fc-head)')
             async def dug(i,v):
                 ins=await rows[i].query_selector_all('input'); await ins[2].fill(v); await ins[2].dispatch_event('input')
             await dug(0,'101.010'); await dug(2,'101.050')
