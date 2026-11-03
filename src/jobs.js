@@ -6,9 +6,10 @@
     get(){ const s=SITE.get(); const k=this.keyOf(s.clientFolder,s.job); if(this.key!==k){ this.key=k; try{ this.cur=JSON.parse(localStorage.getItem('rjh-pack:'+k)||'null'); }catch(e){ this.cur=null; } } return this.cur; },
     set(p){ this.cur=p; this.key=this.keyOf(p.client,p.job); try{ localStorage.setItem('rjh-pack:'+this.key,JSON.stringify(p)); }catch(e){} packApply(); jobHome(); },
     path:(client,job)=>`${client}/${job}/${M365.app}/job.json`, oldPath:(client,job)=>`${client}/${job}/${M365.records}/_job.json`,
-    async meta(client,job){ const d=await driveId(); for(const p of [this.path(client,job),this.oldPath(client,job)]){ try{ return await graph(`/drives/${d}/root:/${gpath(p)}?$select=id,lastModifiedDateTime,@microsoft.graph.downloadUrl`); }catch(e){ if(e.status!==404) throw e; } } const e=new Error('no pack'); e.status=404; throw e; },
+    async meta(client,job){ const d=await driveId(); for(const p of [this.path(client,job),this.oldPath(client,job)]){ try{ return await graph(`/drives/${d}/root:/${gpath(p)}`); }catch(e){ if(e.status!==404) throw e; } } const e=new Error('no pack'); e.status=404; throw e; },
+    async read(meta){ if(meta['@microsoft.graph.downloadUrl']){ const r=await fetch(meta['@microsoft.graph.downloadUrl']); if(r.ok) return r.json(); } const tk=await AUTH.token(); const r=await fetch(`https://graph.microsoft.com/v1.0/drives/${await driveId()}/items/${meta.id}/content`,{headers:{Authorization:'Bearer '+tk}}); if(!r.ok) throw new Error('job details '+r.status); return r.json(); },
     async load(client,job,force){ try{ const meta=await this.meta(client,job); const cur=this.get(); if(!force&&cur&&cur.client===client&&cur.job===job&&cur._mod===meta.lastModifiedDateTime) return cur;
-        const p=await (await fetch(meta['@microsoft.graph.downloadUrl'])).json(); p.client=client; p.job=job; p._mod=meta.lastModifiedDateTime; this.set(p); return p; }
+        const p=await this.read(meta); p.client=client; p.job=job; p._mod=meta.lastModifiedDateTime; this.set(p); return p; }
       catch(e){ if(e.status===404){ const p=this.blank(client,job); this.set(p); return p; } throw e; } },
     async save(p){ p.updated=new Date().toISOString(); delete p._mod; await ensureFolder(`${p.client}/${p.job}/${M365.app}`); const r=await uploadFile(this.path(p.client,p.job),new Blob([JSON.stringify(p,null,1)],{type:'application/json'})); p._mod=r&&r.lastModifiedDateTime; this.set(p);
       try{ await delAt(this.oldPath(p.client,p.job)); }catch(e){} return p; } };
@@ -22,7 +23,7 @@
     clients.forEach(c=>{ (c.children||[]).forEach(j=>{ if(!j.folder||/^_|^(To site|Drawings|Site records)$/.test(j.name)) return; list.push({client:c.name,job:j.name,status:'live',notice:''}); }); });
     // status and notice from each job's pack, a few at a time
     const known={}; try{ Object.assign(known,JSON.parse(localStorage.getItem('rjh-jobs-meta')||'{}')); }catch(e){}
-    const q=[...list]; const worker=async()=>{ while(q.length){ const j=q.shift(); const k=PACK.keyOf(j.client,j.job); try{ const meta=await PACK.meta(j.client,j.job); if(known[k]&&known[k].mod===meta.lastModifiedDateTime){ Object.assign(j,known[k]); continue; } const p=await (await fetch(meta['@microsoft.graph.downloadUrl'])).json(); j.status=p.status||'live'; j.notice=p.notice||''; known[k]={status:j.status,notice:j.notice,mod:meta.lastModifiedDateTime}; }
+    const q=[...list]; const worker=async()=>{ while(q.length){ const j=q.shift(); const k=PACK.keyOf(j.client,j.job); try{ const meta=await PACK.meta(j.client,j.job); if(known[k]&&known[k].mod===meta.lastModifiedDateTime){ Object.assign(j,known[k]); continue; } const p=await PACK.read(meta); j.status=p.status||'live'; j.notice=p.notice||''; known[k]={status:j.status,notice:j.notice,mod:meta.lastModifiedDateTime}; }
         catch(e){ // no job details yet: it is a job if it has a Site records or _app folder, otherwise it is just a folder someone made
           let isJob=false; try{ const r=await graph(`/drives/${d}/root:/${gpath(j.client+'/'+j.job)}:/children?$select=name,folder&$top=50`); isJob=(r.value||[]).some(x=>x.folder&&(x.name===M365.records||x.name===M365.app)); }catch(e2){}
           known[k]={status:isJob?'live':'notajob',notice:'',mod:''}; j.status=known[k].status; } } };

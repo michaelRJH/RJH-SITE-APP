@@ -32,7 +32,9 @@ class FakeSP:
         m = {'id': it['id'], 'name': name, 'eTag': it.get('etag', '"F"'), 'lastModifiedDateTime': it.get('mod', '2026-10-01T00:00:00Z'),
              'webUrl': 'https://rjhowardengineering.sharepoint.com/sites/RJH-Site/Shared%20Documents/' + it['path'].replace(' ', '%20')}
         if it['folder']: m['folder'] = {}
-        else: m['@microsoft.graph.downloadUrl'] = 'https://dl.example/' + it['id']; m['file'] = {}; m['size'] = len(it.get('data', b''))
+        else:
+            if not getattr(self, 'no_dl', False): m['@microsoft.graph.downloadUrl'] = 'https://dl.example/' + it['id']
+            m['file'] = {}; m['size'] = len(it.get('data', b''))
         return m
     def kids(self, path):
         pre = (path + '/') if path else ''
@@ -97,6 +99,11 @@ class FakeSP:
                 row = next((x for x in self.rows if x['id'] == rid), None)
                 if not row: return await self.j(route, 404, {'error': {'code': 'itemNotFound', 'message': 'nf'}})
                 row['fields'].update(f); return await self.j(route, 200, row['fields'])
+        mm = re.match(r'/drives/DRIVE1/items/([^/]+)/content$', base)
+        if mm and m == 'GET':
+            it = self.byid.get(mm.group(1))
+            if not it: return await self.j(route, 404, {'error': {'code': 'itemNotFound', 'message': 'nf'}})
+            return await route.fulfill(status=200, body=it.get('data', b''), content_type='application/octet-stream')
         # drive by id
         mm = re.match(r'/drives/DRIVE1/items/([^/]+)$', base)
         if mm:

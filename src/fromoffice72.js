@@ -7,7 +7,7 @@
     out.sort((a,b)=>String(b.mod).localeCompare(String(a.mod))); FROM.set(s.job,{at:Date.now(),files:out}); fromDraw(); }
   async function fromCached(f){ try{ const c=await caches.open('rjh-drawings'); return await c.match('/rjh-file/'+f.id+'/'+encodeURIComponent(f.tag||'')); }catch(e){ return null; } }
   async function fromBlob(f){ let hit=await fromCached(f); if(hit) return hit.blob(); if(!navigator.onLine) throw new Error('not on this phone yet, and no signal');
-    const m=await graph(`/drives/${await driveId()}/items/${f.id}`); const r=await fetch(m['@microsoft.graph.downloadUrl']); if(!r.ok) throw new Error('download '+r.status); const b=await r.blob();
+    const d=await driveId(); const m=await graph(`/drives/${d}/items/${f.id}`); let r=m['@microsoft.graph.downloadUrl']?await fetch(m['@microsoft.graph.downloadUrl']):null; if(!r||!r.ok){ const tk=await AUTH.token(); r=await fetch(`https://graph.microsoft.com/v1.0/drives/${d}/items/${f.id}/content`,{headers:{Authorization:'Bearer '+tk}}); } if(!r.ok) throw new Error('download '+r.status); const b=await r.blob();
     try{ const c=await caches.open('rjh-drawings'); await c.put('/rjh-file/'+f.id+'/'+encodeURIComponent(f.tag||''),new Response(b,{headers:{'Content-Type':b.type||'application/octet-stream'}})); }catch(e){} return b; }
   function fromDraw(){ const box=$('home-from'); if(!box) return; const s=SITE.get(); const v=s.job&&FROM.get(s.job); const files=(v&&v.files)||[]; if(!files.length){ box.hidden=true; box.innerHTML=''; return; }
     const seen=FROM.seen(); const isNew=f=>seen[f.id]!==f.tag; const nNew=files.filter(isNew).length;

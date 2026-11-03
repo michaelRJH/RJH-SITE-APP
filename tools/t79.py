@@ -17,7 +17,7 @@ async def main():
     srv=subprocess.Popen(['python3','-m','http.server',str(PORT)],cwd=ROOT,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); await asyncio.sleep(0.8)
     try:
         async with async_playwright() as p:
-            b=await p.chromium.launch(); sp=FakeSP()
+            b=await p.chromium.launch(); sp=FakeSP(); sp.no_dl=True   # Graph sometimes leaves the download link out: the app must still read the job
             pack={'v':1,'client':'Strata Homes','job':'Expression','status':'live','notice':'','people':[],'manholes':[],'runs':[],'houseTypes':[{'ref':'CHST-AWP-XX-F1-D-S-7800-S3','rev':'P3','boxes':[{'k':'plan','house':'H3-2100','hand':'OP','plots':[1],'id':'b1','tpl':{'pts':[[1.0,1.0],[10.425,1.0],[10.425,7.61],[1.0,7.61]],'w':[600,750,600,750],'walls':[{'p':[[4.695,7.31],[4.695,1.3]],'w':600}],'bays':[{'side':2,'at':3.76,'w':0.6,'d':0.6,'fw':600,'label':'Nib'}],'q':[]}}]}],
               'plots':[{'plot':'1','type':'H3-2100','hand':'OP','design':{'found':'Eng Strip','ffl':102.25,'toc':101.5,'depth':'1.100','under':{'A':101.0,'B':101.0,'C':101.0,'D':101.0},'gl':{},'strata':'Eng Fill','borehole':'RBH01','suitable':101.1}},
                        {'plot':'42','type':'H4-1700','hand':'','design':{'found':'Trench','ffl':95.0,'toc':94.2,'depth':'1.200','under':{'B':93.6,'D':93.6},'gl':{},'strata':'Clay','borehole':'WS12','suitable':93.8}},
