@@ -10,4 +10,5 @@ CSS.append('''.seg.five{grid-template-columns:repeat(5,minmax(0,1fr))}.fr-wq but
 .fr-close{appearance:none;border:2px solid var(--ink);border-radius:var(--r);background:var(--ink);color:#fff;font:inherit;font-weight:700;font-size:14px;padding:6px 14px;cursor:pointer;min-height:36px}
 .fr-sel .fr-out{margin:0 0 8px}.fr-selbtns{margin:0}.fr-selbtns .btn{font-size:14px;min-height:42px;padding:8px 10px}
 .fr-info span{display:block}
+.fr-conc{font-size:14px;padding:8px 12px;border-radius:var(--r);margin:0 0 12px;background:#f1efe9;color:var(--ink)}.fr-conc[data-k=ok]{background:#E7F2EA;color:#1E6F3F}.fr-conc[data-k=deep]{background:#FFF4D6;color:#8a5a00}.fr-conc[data-k=high]{background:#FBE9E7;color:#B3261E}
 #fr-passed button{font-size:14px;padding:10px 4px}''')

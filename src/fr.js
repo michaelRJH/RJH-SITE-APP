@@ -34,6 +34,8 @@
     P.pts.splice(i+1,0,{x:+s.mx.toFixed(3),y:+s.my.toFixed(3)}); P.w.splice(i+1,0,P.w[i]); P.w0.splice(i+1,0,P.w0[i]); P.bays.forEach(y=>{ if(y.side>i) y.side++; });
     FR.corners.splice(i+1,0,corner?{...corner,k:corner.k&&!used.has(corner.k)?corner.k:k}:{k,design:FR.corners[i]?FR.corners[i].design:frDesignFor(k),dug:'',from:'',why:''}); return i+1; }
   function frRemovePoint(i){ const P=FR.plan; if(P.pts.length<=3){ toast('A footing needs at least three corners'); return false; } P.pts.splice(i,1); P.w.splice(i,1); P.w0.splice(i,1); P.bays.forEach(y=>{ if(y.side>=i) y.side=Math.max(0,y.side-1); }); FR.corners.splice(i,1); return true; }
+  function frSetLength(i,L){ const P=FR.plan, n=P.pts.length; const s=frSide(i); const d=L-s.L; if(Math.abs(d)<0.0005) return; const pb=s.b.x*s.ux+s.b.y*s.uy; P.pts.forEach(p=>{ if(p.x*s.ux+p.y*s.uy>=pb-0.01){ p.x=+(p.x+s.ux*d).toFixed(3); p.y=+(p.y+s.uy*d).toFixed(3); } });
+    const mv=q=>{ if(q.x*s.ux+q.y*s.uy>=pb-0.01){ q.x=+(q.x+s.ux*d).toFixed(3); q.y=+(q.y+s.uy*d).toFixed(3); } }; P.walls.forEach(w=>{ mv(w.a); mv(w.b); }); P.bays.forEach(mv); frRectUI(); }
   function frFlip(){ const P=FR.plan; if(!P) return; const xs=P.pts.map(p=>p.x); const X=Math.max(...xs)+Math.min(...xs); const f=p=>{ p.x=+(X-p.x).toFixed(3); }; P.pts.forEach(f); P.walls.forEach(w=>{ f(w.a); f(w.b); }); P.bays.forEach(f); P.flip=!P.flip; frDraw(); frSel(); }
   // ---- the picture ----
   function frDraw(){ const svg=$('fr-plan'); const P=FR.plan; if(!P||!P.pts.length){ svg.innerHTML=''; return; } const pts=P.pts, n=pts.length; const b=frBounds(); svg.setAttribute('viewBox',`${b.x0} ${b.y0} ${b.x1-b.x0} ${b.y1-b.y0}`);
@@ -54,7 +56,7 @@
       out.push(`<g class="fr-cor" data-c="${i}"><circle cx="${p.x}" cy="${p.y}" r="${r*1.9}" fill="${on?'rgba(243,211,107,.45)':'transparent'}"/><circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${col}" stroke="${c.from?'#B3261E':'#fff'}" stroke-width="${fs*(c.from?0.14:0.08)}"/><text x="${p.x}" y="${p.y+fs*0.33}" text-anchor="middle" font-size="${fs*0.95}" font-weight="800" fill="#fff">${frEsc(c.k)}</text>`+
         (l1?`<text x="${tx}" y="${ty+dy}" text-anchor="${anc}" font-size="${fs*0.8}" font-weight="800" fill="${col}">${l1}</text>`:'')+(l2?`<text x="${tx}" y="${ty+dy+(l1?fs*0.85:0)}" text-anchor="${anc}" font-size="${fs*0.66}" fill="${c.from?'#B3261E':'#666'}">${l1?'':'design '}${l2}</text>`:'')+`</g>`); });
     if(P.house||P.ref){ const cx=(b.x0+b.x1)/2; out.push(`<text x="${cx}" y="${b.y1-fs*0.35}" text-anchor="middle" font-size="${fs*0.62}" fill="#777">${frEsc([P.house,P.ref?'drg '+P.ref:'',P.flip?'flipped on site':''].filter(Boolean).join(' · '))}</text>`); }
-    svg.innerHTML=out.join(''); }
+    svg.innerHTML=out.join(''); frConc(); }
   $('fr-plan').addEventListener('click',e=>{ const c=e.target.closest('[data-c]'), s=e.target.closest('[data-s]'); if(c) FR.sel={t:'c',i:+c.dataset.c}; else if(s) FR.sel={t:'s',i:+s.dataset.s}; else FR.sel=null; frDraw(); frSel(true); });
   // ---- what you tapped: one corner or one side ----
   function frSel(scroll){ const box=$('fr-sel'); const P=FR.plan, sel=FR.sel; if(!P||!sel||!FR.corners[sel.i]&&sel.t==='c'){ box.hidden=true; box.innerHTML=''; return; } box.hidden=false; const n=P.pts.length; const kk=i=>(FR.corners[i]||{}).k||'?';
@@ -72,9 +74,11 @@
       if(scroll) setTimeout(()=>{ dug.focus({preventScroll:true}); box.scrollIntoView({block:'nearest',behavior:'smooth'}); },30); }
     else { const i=sel.i; const s=frSide(i); const chg=P.w[i]!==P.w0[i];
       box.innerHTML=`<div class="fr-selh"><b>Side ${frEsc(kk(i))} to ${frEsc(kk((i+1)%n))}</b><span>${s.L.toFixed(2)} m long</span><button type="button" class="fr-close" aria-label="Done">Done</button></div>
-        <div class="field"><label>Width of the footing on this side</label><div class="in"><input id="fr-selw" type="number" inputmode="numeric" step="50" value="${P.w[i]}"><span class="unit">mm</span></div>${chg?`<small class="fr-was">design ${P.w0[i]} <button type="button" class="fr-chg" id="fr-selw0">Put it back</button></small>`:`<small class="note" style="margin:4px 0 0">As the drawing. Change it if you dug it wider.</small>`}</div>
-        <div class="seg five fr-wq">${[600,750,900,1050,1200].map(w=>`<button type="button" data-w="${w}" aria-pressed="${P.w[i]===w}">${w}</button>`).join('')}</div>
+        <div class="grid2"><div class="field"><label>Length of this side</label><div class="in"><input id="fr-sell" type="number" inputmode="decimal" step="0.01" value="${+s.L.toFixed(2)}"><span class="unit">m</span></div><small class="note" style="margin:4px 0 0">Changing it moves corner ${frEsc(kk((i+1)%n))} and everything past it.</small></div>
+        <div class="field"><label>Width on this side</label><div class="in"><input id="fr-selw" type="number" inputmode="numeric" step="50" value="${P.w[i]}"><span class="unit">mm</span></div>${chg?`<small class="fr-was">design ${P.w0[i]} <button type="button" class="fr-chg" id="fr-selw0">Put it back</button></small>`:`<small class="note" style="margin:4px 0 0">As the drawing. Change it if you dug it wider.</small>`}</div>
+        </div><div class="seg five fr-wq">${[600,750,900,1050,1200].map(w=>`<button type="button" data-w="${w}" aria-pressed="${P.w[i]===w}">${w}</button>`).join('')}</div>
         <div class="btnrow fr-selbtns"><button type="button" class="btn" id="fr-seladd">+ Point on this side</button></div>`;
+      const lin=$('fr-sell'); lin.addEventListener('change',()=>{ const L=frNum(lin.value); if(!(L>0.2)) return; frSetLength(i,L); frDraw(); frChanged(); const s2=frSide(i); box.querySelector('.fr-selh span').textContent=s2.L.toFixed(2)+' m long'; });
       const w=$('fr-selw'); const setW=v=>{ v=Math.round(frNum(v)); if(!(v>=100)) return; P.w[i]=v; box.querySelectorAll('.fr-wq button').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.w===v)); const was=box.querySelector('.fr-was'); frDraw(); frChanged(); if(!!was!==(v!==P.w0[i])) frSel(); };
       w.addEventListener('input',()=>setW(w.value)); box.querySelectorAll('.fr-wq button').forEach(x=>x.addEventListener('click',()=>{ w.value=x.dataset.w; setW(x.dataset.w); }));
       const back=$('fr-selw0'); if(back) back.addEventListener('click',()=>{ w.value=P.w0[i]; setW(P.w0[i]); });
@@ -113,6 +117,16 @@
       const ch=r.querySelector('.fr-chg'); if(ch) ch.addEventListener('click',()=>{ const why=prompt('Design level at '+c.k+' changed on site. Why, and who said? (e.g. soft spot, deepen 300, J Smith AWP)'); if(why===null) return; c.from=c.design; c.why=why.trim(); frCorners(); frDraw(); setTimeout(()=>{ const rr=box.querySelectorAll('.fc-row')[i+1]; if(rr) rr.querySelectorAll('input')[1].focus(); },50); });
       r.querySelector('.fr-x').addEventListener('click',()=>{ if(FR.plan&&FR.plan.pts.length===FR.corners.length){ if(!frRemovePoint(i)) return; } else FR.corners.splice(i,1); FR.sel=null; frCorners(); frDraw(); frSel(); frChanged(); });
       box.appendChild(r); }); }
+  // concrete: the footing's length times width times depth, design and as dug, against what came
+  function frConc(){ const o=$('fr-concout'); if(!o) return; const P=FR.plan; const toc=frNum($('fr-toc').value), tocd=frNum($('fr-tocd').value); const top=isNaN(toc)?tocd:toc; if(!P||!P.pts.length||isNaN(top)){ o.hidden=true; return; }
+    const n=P.pts.length; const dep=(i,dug)=>{ const a=FR.corners[i]||{}, b=FR.corners[(i+1)%n]||{}; const la=frNum(dug&&a.dug?a.dug:a.design), lb=frNum(dug&&b.dug?b.dug:b.design); const vs=[la,lb].filter(v=>!isNaN(v)); if(!vs.length) return NaN; return Math.max(0,top-vs.reduce((x,y)=>x+y,0)/vs.length); };
+    const vol=dug=>{ let v=0, any=false; for(let i=0;i<n;i++){ const d=dep(i,dug); if(isNaN(d)) continue; any=true; const s=frSide(i); v+=s.L*P.w[i]/1000*d; const wp=P.w[(i-1+n)%n]; v-=Math.min(P.w[i],wp)*wp/1e6*d; }
+      if(!any) return NaN; const dm=dep(0,dug)||0; P.walls.forEach(w=>{ v+=Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y)*w.w/1000*(isNaN(dm)?0:dm); }); P.bays.forEach(y=>{ v+=y.w*y.d*(isNaN(dm)?0:dm); }); return v; };
+    const vd=vol(false), va=vol(true), got=frNum($('fr-m3').value); if(isNaN(vd)){ o.hidden=true; return; }
+    const asdug=FR.corners.some(c=>c.dug); let t=`Expected about <b>${vd.toFixed(1)} m³</b> from the drawing`+(asdug&&Math.abs(va-vd)>=0.05?`, <b>${va.toFixed(1)} m³</b> as dug`:''); let k='';
+    if(!isNaN(got)&&got>0){ const base=asdug?va:vd; const diff=got-base; const pc=Math.round(diff/base*100); t+=`. Delivered ${got.toFixed(1)} m³: `+(Math.abs(pc)<=10?`<b>${diff>=0?'+':''}${diff.toFixed(1)} m³ (${pc>=0?'+':''}${pc}%), about right</b>`:diff>0?`<b>${diff.toFixed(1)} m³ more (+${pc}%)</b>, dug wider or deeper somewhere?`:`<b>${(-diff).toFixed(1)} m³ less (${pc}%)</b>, check it was all poured`); k=Math.abs(pc)<=10?'ok':diff>0?'deep':'high'; }
+    o.hidden=false; o.innerHTML=t; o.dataset.k=k; }
+  window.frConc=frConc; ['fr-m3','fr-toc','fr-tocd'].forEach(id=>$(id).addEventListener('input',frConc));
   function frToc(){ const o=$('fr-tocout'); const df=frDiffText($('fr-toc').value,$('fr-tocd').value); o.hidden=!df.t; o.textContent=df.t?'Top of concrete: '+df.t:''; o.dataset.k=df.k; }
   ['fr-toc','fr-tocd'].forEach(id=>$(id).addEventListener('input',frToc));
   $('fr-addcorner').addEventListener('click',()=>{ let j; if(FR.plan&&FR.plan.pts.length===FR.corners.length){ j=frAddPoint(FR.plan.pts.length-1); } else { const used=new Set(FR.corners.map(c=>c.k)); const k=[...FR_LET].find(x=>!used.has(x))||''; FR.corners.push({k,design:'',dug:'',from:'',why:''}); j=FR.corners.length-1; }
@@ -183,6 +197,7 @@
     H('POUR'); const tdf=frDiffText(v('fr-toc'),v('fr-tocd'));
     y=cellRow(doc,M,y,CW,11,[{label:'Mix',value:v('fr-mix')||'–',w:CW*0.16},{label:'Delivered m3',value:v('fr-m3')||'–',w:CW*0.16},{label:'Tickets',value:v('fr-tickets')||'–',w:CW*0.28},{label:'Top of concrete, design',value:v('fr-tocd')||'–',w:CW*0.2},{label:'Poured',value:v('fr-toc')||'–',w:CW*0.2,bold:true}]);
     if(tdf.t){ doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...(tdf.k==='high'?[179,38,30]:INK)); doc.text('Top of concrete: '+tdf.t,M,y+5); y+=6; }
+    { const c=$('fr-concout'); if(c&&!c.hidden){ doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...INK); const L=doc.splitTextToSize(c.textContent,CW); doc.text(L,M,y+5); y+=L.length*4+2; } }
     y+=6; H('PLOT DRAINAGE'); y+=2; doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK);
     const dr=FR.drain==='design'?'As per the design drawings.':FR.drain==='notyet'?'Not yet installed at the date of this record.':'Differs from the design.'+(v('fr-drainnotes')?' '+v('fr-drainnotes'):'')+(FR.drainPdf?' As-built drawing attached at the back of this record.':''); const DL=doc.splitTextToSize(dr,CW); doc.text(DL,M,y+2); y+=DL.length*4.5+4;
     y=pdfPhotos(doc,FR.photos,y,'PHOTOS'); if(FR.drain==='differs'&&FR.drainPhotos.length) y=pdfPhotos(doc,FR.drainPhotos,y,'PLOT DRAINAGE AS BUILT');

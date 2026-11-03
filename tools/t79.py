@@ -64,6 +64,10 @@ async def main():
             await pg.click('#fr-sel .fr-wq [data-w="900"]'); await pg.wait_for_timeout(150)
             ok(await pg.evaluate("()=>FR.plan.w[1]===900&&FR.plan.w0[1]===750"), 'width changed to 900, design 750 kept')
             ok('design 750' in await pg.text_content('#fr-sel') and await pg.evaluate("()=>document.querySelector('#fr-plan .fr-sidelab[data-s=\"1\"] text').getAttribute('fill')==='#B3261E'"), 'changed width shown red with the design width')
+            # the side's length: corner C and everything past it move
+            await pg.fill('#fr-sell','7.0'); await pg.dispatch_event('#fr-sell','change'); await pg.wait_for_timeout(150)
+            pts=await pg.evaluate("()=>FR.plan.pts.map(p=>[p.x,p.y])"); ok(abs(pts[2][1]-pts[1][1]-7.0)<0.01 and abs(pts[3][1]-pts[0][1]-7.0)<0.01 and pts[0]==[1.0,1.0], 'side B to C now 7.0 m, D moved with C, A stayed: '+str(pts))
+            await pg.fill('#fr-sell','6.61'); await pg.dispatch_event('#fr-sell','change'); await pg.wait_for_timeout(100)
             # a point on side D to A
             await pg.click('#fr-plan .fr-sidelab[data-s="3"] rect'); await pg.wait_for_timeout(200); await pg.click('#fr-seladd'); await pg.wait_for_timeout(200)
             ks=await pg.evaluate("()=>FR.corners.map(c=>c.k)"); ok(ks==['A','B','C','D','E'] and await pg.evaluate("()=>FR.plan.pts.length===5&&FR.plan.w.length===5"), 'point E added on the side, plan and list in step: '+str(ks))
@@ -73,6 +77,13 @@ async def main():
             x0=await pg.evaluate("()=>FR.plan.pts[0].x"); await pg.click('#fr-flip'); x1=await pg.evaluate("()=>FR.plan.pts[0].x"); ok(x0!=x1 and await pg.evaluate("()=>FR.plan.flip"), 'flipped to the other hand'); await pg.click('#fr-flip')
             await pg.fill('#fr-toc','94.9'); await pg.fill('#fr-tocd','101.500'); await pg.fill('#fr-toc','101.520'); await pg.wait_for_timeout(100)
             ok('On level' in await pg.text_content('#fr-tocout'), 'top of concrete difference shown')
+            # expected concrete from the footing, against what came
+            txt=await pg.text_content('#fr-concout'); ok(await pg.is_visible('#fr-concout') and 'Expected about' in txt and 'as dug' in txt, 'expected concrete shown: '+txt[:90])
+            exp=await pg.evaluate("()=>{ const m=document.getElementById('fr-concout').textContent.match(/about ([\\d.]+)/); return +m[1]; }")
+            chk=await pg.evaluate("()=>{ const P=FR.plan,n=P.pts.length; const dd=i=>101.52-(+FR.corners[i].design+ +FR.corners[(i+1)%n].design)/2; const d=dd(0); let v=0; for(let i=0;i<n;i++){ const a=P.pts[i],b=P.pts[(i+1)%n]; const d=dd(i); v+=Math.hypot(b.x-a.x,b.y-a.y)*P.w[i]/1000*d; const wp=P.w[(i-1+n)%n]; v-=Math.min(P.w[i],wp)*wp/1e6*d; } P.walls.forEach(w=>{ v+=Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y)*w.w/1000*d; }); P.bays.forEach(y=>{ v+=y.w*y.d*d; }); return v; }")
+            ok(abs(exp-chk)<0.3 and 8<exp<16, f'expected volume is the footing length x width x depth: {exp} vs {chk:.2f}')
+            await pg.fill('#fr-m3',str(round(exp*1.3,1))); await pg.dispatch_event('#fr-m3','input'); txt=await pg.text_content('#fr-concout'); ok('more' in txt and (await pg.get_attribute('#fr-concout','data-k'))=='deep', 'well over: flagged: '+txt[-80:])
+            await pg.fill('#fr-m3','4.2'); await pg.dispatch_event('#fr-m3','input')
             # drainage differs, as-built PDF on the back
             await pg.click('#fr-drain [data-d="differs"]'); ok(await pg.is_visible('#fr-drainwrap'), 'drainage: differs opens the attach boxes')
             await pg.fill('#fr-drainnotes','FW run moved 600 to clear the bay')
