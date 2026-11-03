@@ -1,4 +1,4 @@
-  <!-- FOUNDATION RECORD (v78): one plot, dug, poured, signed. Design levels come from the job -->
+  <!-- FOUNDATION RECORD (v78, visual v79): one plot, the footing on screen, dug and poured against the engineer's levels -->
   <section id="panel-fr" data-title="Foundation record" hidden>
     <h2>Plot</h2>
     <div class="grid2">
@@ -14,14 +14,28 @@
     <div id="fr-plotinfo" class="fr-info" hidden></div>
     <div id="fr-joblist" class="joblist" hidden></div>
 
+    <h2>The footing</h2>
+    <p class="note fr-note">Tap a corner to put in the level you dug to. Tap a side to change its width. Levels in m AOD, design from the engineer's schedule.</p>
+    <div id="fr-planwrap" class="fr-planwrap"><svg id="fr-plan" viewBox="0 0 10 10"></svg></div>
+    <div id="fr-plantools" class="btnrow fr-plantools" style="margin-top:6px">
+      <button class="btn" type="button" id="fr-flip">Flip to the other hand</button>
+      <button class="btn" type="button" id="fr-rect">Draw a plain rectangle</button>
+    </div>
+    <div id="fr-rectwrap" class="grid2" hidden>
+      <div class="field"><label for="fr-rectl">Length</label><div class="in"><input id="fr-rectl" type="number" inputmode="decimal" step="0.1" placeholder="9.0"><span class="unit">m</span></div></div>
+      <div class="field"><label for="fr-rectw">Width</label><div class="in"><input id="fr-rectw" type="number" inputmode="decimal" step="0.1" placeholder="6.0"><span class="unit">m</span></div></div>
+    </div>
+    <div id="fr-sel" class="fr-sel" hidden></div>
+
     <h2>Dig</h2>
     <div class="grid2">
       <div class="field"><label for="fr-digdate">Dug on</label><div class="in"><input id="fr-digdate" type="date"></div></div>
       <div class="field"><label for="fr-ground">Ground at the bottom</label><div class="in"><input id="fr-ground" type="text" placeholder="e.g. firm clay, as the schedule" list="fr-grounds"></div><datalist id="fr-grounds"><option value="Firm clay"><option value="Stiff clay"><option value="Engineered fill"><option value="Sandstone"><option value="Made ground"><option value="Soft clay, dug deeper"></datalist></div>
     </div>
-    <p class="note fr-note">Levels in m AOD. Design is from the engineer's schedule. Type what you measured at each corner and the sheet works out the difference. Tap Change if the design was changed on site.</p>
-    <div class="fr-corners" id="fr-corners"></div>
-    <div class="btnrow" style="margin-top:0"><button class="btn" type="button" id="fr-addcorner">+ Another corner or point</button></div>
+    <details class="foldsec" id="fr-cornerfold"><summary>Levels as a list <small>the same corners, typed in a table</small></summary>
+      <div class="fr-corners" id="fr-corners"></div>
+      <div class="btnrow" style="margin-top:0"><button class="btn" type="button" id="fr-addcorner">+ Another corner or point</button></div>
+    </details>
     <div class="field"><label for="fr-deeper">Dug deeper or wider than design? Why, and who said</label><div class="in"><input id="fr-deeper" type="text" placeholder="e.g. soft spot at C, dug to 99.600 on AWP engineer's say-so (J Smith, 3 Nov)"></div></div>
 
     <h2>Pour</h2>
@@ -35,19 +49,32 @@
     </div>
     <div id="fr-tocout" class="fr-diff" hidden></div>
 
+    <h2>Plot drainage</h2>
+    <div class="seg three" id="fr-drain">
+      <button type="button" data-d="design" aria-pressed="true">As per design</button>
+      <button type="button" data-d="notyet" aria-pressed="false">Not done yet</button>
+      <button type="button" data-d="differs" aria-pressed="false">Differs, see attached</button>
+    </div>
+    <div id="fr-drainwrap" hidden style="margin-top:10px">
+      <p class="note fr-note">Attach the as-built drainage as a PDF (it goes on the back of the record) or as photos or screenshots.</p>
+      <div class="btnrow" style="margin-top:0"><label class="btn filebtn">Attach PDF<input type="file" id="fr-drainpdf" accept="application/pdf"></label><label class="btn primary filebtn">Take photo<input type="file" id="fr-drainphoto-cam" accept="image/*" capture="environment"></label><label class="btn filebtn">Add photos<input type="file" id="fr-drainphoto" accept="image/*" multiple></label></div>
+      <p class="note" id="fr-drainpdf-name" hidden></p>
+      <div class="photos" id="fr-drainphotos"></div>
+      <div class="field" style="margin-top:8px"><label for="fr-drainnotes">What differs</label><div class="in"><input id="fr-drainnotes" type="text" placeholder="e.g. FW run moved 600 to clear the bay, IC1 relocated"></div></div>
+    </div>
+
     <h2>Photos</h2>
     <p class="note fr-note">Trench before the pour, and the concrete after.</p>
     <div class="btnrow" style="margin-top:0"><label class="btn primary filebtn">Take photo<input type="file" id="fr-photo-cam" accept="image/*" capture="environment"></label><label class="btn filebtn">Add photos<input type="file" id="fr-photo" accept="image/*" multiple></label></div>
     <div class="photos" id="fr-photos"></div>
 
-    <h2>Inspection and sign off</h2>
+    <h2>Inspection</h2>
     <div class="grid2">
       <div class="field"><label for="fr-insp">NHBC inspector</label><div class="in"><input id="fr-insp" type="text" placeholder="Name"></div></div>
       <div class="field"><label for="fr-inspdate">Inspected on</label><div class="in"><input id="fr-inspdate" type="date"></div></div>
     </div>
-    <div class="field" id="fr-sigfield"><label>Inspector's signature</label><div class="sigwrap"><canvas class="sig" id="fr-sig1"></canvas><button type="button" class="clear" data-sig="fr-sig1">Clear</button><span class="hint">Sign here</span></div></div>
-    <div class="field"><label>If they can't sign</label><div class="seg three" id="fr-nosig"><button type="button" data-n="" aria-pressed="true" hidden>Signed</button><button type="button" data-n="Not on site" aria-pressed="false">Not on site</button><button type="button" data-n="Will sign later" aria-pressed="false">Will sign later</button><button type="button" data-n="Passed by phone / email" aria-pressed="false">Passed by phone or email</button></div></div>
-    <div class="field" id="fr-nosigwrap" hidden><label for="fr-nosigwhy">Anything to add</label><div class="in"><input id="fr-nosigwhy" type="text" placeholder="e.g. NHBC passed it by photo, email 3 Nov"></div></div>
+    <div class="field"><label>Result</label><div class="seg four" id="fr-passed"><button type="button" data-p="" aria-pressed="true">Not yet</button><button type="button" data-p="Passed on site" aria-pressed="false">Passed</button><button type="button" data-p="Passed by phone or email" aria-pressed="false">Passed by phone or email</button><button type="button" data-p="Not passed" aria-pressed="false">Not passed</button></div></div>
+    <div class="field" id="fr-inspwrap" hidden><label for="fr-inspnote">What they said</label><div class="in"><input id="fr-inspnote" type="text" placeholder="e.g. deepen at C to firm clay, re-inspect"></div></div>
     <div class="field"><label>Your signature</label><div class="sigwrap"><canvas class="sig" id="fr-sig2"></canvas><button type="button" class="clear" data-sig="fr-sig2">Clear</button><span class="hint">Sign here</span></div></div>
 
     <h2>Notes</h2>
@@ -58,6 +85,6 @@
       <button class="btn primary" type="button" id="fr-download">Download PDF</button>
       <button class="btn" type="button" id="fr-open">Open PDF</button>
     </div>
-    <p class="note" id="fr-status">One sheet per plot. The drawing tool for footings is under More on the home screen if the office needs it.</p>
+    <p class="note" id="fr-status">One sheet per plot. The footing comes from the engineer's drawing for the house type; the office's drawing tool is under More on the home screen.</p>
   </section>
 

@@ -67,7 +67,7 @@
     th:{where:()=>{ try{ return (TH.holes||[]).map(h=>h.ref).filter(Boolean).join(' ').slice(0,40); }catch(e){ return ''; } },date:()=>FV('th-date'),by:()=>FV('th-by')},
     mh:{label:()=>FV('mh-ref')?'MH '+FV('mh-ref'):'',date:()=>FV('mh-date'),by:()=>FV('mh-by')},
     fd:{label:()=>FV('fd-plot')?'FD Plot '+pad3(FV('fd-plot').replace(/^plot\s*/i,'')):'',where:()=>FV('fd-type'),date:()=>FV('fd-date'),by:()=>FV('fd-by')},
-    fr:{label:()=>FV('fr-plot')?'FD Plot '+pad3(FV('fr-plot').replace(/^plot\s*/i,'')):'',where:()=>FV('fr-type'),date:()=>FV('fr-date'),by:()=>FV('fr-by'),signer:()=>FV('fr-insp'),signed:()=>sigState('fr-sig1',(typeof FR!=='undefined'&&FR.nosig)||'')},
+    fr:{label:()=>FV('fr-plot')?'FD Plot '+pad3(FV('fr-plot').replace(/^plot\s*/i,'')):'',where:()=>FV('fr-type'),date:()=>FV('fr-date'),by:()=>FV('fr-by'),signer:()=>FV('fr-insp'),signed:()=>(typeof FR!=='undefined'&&FR.passed)||'Not inspected yet'},
     grad:{label:()=>(FV('g-from')||FV('g-to'))?`GS ${FV('g-from')||'?'} to ${FV('g-to')||'?'}`:'',date:()=>FV('g-date'),by:()=>FV('g-by')},
     lv:{date:()=>FV('lv-date'),by:()=>FV('lv-by')},
     takeoff:{where:()=>FV('to-ref'),date:()=>FV('to-date'),by:()=>FV('to-by')},

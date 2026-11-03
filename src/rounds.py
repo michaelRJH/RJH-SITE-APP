@@ -172,6 +172,7 @@ exec(open('r70.py',encoding='utf-8').read())
 exec(open('r71.py',encoding='utf-8').read())
 exec(open('r72.py',encoding='utf-8').read())
 exec(open('r78.py',encoding='utf-8').read())
+exec(open('r79.py',encoding='utf-8').read())
 CSS.append('.rm-phbtns{display:grid;grid-template-columns:1fr 1fr;gap:6px}.rm-phbtns .filebtn{margin:0}')
 #__END__
 rep('</head>','<style>'+'\n'.join(CSS)+'</style>\n</head>')

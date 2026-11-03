@@ -74,5 +74,5 @@
       drawnPart=part; drawnId=b.id; render(); toast(part==null?'Footing drawn':'One house kept'); }
     plotEl.addEventListener('input',()=>{ clearTimeout(timer); timer=setTimeout(render,250); });
     window.addEventListener('pageshow',render); plotEl.addEventListener('change',()=>{ drawnId=''; }); setTimeout(render,600);
-    window.RJH_DRG={ find, render, data:DRG_DEFAULT };
+    window.RJH_DRG={ find, render, geom, data:DRG_DEFAULT };
   })();
