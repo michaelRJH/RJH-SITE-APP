@@ -17,7 +17,7 @@
     const _set=o.set, _clear=o.clear; o.set=x=>{ _set(x); draw(); }; o.clear=()=>{ _clear(); setTimeout(draw,0); }; draw(); });
   document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>setTimeout(()=>Object.values(SAVERS).forEach(o=>o._strip&&o._strip()),30)));
   // one way to finish: Done (saves and sends to the office), then a client copy if they want one. The rest folds away under More.
-  const DONEPFX={dw:'dw',aw:'aw',rm:'rm',th:'th',mh:'mh',fd:'fd',g:'grad',lv:'lv',d:'dips'};
+  const DONEPFX={dw:'dw',aw:'aw',rm:'rm',th:'th',mh:'mh',fd:'fd',fr:'fr',g:'grad',lv:'lv',d:'dips'};
   Object.entries(DONEPFX).forEach(([p,tool])=>{ const o=SAVERS[tool]; const sh=$(p+'-share'); if(!o||!sh) return; const sec=$(o.section); const row=sh.closest('.btnrow'); if(!row) return;
     const box=document.createElement('div'); box.className='donebar'; box.innerHTML=`<button type="button" class="btn primary done">Done</button><button type="button" class="btn clientcopy">Give the client a copy (PDF)</button><details class="pdfmore"><summary>More: show it, download, email</summary></details>`;
     row.before(box); const more=box.querySelector('.pdfmore');

@@ -78,7 +78,7 @@ t=t[:h0]+newhome+t[h1:]
 # ---- the job card: your job, your name, change job, one-off ----
 # ---- one strip at the top of every sheet: job, date, name. Tap it to change them ----
 STRIP={'dw':['dw-site','dw-client','dw-date','dw-by'],'rm':['rm-site','rm-client','rm-by'],'th':['th-site','th-date','th-by'],'mh':['mh-site','mh-client','mh-by','mh-date'],
-       'fd':['fd-dev','fd-site','fd-by','fd-date'],'grad':['g-site','g-client','g-by','g-date'],'lv':['lv-site','lv-by','lv-date'],'takeoff':['to-site','to-client','to-by','to-date'],'dips':['d-site','d-client','d-by','d-date']}
+       'fd':['fd-dev','fd-site','fd-by','fd-date'],'fr':['fr-site','fr-client','fr-by','fr-date'],'grad':['g-site','g-client','g-by','g-date'],'lv':['lv-site','lv-by','lv-date'],'takeoff':['to-site','to-client','to-by','to-date'],'dips':['d-site','d-client','d-by','d-date']}
 a="  if('serviceWorker' in navigator){"; assert t.count(a)==1
 t=t.replace(a,'  const STRIP='+__import__('json').dumps(STRIP)+';\n'+open('screens70.js',encoding='utf-8').read()+a)
 # ---- words: the lad's words, not the office's ----

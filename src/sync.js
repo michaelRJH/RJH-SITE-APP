@@ -9,7 +9,7 @@
     scopes:'openid profile offline_access User.Read Files.ReadWrite.All Sites.ReadWrite.All'};
   // one name per type: the tile, the folder, the register and the file name all come from here
   const TYPES={dw:{name:'Dayworks',folder:'Dayworks',code:'DW',num:true},aw:{name:'Extras',folder:'Extras',code:'AW',num:true},rm:{name:'Remedials',folder:'Remedials',code:'RM',num:true},
-    th:{name:'Trial holes',folder:'Trial holes',code:'TH',num:true},mh:{name:'Manhole card',folder:'Manhole cards',code:'MH'},fd:{name:'Foundation record',folder:'Foundations',code:'FD'},
+    th:{name:'Trial holes',folder:'Trial holes',code:'TH',num:true},mh:{name:'Manhole card',folder:'Manhole cards',code:'MH'},fd:{name:'Foundation record',folder:'Foundations',code:'FD'},fr:{name:'Foundation record',folder:'Foundations',code:'FD'},
     grad:{name:'Gradient sheet',folder:'Gradient sheets',code:'GS'},lv:{name:'Level book',folder:'Level book',code:'LB',num:true},takeoff:{name:'Take-off',folder:'Take-offs',code:'TO',num:true},
     dips:{name:'Road dips',folder:'',code:'RD',local:true}};   // road dips is a calculator: it saves on the phone, it does not file
   const SYNC_TYPE=Object.fromEntries(Object.entries(TYPES).map(([k,v])=>[k,v.folder]));
@@ -67,6 +67,7 @@
     th:{where:()=>{ try{ return (TH.holes||[]).map(h=>h.ref).filter(Boolean).join(' ').slice(0,40); }catch(e){ return ''; } },date:()=>FV('th-date'),by:()=>FV('th-by')},
     mh:{label:()=>FV('mh-ref')?'MH '+FV('mh-ref'):'',date:()=>FV('mh-date'),by:()=>FV('mh-by')},
     fd:{label:()=>FV('fd-plot')?'FD Plot '+pad3(FV('fd-plot').replace(/^plot\s*/i,'')):'',where:()=>FV('fd-type'),date:()=>FV('fd-date'),by:()=>FV('fd-by')},
+    fr:{label:()=>FV('fr-plot')?'FD Plot '+pad3(FV('fr-plot').replace(/^plot\s*/i,'')):'',where:()=>FV('fr-type'),date:()=>FV('fr-date'),by:()=>FV('fr-by'),signer:()=>FV('fr-insp'),signed:()=>sigState('fr-sig1',(typeof FR!=='undefined'&&FR.nosig)||'')},
     grad:{label:()=>(FV('g-from')||FV('g-to'))?`GS ${FV('g-from')||'?'} to ${FV('g-to')||'?'}`:'',date:()=>FV('g-date'),by:()=>FV('g-by')},
     lv:{date:()=>FV('lv-date'),by:()=>FV('lv-by')},
     takeoff:{where:()=>FV('to-ref'),date:()=>FV('to-date'),by:()=>FV('to-by')},
