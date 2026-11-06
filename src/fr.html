@@ -15,15 +15,16 @@
     <div id="fr-joblist" class="joblist" hidden></div>
 
     <h2>The footing</h2>
-    <p class="note fr-note">Tap a corner to put in the level you dug to. Tap a side to change its width. Levels in m AOD, design from the engineer's schedule.</p>
+    <p class="note fr-note">Tap a corner for the level you dug to. Tap a side or an internal leg for its width or length. A step or a change of width part way along? Tap the side, then Split. Levels in m AOD, design from the engineer's schedule.</p>
     <div id="fr-planwrap" class="fr-planwrap"><svg id="fr-plan" viewBox="0 0 10 10"></svg></div>
     <div id="fr-plantools" class="btnrow fr-plantools" style="margin-top:6px">
       <button class="btn" type="button" id="fr-flip">Flip to the other hand</button>
       <button class="btn" type="button" id="fr-rect">Draw a plain rectangle</button>
+      <button class="btn" type="button" id="fr-addwall">+ Internal leg</button>
     </div>
     <div id="fr-rectwrap" class="grid2" hidden>
-      <div class="field"><label for="fr-rectl">Length</label><div class="in"><input id="fr-rectl" type="number" inputmode="decimal" step="0.1" placeholder="9.0"><span class="unit">m</span></div></div>
-      <div class="field"><label for="fr-rectw">Width</label><div class="in"><input id="fr-rectw" type="number" inputmode="decimal" step="0.1" placeholder="6.0"><span class="unit">m</span></div></div>
+      <div class="field"><label for="fr-rectl">Length, centre line</label><div class="in"><input id="fr-rectl" type="number" inputmode="decimal" step="0.1" placeholder="9.0"><span class="unit">m</span></div></div>
+      <div class="field"><label for="fr-rectw">Width, centre line</label><div class="in"><input id="fr-rectw" type="number" inputmode="decimal" step="0.1" placeholder="6.0"><span class="unit">m</span></div></div>
     </div>
     <div id="fr-sel" class="fr-sel" hidden></div>
 
@@ -39,8 +40,16 @@
     <div class="field"><label for="fr-deeper">Dug deeper or wider than design? Why, and who said</label><div class="in"><input id="fr-deeper" type="text" placeholder="e.g. soft spot at C, dug to 99.600 on AWP engineer's say-so (J Smith, 3 Nov)"></div></div>
 
     <h2>Pour</h2>
+    <details class="foldsec" id="fr-p1fold"><summary>Mass fill first? <small>two pours: mass fill, then the strip or cage on top</small></summary>
     <div class="grid2">
-      <div class="field"><label for="fr-pourdate">Poured on</label><div class="in"><input id="fr-pourdate" type="date"></div></div>
+      <div class="field"><label for="fr-p1date">Mass fill poured on</label><div class="in"><input id="fr-p1date" type="date"></div></div>
+      <div class="field"><label for="fr-p1mix">Mix</label><div class="in"><input id="fr-p1mix" type="text" placeholder="GEN1" list="fr-mixes"></div></div>
+      <div class="field"><label for="fr-p1m3">Delivered</label><div class="in"><input id="fr-p1m3" type="number" inputmode="decimal" step="0.1" placeholder="0.0"><span class="unit">m³</span></div></div>
+      <div class="field"><label for="fr-p1tickets">Ticket numbers</label><div class="in"><input id="fr-p1tickets" type="text" placeholder="e.g. 48201"></div></div>
+      <div class="field"><label for="fr-p1top">Top of mass fill</label><div class="in"><input id="fr-p1top" type="number" inputmode="decimal" step="0.001" placeholder="level, if known"><span class="unit">m</span></div></div>
+    </div></details>
+    <div class="grid2">
+      <div class="field"><label for="fr-pourdate">Strip or cage poured on</label><div class="in"><input id="fr-pourdate" type="date"></div></div>
       <div class="field"><label for="fr-mix">Mix</label><div class="in"><input id="fr-mix" type="text" placeholder="GEN1 / ST2 / C25" list="fr-mixes"></div><datalist id="fr-mixes"><option value="GEN1"><option value="GEN3"><option value="ST2"><option value="C25"><option value="C32/40"><option value="FND2"><option value="FND3"></datalist></div>
       <div class="field"><label for="fr-m3">Delivered</label><div class="in"><input id="fr-m3" type="number" inputmode="decimal" step="0.1" placeholder="0.0"><span class="unit">m³</span></div></div>
       <div class="field"><label for="fr-tickets">Ticket numbers</label><div class="in"><input id="fr-tickets" type="text" placeholder="e.g. 48213, 48219"></div></div>
@@ -76,6 +85,10 @@
     </div>
     <div class="field"><label>Result</label><div class="seg four" id="fr-passed"><button type="button" data-p="" aria-pressed="true">Not yet</button><button type="button" data-p="Passed on site" aria-pressed="false">Passed</button><button type="button" data-p="Passed by phone or email" aria-pressed="false">Passed by phone or email</button><button type="button" data-p="Not passed" aria-pressed="false">Not passed</button></div></div>
     <div class="field" id="fr-inspwrap" hidden><label for="fr-inspnote">What they said</label><div class="in"><input id="fr-inspnote" type="text" placeholder="e.g. deepen at C to firm clay, re-inspect"></div></div>
+    <div class="grid2">
+      <div class="field"><label>NHBC score, footing</label><div class="seg seven fr-score" id="fr-score"><button type="button" data-v="" aria-pressed="true">–</button><button type="button" data-v="1" aria-pressed="false">1</button><button type="button" data-v="2" aria-pressed="false">2</button><button type="button" data-v="3" aria-pressed="false">3</button><button type="button" data-v="4" aria-pressed="false">4</button><button type="button" data-v="5" aria-pressed="false">5</button><button type="button" data-v="6" aria-pressed="false">6</button></div></div>
+      <div class="field"><label>NHBC score, plot drainage</label><div class="seg seven fr-score" id="fr-drscore"><button type="button" data-v="" aria-pressed="true">–</button><button type="button" data-v="1" aria-pressed="false">1</button><button type="button" data-v="2" aria-pressed="false">2</button><button type="button" data-v="3" aria-pressed="false">3</button><button type="button" data-v="4" aria-pressed="false">4</button><button type="button" data-v="5" aria-pressed="false">5</button><button type="button" data-v="6" aria-pressed="false">6</button></div></div>
+    </div>
     <div class="field"><label>Your signature</label><div class="sigwrap"><canvas class="sig" id="fr-sig2"></canvas><button type="button" class="clear" data-sig="fr-sig2">Clear</button><span class="hint">Sign here</span></div></div>
 
     <h2>Notes</h2>

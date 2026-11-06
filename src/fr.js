@@ -1,7 +1,7 @@
   // ---- Foundation record (v79): the footing on screen. Tap a corner for the level you dug to, tap a side for its width ----
   // plan: {pts:[{x,y}] in m, w:[mm, side i runs from corner i to corner i+1], w0:[design widths], walls:[{a,b,w}], bays:[{x,y,side,w,d,fw}], src:'tpl'|'rect', flip, ref, house}
   // corners[i] sits at plan.pts[i]: {k:'A', design:'101.000', dug:'', from:'', why:''}   from/why: the design level was changed on site
-  const FR={corners:[],plan:null,photos:[],drain:'design',drainPhotos:[],drainPdf:null,passed:'',design:null,sel:null};
+  const FR={corners:[],plan:null,photos:[],drain:'design',drainPhotos:[],drainPdf:null,passed:'',score:'',drscore:'',design:null,sel:null};
   const FR_LET='ABCDEFGHJKLMNPRSTUVWXYZ';
   const frEsc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const frNum=v=>{ const n=parseFloat(v); return isNaN(n)?NaN:n; };
@@ -16,7 +16,7 @@
     for(const n of nums){ const hits=RJH_DRG.find(n).filter(h=>h.b.tpl&&((h.b.house==='Garage')===isG)); if(hits.length){ const h=hits[0], t=h.b.tpl; let part=null; if((t.units||1)>1){ const g=(t.grp||[]).find(gp=>gp.includes(n)); if(g) part=g.indexOf(n); } return {t,part,h}; } }
     return null; }
   function frPlanFromTpl(x){ const tp=frTplFor(x); if(!tp) return null; let g; try{ g=RJH_DRG.geom(tp.t,tp.part); }catch(e){ return null; } if(!g||!g.P||g.P.length<3) return null;
-    return {pts:g.P.map(p=>({x:+(+p.x).toFixed(3),y:+(+p.y).toFixed(3)})),w:g.P.map(p=>+p.w||600),w0:g.P.map(p=>+p.w||600),walls:(g.W||[]).map(w=>({a:{x:w.a.x,y:w.a.y},b:{x:w.b.x,y:w.b.y},w:+w.w||600})),bays:(g.Bs||[]).map(y=>({x:y.pt.x,y:y.pt.y,side:y.side,w:y.w||0.6,d:y.d||0.6,fw:y.fw||600})),src:'tpl',flip:false,ref:String(tp.h.s.ref||'').replace(/-S3$/,'').split('-').pop(),house:[tp.h.b.house,tp.h.b.hand].filter(Boolean).join(' ')}; }
+    return {pts:g.P.map(p=>({x:+(+p.x).toFixed(3),y:+(+p.y).toFixed(3)})),w:g.P.map(p=>+p.w||600),w0:g.P.map(p=>+p.w||600),walls:(g.W||[]).map(w=>({a:{x:w.a.x,y:w.a.y},b:{x:w.b.x,y:w.b.y},w:+w.w||600,w0:+w.w||600})),bays:(g.Bs||[]).map(y=>({x:y.pt.x,y:y.pt.y,side:y.side,w:y.w||0.6,d:y.d||0.6,fw:y.fw||600})),party:(()=>{ const s=g.P.map((p,i)=>p.lab&&/party/i.test(p.lab)?i:-1).filter(i=>i>=0); return s.length?{sides:s,full:Math.round((+g.P[s[0]].w||675)*2),mode:'half'}:null; })(),src:'tpl',flip:false,ref:String(tp.h.s.ref||'').replace(/-S3$/,'').split('-').pop(),house:[tp.h.b.house,tp.h.b.hand].filter(Boolean).join(' ')}; }
   function frRectPlan(L,Wd){ L=frNum(L); Wd=frNum(Wd); if(!(L>0)) L=9; if(!(Wd>0)) Wd=6; return {pts:[{x:0,y:0},{x:L,y:0},{x:L,y:Wd},{x:0,y:Wd}],w:[600,600,600,600],w0:[600,600,600,600],walls:[],bays:[],src:'rect',flip:false}; }
   // a new shape: the corners are made again (levels from the schedule), unless keep is set and the count matches
   function frSetPlan(plan,keep){ const old=FR.corners; FR.plan=plan; FR.sel=null;
@@ -31,23 +31,32 @@
   function frOut(i){ const n=FR.plan.pts.length; const s1=frSide((i-1+n)%n), s2=frSide(i); let ox=s1.nx+s2.nx, oy=s1.ny+s2.ny; const L=Math.hypot(ox,oy); if(L<1e-6){ ox=s2.nx; oy=s2.ny; } else { ox/=L; oy/=L; } return {ox,oy}; }
   function frBounds(){ const P=FR.plan; const xs=P.pts.map(p=>p.x), ys=P.pts.map(p=>p.y); const pad=Math.max(...P.w,600)/2000+1.45; return {x0:Math.min(...xs)-pad,y0:Math.min(...ys)-pad,x1:Math.max(...xs)+pad,y1:Math.max(...ys)+pad}; }
   function frAddPoint(i,corner){ const P=FR.plan, n=P.pts.length; const s=frSide(i); const used=new Set(FR.corners.map(c=>c.k)); const k=[...FR_LET].find(x=>!used.has(x))||('P'+(n+1));
-    P.pts.splice(i+1,0,{x:+s.mx.toFixed(3),y:+s.my.toFixed(3)}); P.w.splice(i+1,0,P.w[i]); P.w0.splice(i+1,0,P.w0[i]); P.bays.forEach(y=>{ if(y.side>i) y.side++; });
+    P.pts.splice(i+1,0,{x:+s.mx.toFixed(3),y:+s.my.toFixed(3)}); P.w.splice(i+1,0,P.w[i]); P.w0.splice(i+1,0,P.w0[i]); P.bays.forEach(y=>{ if(y.side>i) y.side++; }); if(P.party) P.party.sides=P.party.sides.flatMap(x=>x>i?[x+1]:x===i?[x,x+1]:[x]);
     FR.corners.splice(i+1,0,corner?{...corner,k:corner.k&&!used.has(corner.k)?corner.k:k}:{k,design:FR.corners[i]?FR.corners[i].design:frDesignFor(k),dug:'',from:'',why:''}); return i+1; }
-  function frRemovePoint(i){ const P=FR.plan; if(P.pts.length<=3){ toast('A footing needs at least three corners'); return false; } P.pts.splice(i,1); P.w.splice(i,1); P.w0.splice(i,1); P.bays.forEach(y=>{ if(y.side>=i) y.side=Math.max(0,y.side-1); }); FR.corners.splice(i,1); return true; }
+  function frRemovePoint(i){ const P=FR.plan; if(P.pts.length<=3){ toast('A footing needs at least three corners'); return false; } P.pts.splice(i,1); P.w.splice(i,1); P.w0.splice(i,1); P.bays.forEach(y=>{ if(y.side>=i) y.side=Math.max(0,y.side-1); }); if(P.party) P.party.sides=[...new Set(P.party.sides.map(x=>x>i?x-1:x))]; FR.corners.splice(i,1); return true; }
   function frSetLength(i,L){ const P=FR.plan, n=P.pts.length; const s=frSide(i); const d=L-s.L; if(Math.abs(d)<0.0005) return; const pb=s.b.x*s.ux+s.b.y*s.uy; P.pts.forEach(p=>{ if(p.x*s.ux+p.y*s.uy>=pb-0.01){ p.x=+(p.x+s.ux*d).toFixed(3); p.y=+(p.y+s.uy*d).toFixed(3); } });
     const mv=q=>{ if(q.x*s.ux+q.y*s.uy>=pb-0.01){ q.x=+(q.x+s.ux*d).toFixed(3); q.y=+(q.y+s.uy*d).toFixed(3); } }; P.walls.forEach(w=>{ mv(w.a); mv(w.b); }); P.bays.forEach(mv); frRectUI(); }
+  function frConvex(i){ const P=FR.plan, n=P.pts.length; const a=P.pts[(i-1+n)%n], b=P.pts[i], c=P.pts[(i+1)%n]; const cr=(b.x-a.x)*(c.y-b.y)-(b.y-a.y)*(c.x-b.x); let A=0; for(let k=0;k<n;k++){ const p=P.pts[k], q=P.pts[(k+1)%n]; A+=p.x*q.y-q.x*p.y; } return cr*A>=0; }
+  function frOutsideLen(i){ const P=FR.plan, n=P.pts.length; const s=frSide(i); const wp=P.w[(i-1+n)%n]/2000, wn=P.w[(i+1)%n]/2000; return s.L+(frConvex(i)?wp:-wp)+(frConvex((i+1)%n)?wn:-wn); }
+  function frIsParty(i){ const P=FR.plan; return !!(P&&P.party&&P.party.sides.includes(i)); }
+  function frPartyMode(mode){ const P=FR.plan; if(!P||!P.party) return; P.party.mode=mode; const w=mode==='all'?P.party.full:mode==='none'?0:Math.round(P.party.full/2); P.party.sides.forEach(i=>{ P.w[i]=w; P.w0[i]=w; }); }
+  function frAddWall(ia,ib){ const P=FR.plan; const n=P.pts.length; ia=ia==null?0:ia; ib=ib==null?Math.floor(n/2):ib; const a=P.pts[ia], b=P.pts[ib]; P.walls.push({a:{x:a.x,y:a.y},b:{x:b.x,y:b.y},w:600,w0:600,added:true}); return P.walls.length-1; }
   function frFlip(){ const P=FR.plan; if(!P) return; const xs=P.pts.map(p=>p.x); const X=Math.max(...xs)+Math.min(...xs); const f=p=>{ p.x=+(X-p.x).toFixed(3); }; P.pts.forEach(f); P.walls.forEach(w=>{ f(w.a); f(w.b); }); P.bays.forEach(f); P.flip=!P.flip; frDraw(); frSel(); }
   // ---- the picture ----
   function frDraw(){ const svg=$('fr-plan'); const P=FR.plan; if(!P||!P.pts.length){ svg.innerHTML=''; return; } const pts=P.pts, n=pts.length; const b=frBounds(); svg.setAttribute('viewBox',`${b.x0} ${b.y0} ${b.x1-b.x0} ${b.y1-b.y0}`);
     const fs=(b.x1-b.x0)*0.036, sel=FR.sel||{}; const out=[]; const f3=v=>+(+v).toFixed(3);
     // concrete: each side and wall drawn at its width
-    pts.forEach((p,i)=>{ const q=pts[(i+1)%n]; const on=sel.t==='s'&&sel.i===i; out.push(`<g data-s="${i}" class="fr-sidelab"><line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${on?'#f3d36b':(P.w[i]!==P.w0[i]?'#e6c3bf':'#cfc8ba')}" stroke-width="${Math.max(P.w[i],450)/1000}" stroke-linecap="square"/></g>`); });
-    P.walls.forEach(w=>out.push(`<line x1="${w.a.x}" y1="${w.a.y}" x2="${w.b.x}" y2="${w.b.y}" stroke="#d9d3c6" stroke-width="${w.w/1000}" stroke-linecap="butt"/>`));
+    pts.forEach((p,i)=>{ const q=pts[(i+1)%n]; const on=sel.t==='s'&&sel.i===i; const party=frIsParty(i); out.push(`<g data-s="${i}" class="fr-sidelab"><line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${on?'#f3d36b':party?'#d6cfe6':(P.w[i]!==P.w0[i]?'#e6c3bf':'#cfc8ba')}" stroke-width="${Math.max(P.w[i],450)/1000}" stroke-linecap="square"${P.w[i]?'':' stroke-dasharray="0.15 0.15" opacity=".35"'}/></g>`); });
+    P.walls.forEach((w,i)=>{ const on=sel.t==='w'&&sel.i===i; out.push(`<g data-w="${i}" class="fr-sidelab"><line x1="${w.a.x}" y1="${w.a.y}" x2="${w.b.x}" y2="${w.b.y}" stroke="${on?'#f3d36b':(w.w0!=null&&w.w!==w.w0)||w.added?'#e6c3bf':'#d9d3c6'}" stroke-width="${Math.max(w.w,450)/1000}" stroke-linecap="butt"/></g>`); });
     P.bays.forEach(y=>{ const s=frSide(Math.min(y.side,n-1)); const cx=y.x+s.nx*y.d/2, cy=y.y+s.ny*y.d/2; const ang=Math.atan2(s.uy,s.ux)*180/Math.PI; out.push(`<rect x="${cx-y.w/2}" y="${cy-y.d/2}" width="${y.w}" height="${y.d}" fill="#d9d3c6" transform="rotate(${ang} ${cx} ${cy})"/>`); });
     out.push(`<polygon points="${pts.map(p=>p.x+','+p.y).join(' ')}" fill="none" stroke="#333" stroke-width="${fs*0.06}" stroke-dasharray="${fs*0.5} ${fs*0.35}"/>`);
     // side widths, tappable
     pts.forEach((p,i)=>{ const s=frSide(i); const tw=fs*2.6, th=fs*1.3; if(s.L<tw*1.1) return; const off=P.w[i]/2000+fs*0.85; const x=s.mx-s.nx*off, y=s.my-s.ny*off; const chg=P.w[i]!==P.w0[i]; const on=sel.t==='s'&&sel.i===i;
-      out.push(`<g class="fr-sidelab" data-s="${i}"><rect x="${x-tw/2}" y="${y-th/2}" width="${tw}" height="${th}" rx="${fs*0.2}" fill="${on?'#f3d36b':'#fff'}" stroke="${chg?'#B3261E':'#999'}" stroke-width="${fs*0.06}"/><text x="${x}" y="${y+fs*0.33}" text-anchor="middle" font-size="${fs*0.85}" font-weight="700" fill="${chg?'#B3261E':'#333'}">${P.w[i]}</text></g>`); });
+      const lab=frIsParty(i)?'P '+P.w[i]:String(P.w[i]); const tw2=lab.length>3?tw*1.35:tw;
+      out.push(`<g class="fr-sidelab" data-s="${i}"><rect x="${x-tw2/2}" y="${y-th/2}" width="${tw2}" height="${th}" rx="${fs*0.2}" fill="${on?'#f3d36b':'#fff'}" stroke="${chg?'#B3261E':'#999'}" stroke-width="${fs*0.06}"/><text x="${x}" y="${y+fs*0.33}" text-anchor="middle" font-size="${fs*0.85}" font-weight="700" fill="${chg?'#B3261E':'#333'}">${lab}</text></g>`); });
+    // internal legs: width label on the leg
+    P.walls.forEach((w,i)=>{ const L=Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y); const tw=fs*2.6, th=fs*1.3; if(L<tw*1.3) return; const x=(w.a.x+w.b.x)/2, y=(w.a.y+w.b.y)/2; const chg=(w.w0!=null&&w.w!==w.w0)||w.added; const on=sel.t==='w'&&sel.i===i;
+      out.push(`<g class="fr-sidelab" data-w="${i}"><rect x="${x-tw/2}" y="${y-th/2}" width="${tw}" height="${th}" rx="${fs*0.2}" fill="${on?'#f3d36b':'#fff'}" stroke="${chg?'#B3261E':'#bbb'}" stroke-width="${fs*0.06}"/><text x="${x}" y="${y+fs*0.33}" text-anchor="middle" font-size="${fs*0.8}" font-weight="700" fill="${chg?'#B3261E':'#555'}">${w.w}</text></g>`); });
     // corners: letter in a circle, coloured by how the dug level compares; the levels beside it
     const multi=new Set(FR.corners.map(c=>String(c.design||''))).size>1;
     pts.forEach((p,i)=>{ const c=FR.corners[i]||{k:'?'}; const df=frDiffText(c.dug,c.design); const col=FR_COL[df.k]; const on=sel.t==='c'&&sel.i===i; const o=frOut(i); const r=fs*0.75;
@@ -57,7 +66,7 @@
         (l1?`<text x="${tx}" y="${ty+dy}" text-anchor="${anc}" font-size="${fs*0.8}" font-weight="800" fill="${col}">${l1}</text>`:'')+(l2?`<text x="${tx}" y="${ty+dy+(l1?fs*0.85:0)}" text-anchor="${anc}" font-size="${fs*0.66}" fill="${c.from?'#B3261E':'#666'}">${l1?'':'design '}${l2}</text>`:'')+`</g>`); });
     if(P.house||P.ref){ const cx=(b.x0+b.x1)/2; out.push(`<text x="${cx}" y="${b.y1-fs*0.35}" text-anchor="middle" font-size="${fs*0.62}" fill="#777">${frEsc([P.house,P.ref?'drg '+P.ref:'',P.flip?'flipped on site':''].filter(Boolean).join(' · '))}</text>`); }
     svg.innerHTML=out.join(''); frConc(); }
-  $('fr-plan').addEventListener('click',e=>{ const c=e.target.closest('[data-c]'), s=e.target.closest('[data-s]'); if(c) FR.sel={t:'c',i:+c.dataset.c}; else if(s) FR.sel={t:'s',i:+s.dataset.s}; else FR.sel=null; frDraw(); frSel(true); });
+  $('fr-plan').addEventListener('click',e=>{ const c=e.target.closest('[data-c]'), s=e.target.closest('[data-s]'), w=e.target.closest('[data-w]'); if(c) FR.sel={t:'c',i:+c.dataset.c}; else if(s) FR.sel={t:'s',i:+s.dataset.s}; else if(w) FR.sel={t:'w',i:+w.dataset.w}; else FR.sel=null; frDraw(); frSel(true); });
   // ---- what you tapped: one corner or one side ----
   function frSel(scroll){ const box=$('fr-sel'); const P=FR.plan, sel=FR.sel; if(!P||!sel||!FR.corners[sel.i]&&sel.t==='c'){ box.hidden=true; box.innerHTML=''; return; } box.hidden=false; const n=P.pts.length; const kk=i=>(FR.corners[i]||{}).k||'?';
     if(sel.t==='c'){ const i=sel.i, c=FR.corners[i]; const df=frDiffText(c.dug,c.design);
@@ -72,21 +81,40 @@
       $('fr-seladd').addEventListener('click',()=>{ const j=frAddPoint(i); FR.sel={t:'c',i:j}; frDraw(); frCorners(); frSel(); frChanged(); toast('Point '+FR.corners[j].k+' added. Put its level in'); });
       $('fr-selrm').addEventListener('click',()=>{ if(frRemovePoint(i)){ FR.sel=null; frDraw(); frCorners(); frSel(); frChanged(); } });
       if(scroll) setTimeout(()=>{ dug.focus({preventScroll:true}); box.scrollIntoView({block:'nearest',behavior:'smooth'}); },30); }
-    else { const i=sel.i; const s=frSide(i); const chg=P.w[i]!==P.w0[i];
-      box.innerHTML=`<div class="fr-selh"><b>Side ${frEsc(kk(i))} to ${frEsc(kk((i+1)%n))}</b><span>${s.L.toFixed(2)} m long</span><button type="button" class="fr-close" aria-label="Done">Done</button></div>
-        <div class="grid2"><div class="field"><label>Length of this side</label><div class="in"><input id="fr-sell" type="number" inputmode="decimal" step="0.01" value="${+s.L.toFixed(2)}"><span class="unit">m</span></div><small class="note" style="margin:4px 0 0">Changing it moves corner ${frEsc(kk((i+1)%n))} and everything past it.</small></div>
+    else if(sel.t==='w'){ const i=sel.i, wl=P.walls[i]; if(!wl){ box.hidden=true; return; } const L=Math.hypot(wl.b.x-wl.a.x,wl.b.y-wl.a.y); const chg=wl.w0!=null&&wl.w!==wl.w0; const near=q=>{ let best=-1,bd=0.3; P.pts.forEach((p,k)=>{ const d=Math.hypot(p.x-q.x,p.y-q.y); if(d<bd){ bd=d; best=k; } }); return best; };
+      const opts=(cur)=>`<option value="">as drawn</option>`+P.pts.map((p,k)=>`<option value="${k}"${k===cur?' selected':''}>${frEsc(kk(k))}</option>`).join('');
+      box.innerHTML=`<div class="fr-selh"><b>Internal leg ${i+1}</b><span>${L.toFixed(2)} m long</span><button type="button" class="fr-close" aria-label="Done">Done</button></div>
+        <div class="field"><label>Width of this leg</label><div class="in"><input id="fr-selw" type="number" inputmode="numeric" step="50" value="${wl.w}"><span class="unit">mm</span></div>${chg?`<small class="fr-was">design ${wl.w0} <button type="button" class="fr-chg" id="fr-selw0">Put it back</button></small>`:''}</div>
+        <div class="seg five fr-wq">${[450,600,750,900,1050].map(w=>`<button type="button" data-w="${w}" aria-pressed="${wl.w===w}">${w}</button>`).join('')}</div>
+        <div class="grid2"><div class="field"><label>From corner</label><div class="in"><select id="fr-wa">${opts(near(wl.a))}</select></div></div><div class="field"><label>To corner</label><div class="in"><select id="fr-wb">${opts(near(wl.b))}</select></div></div></div>
+        <div class="btnrow fr-selbtns"><button type="button" class="btn" id="fr-selrm">Take this leg off</button></div>`;
+      const w=$('fr-selw'); const setW=v=>{ v=Math.round(frNum(v)); if(!(v>=100)) return; wl.w=v; box.querySelectorAll('.fr-wq button').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.w===v)); frDraw(); frChanged(); };
+      w.addEventListener('input',()=>setW(w.value)); box.querySelectorAll('.fr-wq button').forEach(x=>x.addEventListener('click',()=>{ w.value=x.dataset.w; setW(x.dataset.w); }));
+      const back=$('fr-selw0'); if(back) back.addEventListener('click',()=>{ w.value=wl.w0; setW(wl.w0); frSel(); });
+      [['fr-wa','a'],['fr-wb','b']].forEach(([id,end])=>$(id).addEventListener('change',()=>{ const k=$(id).value; if(k==='') return; const p=P.pts[+k]; wl[end]={x:p.x,y:p.y}; frDraw(); frChanged(); frSel(); }));
+      $('fr-selrm').addEventListener('click',()=>{ P.walls.splice(i,1); FR.sel=null; frDraw(); frSel(); frChanged(); });
+      if(scroll) setTimeout(()=>{ w.focus({preventScroll:true}); box.scrollIntoView({block:'nearest',behavior:'smooth'}); },30); }
+    else { const i=sel.i; const s=frSide(i); const chg=P.w[i]!==P.w0[i]; const party=frIsParty(i); const O=frOutsideLen(i);
+      box.innerHTML=`<div class="fr-selh"><b>Side ${frEsc(kk(i))} to ${frEsc(kk((i+1)%n))}</b><span>${party?'party wall':''}</span><button type="button" class="fr-close" aria-label="Done">Done</button></div>
+        <div class="grid2"><div class="field"><label>Length, centre line</label><div class="in"><input id="fr-sell" type="number" inputmode="decimal" step="0.01" value="${+s.L.toFixed(2)}"><span class="unit">m</span></div><small class="note" style="margin:4px 0 0">As the drawing (wall centre line).</small></div>
+        <div class="field"><label>Length, outside of the dig</label><div class="in"><input id="fr-sello" type="number" inputmode="decimal" step="0.01" value="${+O.toFixed(2)}"><span class="unit">m</span></div><small class="note" style="margin:4px 0 0">What you measure on the trench. Type either; corner ${frEsc(kk((i+1)%n))} and everything past it moves.</small></div></div>
+        ${party?`<div class="field"><label>Party wall footing: how much is on this plot?</label><div class="seg three" id="fr-party"><button type="button" data-m="half" aria-pressed="${P.party.mode==='half'}">Half (${Math.round(P.party.full/2)})</button><button type="button" data-m="all" aria-pressed="${P.party.mode==='all'}">All of it (${P.party.full})</button><button type="button" data-m="none" aria-pressed="${P.party.mode==='none'}">None, on the other plot</button></div></div>`:''}
         <div class="field"><label>Width on this side</label><div class="in"><input id="fr-selw" type="number" inputmode="numeric" step="50" value="${P.w[i]}"><span class="unit">mm</span></div>${chg?`<small class="fr-was">design ${P.w0[i]} <button type="button" class="fr-chg" id="fr-selw0">Put it back</button></small>`:`<small class="note" style="margin:4px 0 0">As the drawing. Change it if you dug it wider.</small>`}</div>
-        </div><div class="seg five fr-wq">${[600,750,900,1050,1200].map(w=>`<button type="button" data-w="${w}" aria-pressed="${P.w[i]===w}">${w}</button>`).join('')}</div>
-        <div class="btnrow fr-selbtns"><button type="button" class="btn" id="fr-seladd">+ Point on this side</button></div>`;
-      const lin=$('fr-sell'); lin.addEventListener('change',()=>{ const L=frNum(lin.value); if(!(L>0.2)) return; frSetLength(i,L); frDraw(); frChanged(); const s2=frSide(i); box.querySelector('.fr-selh span').textContent=s2.L.toFixed(2)+' m long'; });
-      const w=$('fr-selw'); const setW=v=>{ v=Math.round(frNum(v)); if(!(v>=100)) return; P.w[i]=v; box.querySelectorAll('.fr-wq button').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.w===v)); const was=box.querySelector('.fr-was'); frDraw(); frChanged(); if(!!was!==(v!==P.w0[i])) frSel(); };
+        <div class="seg five fr-wq">${[600,750,900,1050,1200].map(w=>`<button type="button" data-w="${w}" aria-pressed="${P.w[i]===w}">${w}</button>`).join('')}</div>
+        <div class="btnrow fr-selbtns"><button type="button" class="btn" id="fr-seladd">Split this side: a step or a change of width part way along</button></div>`;
+      const lin=$('fr-sell'), lo=$('fr-sello'); const after=()=>{ frDraw(); frChanged(); const s2=frSide(i); lin.value=+s2.L.toFixed(2); lo.value=+frOutsideLen(i).toFixed(2); };
+      lin.addEventListener('change',()=>{ const L=frNum(lin.value); if(!(L>0.2)) return; frSetLength(i,L); after(); });
+      lo.addEventListener('change',()=>{ const Lo=frNum(lo.value); if(!(Lo>0.2)) return; const L=s.L+(Lo-frOutsideLen(i)); if(L>0.2) frSetLength(i,L); after(); });
+      const w=$('fr-selw'); const setW=v=>{ v=Math.round(frNum(v)); if(!(v>=0)) return; P.w[i]=v; box.querySelectorAll('.fr-wq button').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.w===v)); const was=box.querySelector('.fr-was'); frDraw(); frChanged(); if(!!was!==(v!==P.w0[i])) frSel(); };
       w.addEventListener('input',()=>setW(w.value)); box.querySelectorAll('.fr-wq button').forEach(x=>x.addEventListener('click',()=>{ w.value=x.dataset.w; setW(x.dataset.w); }));
       const back=$('fr-selw0'); if(back) back.addEventListener('click',()=>{ w.value=P.w0[i]; setW(P.w0[i]); });
-      $('fr-seladd').addEventListener('click',()=>{ const j=frAddPoint(i); FR.sel={t:'c',i:j}; frDraw(); frCorners(); frSel(true); frChanged(); });
+      const pt=$('fr-party'); if(pt) pt.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; frPartyMode(b.dataset.m); frDraw(); frChanged(); frSel(); });
+      $('fr-seladd').addEventListener('click',()=>{ const j=frAddPoint(i); FR.sel={t:'c',i:j}; frDraw(); frCorners(); frSel(true); frChanged(); toast('Side split at '+FR.corners[j].k+'. Put its level in, then tap each half for its width'); });
       if(scroll) setTimeout(()=>{ w.focus({preventScroll:true}); box.scrollIntoView({block:'nearest',behavior:'smooth'}); },30); }
     box.querySelector('.fr-close').addEventListener('click',()=>{ FR.sel=null; frDraw(); frSel(); }); }
   const frChanged=()=>$('panel-fr').dispatchEvent(new Event('change'));
   $('fr-flip').addEventListener('click',()=>{ frFlip(); frChanged(); });
+  $('fr-addwall').addEventListener('click',()=>{ if(!FR.plan) return; const j=frAddWall(); FR.sel={t:'w',i:j}; frDraw(); frSel(true); frChanged(); toast('Internal leg added: pick which corners it runs between'); });
   $('fr-rect').addEventListener('click',()=>{ const x=frPlotRec($('fr-plot').value); const P=FR.plan; const dug=FR.corners.some(c=>c.dug); if(dug&&!confirm('Change the shape? The levels you put in are kept where the corner letters match.')) return;
     if(P&&P.src==='rect'){ const t=frPlanFromTpl(x); if(t) frSetPlan(t,true); } else frSetPlan(frRectPlan($('fr-rectl').value,$('fr-rectw').value),true); frChanged(); });
   ['fr-rectl','fr-rectw'].forEach(id=>$(id).addEventListener('input',()=>{ const P=FR.plan; if(!P||P.src!=='rect') return; const L=frNum($('fr-rectl').value), W=frNum($('fr-rectw').value); if(!(L>0&&W>0)) return; const xs=P.pts.map(p=>p.x), ys=P.pts.map(p=>p.y); const oL=Math.max(...xs)-Math.min(...xs)||1, oW=Math.max(...ys)-Math.min(...ys)||1, x0=Math.min(...xs), y0=Math.min(...ys);
@@ -120,13 +148,14 @@
   // concrete: the footing's length times width times depth, design and as dug, against what came
   function frConc(){ const o=$('fr-concout'); if(!o) return; const P=FR.plan; const toc=frNum($('fr-toc').value), tocd=frNum($('fr-tocd').value); const top=isNaN(toc)?tocd:toc; if(!P||!P.pts.length||isNaN(top)){ o.hidden=true; return; }
     const n=P.pts.length; const dep=(i,dug)=>{ const a=FR.corners[i]||{}, b=FR.corners[(i+1)%n]||{}; const la=frNum(dug&&a.dug?a.dug:a.design), lb=frNum(dug&&b.dug?b.dug:b.design); const vs=[la,lb].filter(v=>!isNaN(v)); if(!vs.length) return NaN; return Math.max(0,top-vs.reduce((x,y)=>x+y,0)/vs.length); };
-    const vol=dug=>{ let v=0, any=false; for(let i=0;i<n;i++){ const d=dep(i,dug); if(isNaN(d)) continue; any=true; const s=frSide(i); v+=s.L*P.w[i]/1000*d; const wp=P.w[(i-1+n)%n]; v-=Math.min(P.w[i],wp)*wp/1e6*d; }
-      if(!any) return NaN; const dm=dep(0,dug)||0; P.walls.forEach(w=>{ v+=Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y)*w.w/1000*(isNaN(dm)?0:dm); }); P.bays.forEach(y=>{ v+=y.w*y.d*(isNaN(dm)?0:dm); }); return v; };
-    const vd=vol(false), va=vol(true), got=frNum($('fr-m3').value); if(isNaN(vd)){ o.hidden=true; return; }
+    const vol=dug=>{ let v=0, any=false, dsum=0, dn=0; for(let i=0;i<n;i++){ const d=dep(i,dug); if(isNaN(d)) continue; any=true; dsum+=d; dn++; const s=frSide(i); v+=s.L*P.w[i]/1000*d; const wp=P.w[(i-1+n)%n]; v-=Math.min(P.w[i],wp)*wp/1e6*d; }
+      if(!any) return NaN; const dm=dsum/dn; P.walls.forEach(w=>{ v+=Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y)*w.w/1000*dm; }); P.bays.forEach(y=>{ v+=y.w*y.d*dm; }); return v; };
+    const g1=frNum($('fr-p1m3').value), g2=frNum($('fr-m3').value); const got=(isNaN(g1)?0:g1)+(isNaN(g2)?0:g2); const both=!isNaN(g1)&&g1>0&&!isNaN(g2)&&g2>0;
+    const vd=vol(false), va=vol(true); if(isNaN(vd)){ o.hidden=true; return; }
     const asdug=FR.corners.some(c=>c.dug); let t=`Expected about <b>${vd.toFixed(1)} m³</b> from the drawing`+(asdug&&Math.abs(va-vd)>=0.05?`, <b>${va.toFixed(1)} m³</b> as dug`:''); let k='';
-    if(!isNaN(got)&&got>0){ const base=asdug?va:vd; const diff=got-base; const pc=Math.round(diff/base*100); t+=`. Delivered ${got.toFixed(1)} m³: `+(Math.abs(pc)<=10?`<b>${diff>=0?'+':''}${diff.toFixed(1)} m³ (${pc>=0?'+':''}${pc}%), about right</b>`:diff>0?`<b>${diff.toFixed(1)} m³ more (+${pc}%)</b>, dug wider or deeper somewhere?`:`<b>${(-diff).toFixed(1)} m³ less (${pc}%)</b>, check it was all poured`); k=Math.abs(pc)<=10?'ok':diff>0?'deep':'high'; }
+    if(!isNaN(got)&&got>0){ const base=asdug?va:vd; const diff=got-base; const pc=Math.round(diff/base*100); t+=`. Delivered ${both?g1.toFixed(1)+' + '+g2.toFixed(1)+' = ':''}${got.toFixed(1)} m³: `+(Math.abs(pc)<=10?`<b>${diff>=0?'+':''}${diff.toFixed(1)} m³ (${pc>=0?'+':''}${pc}%), about right</b>`:diff>0?`<b>${diff.toFixed(1)} m³ more (+${pc}%)</b>, dug wider or deeper somewhere?`:`<b>${(-diff).toFixed(1)} m³ less (${pc}%)</b>, check it was all poured`); k=Math.abs(pc)<=10?'ok':diff>0?'deep':'high'; }
     o.hidden=false; o.innerHTML=t; o.dataset.k=k; }
-  window.frConc=frConc; ['fr-m3','fr-toc','fr-tocd'].forEach(id=>$(id).addEventListener('input',frConc));
+  window.frConc=frConc; ['fr-m3','fr-p1m3','fr-toc','fr-tocd'].forEach(id=>$(id).addEventListener('input',frConc));
   function frToc(){ const o=$('fr-tocout'); const df=frDiffText($('fr-toc').value,$('fr-tocd').value); o.hidden=!df.t; o.textContent=df.t?'Top of concrete: '+df.t:''; o.dataset.k=df.k; }
   ['fr-toc','fr-tocd'].forEach(id=>$(id).addEventListener('input',frToc));
   $('fr-addcorner').addEventListener('click',()=>{ let j; if(FR.plan&&FR.plan.pts.length===FR.corners.length){ j=frAddPoint(FR.plan.pts.length-1); } else { const used=new Set(FR.corners.map(c=>c.k)); const k=[...FR_LET].find(x=>!used.has(x))||''; FR.corners.push({k,design:'',dug:'',from:'',why:''}); j=FR.corners.length-1; }
@@ -135,6 +164,8 @@
   // inspection: a result, not a signature
   const frPassUI=()=>{ $('fr-passed').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===FR.passed)); $('fr-inspwrap').hidden=!FR.passed; };
   $('fr-passed').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; FR.passed=b.dataset.p; if(FR.passed&&!$('fr-inspdate').value) $('fr-inspdate').value=today(); frPassUI(); });
+  const frScoreUI=()=>{ [['fr-score','score'],['fr-drscore','drscore']].forEach(([id,k])=>$(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===FR[k]))); };
+  [['fr-score','score'],['fr-drscore','drscore']].forEach(([id,k])=>$(id).addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; FR[k]=b.dataset.v; frScoreUI(); }));
   // plot drainage, as the old record: as design, not yet, or differs with the as-built attached
   const frDrainRender=photoStore('fr-drainphoto','fr-drainphotos',()=>FR.drainPhotos);
   $('fr-drainpdf').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; if(f.size>8*1024*1024){ toast('PDF too big (8 MB max)'); e.target.value=''; return; } const rd=new FileReader(); rd.onload=()=>{ FR.drainPdf={name:f.name,data:rd.result}; frDrainPdfUI(); toast('PDF attached: '+f.name); }; rd.readAsDataURL(f); e.target.value=''; });
@@ -191,11 +222,14 @@
     doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK);
     const line=(lab,val)=>{ if(!val) return; if(y>270){ doc.addPage(); y=42; } doc.setFont('helvetica','bold'); doc.text(lab,M,y); doc.setFont('helvetica','normal'); const L=doc.splitTextToSize(val,CW-40); doc.text(L,M+40,y); y+=L.length*4.5+1.5; };
     const P=FR.plan; if(P&&P.pts.length){ const n=P.pts.length; const kk=i=>(FR.corners[i]||{}).k||'?'; const same=P.w.every(w=>w===P.w[0]); const chg=P.w.map((w,i)=>w!==P.w0[i]?`${kk(i)}–${kk((i+1)%n)} ${w} (design ${P.w0[i]})`:'').filter(Boolean);
-      line('Footing widths',(same?`${P.w[0]} mm all round`:P.w.map((w,i)=>`${kk(i)}–${kk((i+1)%n)} ${w}`).join(', ')+' mm')+(chg.length?'. Changed on site: '+chg.join(', '):'')); }
+      line('Footing widths',(same?`${P.w[0]} mm all round`:P.w.map((w,i)=>`${kk(i)}–${kk((i+1)%n)} ${w}`).join(', ')+' mm')+(chg.length?'. Changed on site: '+chg.join(', '):''));
+      if(P.party) line('Party wall',P.party.mode==='all'?`all ${P.party.full} mm counted on this plot`:P.party.mode==='none'?'counted on the adjoining plot, none here':`half (${Math.round(P.party.full/2)} of ${P.party.full} mm) counted on this plot`);
+      if(P.walls.length) line('Internal legs',P.walls.map(w=>`${Math.hypot(w.b.x-w.a.x,w.b.y-w.a.y).toFixed(2)} m x ${w.w}`+((w.w0!=null&&w.w!==w.w0)?` (design ${w.w0})`:w.added?' (added on site)':'')).join(', ')); }
     line('Ground at the bottom',v('fr-ground')); line('Dug deeper or wider',v('fr-deeper')); y+=4;
     if(y>235){ doc.addPage(); y=42; }
     H('POUR'); const tdf=frDiffText(v('fr-toc'),v('fr-tocd'));
-    y=cellRow(doc,M,y,CW,11,[{label:'Mix',value:v('fr-mix')||'–',w:CW*0.16},{label:'Delivered m3',value:v('fr-m3')||'–',w:CW*0.16},{label:'Tickets',value:v('fr-tickets')||'–',w:CW*0.28},{label:'Top of concrete, design',value:v('fr-tocd')||'–',w:CW*0.2},{label:'Poured',value:v('fr-toc')||'–',w:CW*0.2,bold:true}]);
+    if(v('fr-p1m3')||v('fr-p1date')||v('fr-p1mix')) y=cellRow(doc,M,y,CW,11,[{label:'Mass fill, poured on',value:v('fr-p1date')?fmtDate(v('fr-p1date')):'–',w:CW*0.24},{label:'Mix',value:v('fr-p1mix')||'–',w:CW*0.16},{label:'Delivered m3',value:v('fr-p1m3')||'–',w:CW*0.16},{label:'Tickets',value:v('fr-p1tickets')||'–',w:CW*0.24},{label:'Top of mass fill',value:v('fr-p1top')||'–',w:CW*0.2}]);
+    y=cellRow(doc,M,y,CW,11,[{label:(v('fr-p1m3')?'Strip / cage, poured on':'Poured on'),value:v('fr-pourdate')?fmtDate(v('fr-pourdate')):'–',w:CW*0.2},{label:'Mix',value:v('fr-mix')||'–',w:CW*0.12},{label:'Delivered m3',value:v('fr-m3')||'–',w:CW*0.14},{label:'Tickets',value:v('fr-tickets')||'–',w:CW*0.22},{label:'Top of concrete, design',value:v('fr-tocd')||'–',w:CW*0.16},{label:'Poured',value:v('fr-toc')||'–',w:CW*0.16,bold:true}]);
     if(tdf.t){ doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...(tdf.k==='high'?[179,38,30]:INK)); doc.text('Top of concrete: '+tdf.t,M,y+5); y+=6; }
     { const c=$('fr-concout'); if(c&&!c.hidden){ doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...INK); const L=doc.splitTextToSize(c.textContent,CW); doc.text(L,M,y+5); y+=L.length*4+2; } }
     y+=6; H('PLOT DRAINAGE'); y+=2; doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK);
@@ -205,7 +239,7 @@
     const sw=(CW-10)/2;
     doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.setFillColor(...PAPER); doc.rect(M,y,sw,44,'FD'); doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...GREY); doc.text('NHBC INSPECTION',M+2.5,y+4);
     const pr=FR.passed||'Not inspected yet'; doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(...(FR.passed==='Not passed'?[179,38,30]:FR.passed?[30,111,63]:GREY)); doc.text(doc.splitTextToSize(pr.toUpperCase(),sw-6),M+3,y+13);
-    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK); doc.text(doc.splitTextToSize(v('fr-inspnote')||'',sw-6).slice(0,2),M+3,y+24);
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK); doc.text(doc.splitTextToSize([v('fr-inspnote'),(FR.score||FR.drscore)?`NHBC score: footing ${FR.score||'–'}, plot drainage ${FR.drscore||'–'}`:''].filter(Boolean).join('. '),sw-6).slice(0,2),M+3,y+24);
     doc.setDrawColor(...LINE); doc.line(M+3,y+30,M+sw-3,y+30); doc.setFontSize(9); doc.text(v('fr-insp')||'',M+3,y+36); doc.setFontSize(7.5); doc.setTextColor(...GREY); doc.text(v('fr-inspdate')?'Inspected '+fmtDate(v('fr-inspdate')):'',M+3,y+41);
     const x0=M+sw+10; doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.setFillColor(...PAPER); doc.rect(x0,y,sw,44,'FD'); doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...GREY); doc.text('FOR R.J. HOWARD ENGINEERS LTD',x0+2.5,y+4);
     const sg=SIGS['fr-sig2'].data(); if(sg) try{ doc.addImage(sg,'PNG',x0+3,y+6,sw-6,22,undefined,'FAST'); }catch(e){}
@@ -217,13 +251,13 @@
     try{ const out=await PDFLib.PDFDocument.load(base); const att=await PDFLib.PDFDocument.load(FR.drainPdf.data,{ignoreEncryption:true}); const pages=await out.copyPages(att,att.getPageIndices()); pages.forEach(p=>out.addPage(p)); const bytes=await out.save(); return new Blob([bytes],{type:'application/pdf'}); }
     catch(e){ console.warn('drainage pdf',e); return new Blob([base],{type:'application/pdf'}); } }
   pdfActions('fr',buildFrBlob,()=>`RJH_Foundation_Plot${($('fr-plot').value.trim()||'').replace(/\W/g,'')}_${$('fr-date').value}.pdf`,'fr-status',()=>!!$('fr-plot').value.trim());
-  const FR_F=['fr-site','fr-client','fr-by','fr-date','fr-plot','fr-type','fr-digdate','fr-ground','fr-deeper','fr-pourdate','fr-mix','fr-m3','fr-tickets','fr-tocd','fr-toc','fr-insp','fr-inspdate','fr-inspnote','fr-notes','fr-drainnotes'];
+  const FR_F=['fr-site','fr-client','fr-by','fr-date','fr-plot','fr-type','fr-digdate','fr-ground','fr-deeper','fr-pourdate','fr-mix','fr-m3','fr-tickets','fr-tocd','fr-toc','fr-insp','fr-inspdate','fr-inspnote','fr-notes','fr-drainnotes','fr-p1date','fr-p1mix','fr-p1m3','fr-p1tickets','fr-p1top'];
   registerSave('fr',{section:'panel-fr',
     name:()=>{ const p=$('fr-plot').value.trim().replace(/^plot\s*/i,''); return p?`Plot ${p}${$('fr-type').value.trim()?' · '+$('fr-type').value.trim():''}`:''; }, site:()=>$('fr-site').value.trim(),
-    get:()=>({f:FR_F.map(id=>$(id).value),corners:JSON.parse(JSON.stringify(FR.corners)),plan:FR.plan?JSON.parse(JSON.stringify(FR.plan)):null,photos:FR.photos.slice(),drain:FR.drain,drainPhotos:FR.drainPhotos.slice(),drainPdf:FR.drainPdf,passed:FR.passed,sig2:SIGS['fr-sig2'].data(),design:FR.design,v:2}),
-    set:d=>{ FR_F.forEach((id,i)=>{ $(id).value=(d.f||[])[i]||''; }); FR.corners=(d.corners||[]).map(c=>({from:'',why:'',...c})); FR.plan=d.plan||null; FR.sel=null; FR.photos=(d.photos||[]).slice(); FR.drain=d.drain||'design'; FR.drainPhotos=(d.drainPhotos||[]).slice(); FR.drainPdf=d.drainPdf||null; FR.passed=d.passed||''; FR.design=d.design||null;
-      frPassUI(); frDrainUI(); frDrainPdfUI(); frRender(); frDrainRender(); SIGS['fr-sig2'].load(d.sig2); frFromPlot(false);
+    get:()=>({f:FR_F.map(id=>$(id).value),corners:JSON.parse(JSON.stringify(FR.corners)),plan:FR.plan?JSON.parse(JSON.stringify(FR.plan)):null,photos:FR.photos.slice(),drain:FR.drain,drainPhotos:FR.drainPhotos.slice(),drainPdf:FR.drainPdf,passed:FR.passed,score:FR.score,drscore:FR.drscore,sig2:SIGS['fr-sig2'].data(),design:FR.design,v:3}),
+    set:d=>{ FR_F.forEach((id,i)=>{ $(id).value=(d.f||[])[i]||''; }); FR.corners=(d.corners||[]).map(c=>({from:'',why:'',...c})); FR.plan=d.plan||null; FR.sel=null; FR.photos=(d.photos||[]).slice(); FR.drain=d.drain||'design'; FR.drainPhotos=(d.drainPhotos||[]).slice(); FR.drainPdf=d.drainPdf||null; FR.passed=d.passed||''; FR.score=d.score||''; FR.drscore=d.drscore||''; FR.design=d.design||null; if(FR.plan) FR.plan.walls=(FR.plan.walls||[]).map(w=>({w0:w.w,...w}));
+      frPassUI(); frScoreUI(); frDrainUI(); frDrainPdfUI(); frRender(); frDrainRender(); SIGS['fr-sig2'].load(d.sig2); frFromPlot(false); $('fr-p1fold').open=!!(($('fr-p1m3').value||$('fr-p1date').value||$('fr-p1mix').value));
       if(!FR.plan){ const x=frPlotRec($('fr-plot').value); frSetPlan(frPlanFromTpl(x)||frRectPlan(),true); } else { frRectUI(); frDraw(); } frCorners(); frSel(); frToc(); },
-    clear:()=>{ FR_F.forEach(id=>{ $(id).value=''; }); $('fr-date').value=today(); FR.corners=[]; FR.plan=null; FR.sel=null; FR.photos=[]; FR.drain='design'; FR.drainPhotos=[]; FR.drainPdf=null; FR.passed=''; FR.design=null; frPassUI(); frDrainUI(); frDrainPdfUI(); frRender(); frDrainRender(); SIGS['fr-sig2'].clear(); $('fr-plotinfo').hidden=true; $('fr-plan').innerHTML=''; $('fr-rectwrap').hidden=true; frCorners(); frSel(); frToc(); },
-    hasContent:d=>!!(d.f&&(d.f[4]||d.f[8]||d.f[11])||(d.corners||[]).some(c=>c.dug)||(d.photos||[]).length) });
+    clear:()=>{ FR_F.forEach(id=>{ $(id).value=''; }); $('fr-date').value=today(); FR.corners=[]; FR.plan=null; FR.sel=null; FR.photos=[]; FR.drain='design'; FR.drainPhotos=[]; FR.drainPdf=null; FR.passed=''; FR.score=''; FR.drscore=''; FR.design=null; frPassUI(); frScoreUI(); frDrainUI(); frDrainPdfUI(); frRender(); frDrainRender(); SIGS['fr-sig2'].clear(); $('fr-plotinfo').hidden=true; $('fr-plan').innerHTML=''; $('fr-rectwrap').hidden=true; frCorners(); frSel(); frToc(); },
+    hasContent:d=>!!(d.f&&(d.f[4]||d.f[8]||d.f[11]||d.f[22])||(d.corners||[]).some(c=>c.dug)||(d.photos||[]).length) });
   window.FR=FR; window.frFromPlot=frFromPlot; window.buildFr=buildFr; window.frDraw=frDraw;

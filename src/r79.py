@@ -11,4 +11,6 @@ CSS.append('''.seg.five{grid-template-columns:repeat(5,minmax(0,1fr))}.fr-wq but
 .fr-sel .fr-out{margin:0 0 8px}.fr-selbtns{margin:0}.fr-selbtns .btn{font-size:14px;min-height:42px;padding:8px 10px}
 .fr-info span{display:block}
 .fr-conc{font-size:14px;padding:8px 12px;border-radius:var(--r);margin:0 0 12px;background:#f1efe9;color:var(--ink)}.fr-conc[data-k=ok]{background:#E7F2EA;color:#1E6F3F}.fr-conc[data-k=deep]{background:#FFF4D6;color:#8a5a00}.fr-conc[data-k=high]{background:#FBE9E7;color:#B3261E}
+.seg.seven{grid-template-columns:repeat(7,minmax(0,1fr))}.fr-score button{padding:10px 0;min-height:44px;font-size:15px}#fr-party button{font-size:13px;padding:10px 4px}
+.fr-sel .in select{font:inherit;font-size:16px;padding:10px 8px;border:2px solid var(--line);border-radius:var(--r);background:#fff;width:100%;min-height:48px}
 #fr-passed button{font-size:14px;padding:10px 4px}''')

@@ -1,4 +1,4 @@
-const CACHE='rjh-site-app-v83'; const DRG='rjh-drawings';   // the drawings sit in their own cache so an app update never throws them away
+const CACHE='rjh-site-app-v84'; const DRG='rjh-drawings';   // the drawings sit in their own cache so an app update never throws them away
 const FILES=['./','./index.html','./manifest.json','./icon-180.png','./icon-512.png'];
 self.addEventListener('install',e=>{ e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES.map(f=>new Request(f,{cache:'reload'})))).then(()=>self.skipWaiting()));   // straight from the server, never the browser's old copy });
 self.addEventListener('activate',e=>{ e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE&&k!==DRG).map(k=>caches.delete(k)))).then(()=>self.clients.claim())); });
